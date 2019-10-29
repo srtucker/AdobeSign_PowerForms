@@ -27,20 +27,21 @@ var host = config['server']['host'];
 var endpoint = config['server']['endpoint'];
 var url = host + endpoint;
 var port = process.env.PORT || config.port || 80;
+var publicPath = config.publicPath || "/";
 
-app.use(express.static(path.join(__dirname, '../client/src')));
+app.use(publicPath, express.static(path.join(__dirname, '../client/src')));
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
 
 // Get features from config files
-app.get('/features', function (req, res){
+app.get(publicPath + '/features', function (req, res){
     res.json(config['features'])
 })
 
 // GET /workflows
-app.get('/api/getWorkflows', async function (req, res, next) {
+app.get(publicPath + '/api/getWorkflows', async function (req, res, next) {
 
     function getWorkflows() {
         /***
@@ -63,7 +64,7 @@ app.get('/api/getWorkflows', async function (req, res, next) {
 });
 
 // GET /workflows/{workflowId}
-app.get('/api/getWorkflowById/:id', async function(req, res, next){
+app.get(publicPath + '/api/getWorkflowById/:id', async function(req, res, next){
 
     function getWorkflowById() {
         /***
@@ -86,7 +87,7 @@ app.get('/api/getWorkflowById/:id', async function(req, res, next){
 });
 
 // GET /libraryDocuments/{libraryDocumentId}/documents
-app.get('/api/getLibraryDocuments/:id', async function(req, res, next) {
+app.get(publicPath + '/api/getLibraryDocuments/:id', async function(req, res, next) {
 
     function getLibraryDocuments() {
         /***
@@ -107,7 +108,7 @@ app.get('/api/getLibraryDocuments/:id', async function(req, res, next) {
 });
 
 // POST /workflows/{workflowId}/agreements
-app.post('/api/postAgreement/:id', async function(req, res, next){
+app.post(publicPath + '/api/postAgreement/:id', async function(req, res, next){
 
     function postAgreement() {
         /***
@@ -133,7 +134,7 @@ app.post('/api/postAgreement/:id', async function(req, res, next){
 });
 
 // POST /transientDocuments
-app.post('/api/postTransient', upload.single('myfile'), async function (req, res, next) {
+app.post(publicPath + '/api/postTransient', upload.single('myfile'), async function (req, res, next) {
 
     function postTransient() {
         /***
