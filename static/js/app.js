@@ -32,7 +32,7 @@ function runWorkflow() {
     var workflow_id = getWorkflowId();
 
     // Fetch workflow data by ID
-    var workflow_data = fetch('/api/getWorkflowById/' + workflow_id)
+    var workflow_data = fetch(apiURL + 'api/getWorkflowById/' + workflow_id)
         .then(function (resp) {
             return resp.json()
         })
@@ -41,7 +41,7 @@ function runWorkflow() {
         });
 
     // Fetch application features
-    var get_features = fetch('/features')
+    var get_features = fetch(apiURL + 'features')
         .then(function (resp) {
             return resp.json()
         })
@@ -86,7 +86,7 @@ function getWorkflowId(){
 }
 
 // Fetch all workflow data
-var workflow_data = fetch('/api/getWorkflows')
+var workflow_data = fetch(apiURL + 'api/getWorkflows')
     .then(function (resp) {
         return resp.json()
     })

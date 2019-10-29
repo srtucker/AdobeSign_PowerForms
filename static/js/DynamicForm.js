@@ -261,7 +261,7 @@ class DynamicForm {
                 async_wf_obj.updateCcGroup(wf_data['ccsListInfo'][0], this.cc_group);
             }
 
-            var response = await fetch('/api/postAgreement/' + async_wf_obj.workflow_id, {
+            var response = await fetch(apiURL + 'api/postAgreement/' + async_wf_obj.workflow_id, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',

@@ -122,7 +122,7 @@ class FileInfo {
             var formData = new FormData();
             formData.append('myfile', file.files[0]);
 
-            var response = await fetch('/api/postTransient', {
+            var response = await fetch(apiURL + 'api/postTransient', {
                 method: 'POST',
                 body: formData
             }).then(function (resp) {
