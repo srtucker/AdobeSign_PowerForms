@@ -9,8 +9,18 @@ port: 80
 # This is the public path the app will be located at.
 publicPath: '/'
 
+# This is the base URL all client API calls will be made to
+apiBaseURL: '/'
+
+CSS:
+  # Autoprefixer will make sure your CSS works with these browsers
+  browsers:
+    - "last 2 versions"
+    - "ie >= 9"
+    - "ios >= 7"
+
 # This is the server information needed to point the application to your Sign Console.
-server:
+adobeApi:
   # The host address to your Sign Console.
   host:
 
@@ -18,12 +28,10 @@ server:
   # This is the endpoint
   endpoint: "/api/rest/v5"
 
-# This is the enterprise setting to get access to your Sign Console.
-enterprise:
   # This is your integration key for Adobe Sign. This key
   # is needed to get access to perform synchronization between Admin
   # Console and Adobe Sign.
-  integration:
+  integrationKey:
 
 # This is the feature configuration.
 features:

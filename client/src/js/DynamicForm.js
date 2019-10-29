@@ -1,4 +1,11 @@
-class DynamicForm {
+const { RecipientGroup } = require('./RecipientGroup');
+const { CarbonCopy } = require('./CarbonCopy');
+const { FileInfo } = require('./FileInfo');
+const { MergeField } = require('./MergeField');
+const { Deadline } = require('./Deadline');
+const { PassOption } = require('./PassOption');
+
+export class DynamicForm {
 
     constructor(parent_div, data, agreement_data, features) {
         this.parent_div = parent_div;
@@ -261,7 +268,7 @@ class DynamicForm {
                 async_wf_obj.updateCcGroup(wf_data['ccsListInfo'][0], this.cc_group);
             }
 
-            var response = await fetch(apiURL + 'api/postAgreement/' + async_wf_obj.workflow_id, {
+            var response = await fetch(apiBaseURL + 'api/postAgreement/' + async_wf_obj.workflow_id, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',

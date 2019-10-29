@@ -1,4 +1,4 @@
-class RecipientGroup{
+export class RecipientGroup{
 
     constructor(group_id, parent_div, recipient_group_data){
         this.parent_div = parent_div;

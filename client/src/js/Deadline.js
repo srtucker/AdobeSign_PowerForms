@@ -1,4 +1,4 @@
-class Deadline {
+export class Deadline {
 
     constructor(parent_div, deadline_data) {
         this.parent_div = parent_div;

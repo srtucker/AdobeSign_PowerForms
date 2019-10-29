@@ -1,3 +1,6 @@
+
+const yargs = require('yargs');
+
 // Express, Async, Fetch, & Body Parser
 const express = require('express');
 const async = require('express-async-await');
@@ -14,34 +17,71 @@ const upload = multer({ dest: 'uploads/' });
 const https = require('https');
 const path = require('path');
 
+// detect if running in a production or development env
+const isDev = !(yargs.argv.env == "production" || false);
+const isDevClient = (yargs.argv.devClient || false);
+
+var clientFolder = isDev ? 'client/dev' : 'client/dist';
+
+console.log(yargs.argv)
+console.log({isDev, isDevClient})
+
 // js-yaml
 const yaml = require('js-yaml');
 const config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, '/../config/config.yaml'), 'utf-8'));
 
 // Main App
 const app = express();
+app.locals.config = config;
 
 // Configuration
-var integration = config['enterprise']['integration'];
-var host = config['server']['host'];
-var endpoint = config['server']['endpoint'];
-var url = host + endpoint;
+var integration = config.adobeApi.integrationKey;
+var host = config.adobeApi.host;
+var endpoint = config.adobeApi.endpoint;
+config.adobeApi.url = host + endpoint;
+var url = config.adobeApi.url;
+
 var port = process.env.PORT || config.port || 80;
 var publicPath = config.publicPath || "/";
 
-app.use(publicPath, express.static(path.join(__dirname, '../client/src')));
+if (isDevClient) {
+  const webpackDevMiddleware = require('webpack-dev-middleware');
+  const webpackHotMiddleware = require('webpack-hot-middleware');
+  const webpack = require('webpack');
+  const webpackConfig = require('../webpack.config.js');
+
+  //reload=true:Enable auto reloading when changing JS files or content
+  //timeout=1000:Time from disconnecting from server to reconnecting
+  webpackConfig.entry.client.unshift('webpack-hot-middleware/client?reload=true&timeout=1000');
+
+  //Add HMR plugin
+  webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+
+  const webpackCompiler = webpack(webpackConfig);
+
+  //Enable "webpack-dev-middleware"
+  app.use(webpackDevMiddleware(webpackCompiler, {
+      publicPath: publicPath
+  }));
+
+  //Enable "webpack-hot-middleware"
+  app.use(webpackHotMiddleware(webpackCompiler));
+}
+
+
+app.use(publicPath, express.static(path.join(__dirname, '../', clientFolder)));
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
 
 // Get features from config files
-app.get(publicPath + '/features', function (req, res){
+app.get(publicPath + 'features', function (req, res){
     res.json(config['features'])
 })
 
 // GET /workflows
-app.get(publicPath + '/api/getWorkflows', async function (req, res, next) {
+app.get(publicPath + 'api/getWorkflows', async function (req, res, next) {
 
     function getWorkflows() {
         /***
@@ -64,7 +104,7 @@ app.get(publicPath + '/api/getWorkflows', async function (req, res, next) {
 });
 
 // GET /workflows/{workflowId}
-app.get(publicPath + '/api/getWorkflowById/:id', async function(req, res, next){
+app.get(publicPath + 'api/getWorkflowById/:id', async function(req, res, next){
 
     function getWorkflowById() {
         /***
@@ -87,7 +127,7 @@ app.get(publicPath + '/api/getWorkflowById/:id', async function(req, res, next){
 });
 
 // GET /libraryDocuments/{libraryDocumentId}/documents
-app.get(publicPath + '/api/getLibraryDocuments/:id', async function(req, res, next) {
+app.get(publicPath + 'api/getLibraryDocuments/:id', async function(req, res, next) {
 
     function getLibraryDocuments() {
         /***
@@ -108,7 +148,7 @@ app.get(publicPath + '/api/getLibraryDocuments/:id', async function(req, res, ne
 });
 
 // POST /workflows/{workflowId}/agreements
-app.post(publicPath + '/api/postAgreement/:id', async function(req, res, next){
+app.post(publicPath + 'api/postAgreement/:id', async function(req, res, next){
 
     function postAgreement() {
         /***
@@ -134,7 +174,7 @@ app.post(publicPath + '/api/postAgreement/:id', async function(req, res, next){
 });
 
 // POST /transientDocuments
-app.post(publicPath + '/api/postTransient', upload.single('myfile'), async function (req, res, next) {
+app.post(publicPath + 'api/postTransient', upload.single('myfile'), async function (req, res, next) {
 
     function postTransient() {
         /***
@@ -170,8 +210,3 @@ app.post(publicPath + '/api/postTransient', upload.single('myfile'), async funct
   })
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
-
-// https.createServer(httpsOptions, app)
-//     .listen(port, function () {
-//         console.log(`Server started on port ${port}`)
-//     })

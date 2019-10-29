@@ -1,3 +1,6 @@
+const { Workflow } = require('./Workflow');
+const { DynamicForm } = require('./DynamicForm');
+
 async function updateDropdownMenu(workflow_data) {
     /**
      * This function will use the data from the fetch method getLibraryDoc and process the data
@@ -32,7 +35,7 @@ function runWorkflow() {
     var workflow_id = getWorkflowId();
 
     // Fetch workflow data by ID
-    var workflow_data = fetch(apiURL + 'api/getWorkflowById/' + workflow_id)
+    var workflow_data = fetch(apiBaseURL + 'api/getWorkflowById/' + workflow_id)
         .then(function (resp) {
             return resp.json()
         })
@@ -41,7 +44,7 @@ function runWorkflow() {
         });
 
     // Fetch application features
-    var get_features = fetch(apiURL + 'features')
+    var get_features = fetch(apiBaseURL + 'features')
         .then(function (resp) {
             return resp.json()
         })
@@ -86,7 +89,7 @@ function getWorkflowId(){
 }
 
 // Fetch all workflow data
-var workflow_data = fetch(apiURL + 'api/getWorkflows')
+var workflow_data = fetch(apiBaseURL + 'api/getWorkflows')
     .then(function (resp) {
         return resp.json()
     })
@@ -95,3 +98,12 @@ var workflow_data = fetch(apiURL + 'api/getWorkflows')
     });
 
 updateDropdownMenu(workflow_data);
+
+export {
+  showHiddenDiv,
+  getWorkflowId,
+  updateDropdownMenu,
+  runWorkflow
+}
+
+$('#workflow_selector #option_submit_button').click(runWorkflow);

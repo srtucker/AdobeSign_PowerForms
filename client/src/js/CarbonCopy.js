@@ -1,4 +1,4 @@
-class CarbonCopy{
+export class CarbonCopy{
 
     constructor(parent_div, email, id){
         this.parent_div = parent_div;
@@ -15,7 +15,7 @@ class CarbonCopy{
 
         // Create the element
         var cc_div = document.createElement('div');
-        
+
         // Add attributes
         cc_div.id = "cc_div_" + this.id;
         cc_div.className = "add_border_bottom";

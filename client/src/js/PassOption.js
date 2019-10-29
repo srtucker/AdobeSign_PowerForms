@@ -1,4 +1,4 @@
-class PassOption{
+export class PassOption{
 
     constructor(parent_div, data){
         this.parent_div = parent_div;

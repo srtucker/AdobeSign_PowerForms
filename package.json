@@ -2,10 +2,15 @@
   "name": "test",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server/server.js",
   "scripts": {
-    "start": "node server/server.js",
-    "server": "nodemon --inspect server/server.js"
+    "start": "node server/server.js --env=production",
+    "dev": "nodemon --inspect server/server.js --devClient",
+    "dev:server": "nodemon --inspect server/server.js",
+    "dev:client":  "node server/server.js --devClient",
+    "build:dev": "webpack --progress",
+    "build:prod": "webpack --progress --env=production",
+    "analyze": "webpack --progress --env=production --profile"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +24,28 @@
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
-    "nodemon": "^1.19.2"
+    "autoprefixer": "^9.7.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.0.4",
+    "css-loader": "^3.2.0",
+    "cssnano": "^4.1.10",
+    "file-loader": "^4.2.0",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.8.0",
+    "nodemon": "^1.19.2",
+    "postcss-loader": "^3.0.0",
+    "query-string": "^6.8.3",
+    "style-loader": "^1.0.0",
+    "url-loader": "^2.2.0",
+    "webpack": "^4.41.2",
+    "webpack-bundle-analyzer": "^3.6.0",
+    "webpack-cli": "^3.3.9",
+    "webpack-dev-middleware": "^3.7.2",
+    "webpack-dev-server": "^3.9.0",
+    "webpack-hot-middleware": "^2.25.0",
+    "yargs": "^14.2.0"
+  },
+  "nodemonConfig": {
+    "ignore": ["client/*"]
   }
 }

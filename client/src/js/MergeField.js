@@ -1,4 +1,4 @@
-class MergeField{
+export class MergeField{
 
     constructor(parent_div, merge_field_data){
         this.parent_div = parent_div;

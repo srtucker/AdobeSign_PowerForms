@@ -1,4 +1,4 @@
-class Workflow {
+export class Workflow {
 
     constructor(workflow_id) {
         this.workflow_id = workflow_id;
@@ -106,7 +106,7 @@ class Workflow {
         for (let counter = 0; counter < cc_group.length; counter++) {
             if(!(editable)){
                 if(counter < cc_list.length){
-                    add_to_cc_list.push(cc_list[counter]);  
+                    add_to_cc_list.push(cc_list[counter]);
                 }
             }
             else{
@@ -183,12 +183,12 @@ class Workflow {
          */
 
         const date_input = document.getElementById('deadline_input').value;
-        
+
         const today_date = new Date(today);
         const selected_date = new Date(date_input);
 
         const diffTime = Math.abs(selected_date - today_date);
-        this.deadline = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        this.deadline = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     }
 
@@ -203,7 +203,7 @@ class Workflow {
             "openPassword": pass,
             "protectOpen": protection
         }
-        
+
         this.pass_option = data;
     }
 
