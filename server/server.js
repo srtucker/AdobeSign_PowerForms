@@ -10,33 +10,34 @@ const fs = require('fs');
 const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
-// Main App
-const app = express();
-
 // HTTPS & Path
 const https = require('https');
 const path = require('path');
-const httpsOptions = {
-    cert: fs.readFileSync(path.join(__dirname, 'ssl', 'server.crt')),
-    key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key'))
-}
 
+// js-yaml
+const yaml = require('js-yaml');
+const config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, '/../config/config.yaml'), 'utf-8'));
+
+// Main App
+const app = express();
 
 // Configuration
-const integration = "3AAABLblqZhAWRW-rUIElksOJuQaRr-ycSIBFpc9Pyh1HQS4TvpOmji_CfEMm3O_CdBUoIlYdA4W45cyjpa3LuGSuz54LzMGw";
-const host = "https://api.na2.echosign.com:443";
-const endpoint = "/api/rest/v5";
-const url = host + endpoint;
+var integration = config['enterprise']['integration'];
+var host = config['server']['host'];
+var endpoint = config['server']['endpoint'];
+var url = host + endpoint;
+var port = process.env.PORT || config.port || 80;
 
-app.use(express.static(__dirname + '/static'));
+app.use(express.static(path.join(__dirname, '../client/src')));
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
 
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/static/test.html');
-});
+// Get features from config files
+app.get('/features', function (req, res){
+    res.json(config['features'])
+})
 
 // GET /workflows
 app.get('/api/getWorkflows', async function (req, res, next) {
@@ -51,7 +52,7 @@ app.get('/api/getWorkflows', async function (req, res, next) {
         };
 
         return fetch(url + endpoint, {
-            method: 'GET', 
+            method: 'GET',
             headers: headers});
     }
 
@@ -74,7 +75,7 @@ app.get('/api/getWorkflowById/:id', async function(req, res, next){
         };
 
         return fetch(url + endpoint, {
-            method: 'GET', 
+            method: 'GET',
             headers: headers})
     }
 
@@ -120,11 +121,11 @@ app.post('/api/postAgreement/:id', async function(req, res, next){
         };
 
         return fetch(url + endpoint, {
-            method:'POST', 
-            headers: headers, 
+            method:'POST',
+            headers: headers,
             body: JSON.stringify(req.body)})
     }
-    
+
     const api_response = await postAgreement();
     const data = await api_response.json();
 
@@ -167,11 +168,9 @@ app.post('/api/postTransient', upload.single('myfile'), async function (req, res
     res.json(data)
   })
 
-const port = 5000;
+app.listen(port, () => console.log(`Server started on port ${port}`));
 
-// app.listen(port, () => console.log(`Server started on port ${port}`));
-
-https.createServer(httpsOptions, app)
-    .listen(port, function () {
-        console.log(`Server started on port ${port}`)
-    })
+// https.createServer(httpsOptions, app)
+//     .listen(port, function () {
+//         console.log(`Server started on port ${port}`)
+//     })
