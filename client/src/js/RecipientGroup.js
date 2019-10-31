@@ -1,166 +1,148 @@
-export class RecipientGroup{
+export default class RecipientGroup {
+  constructor(group_id, parent_div, recipient_group_data){
+    this.parent_div = parent_div;
+    this.group_id = group_id;
+    this.recipient_group_data = recipient_group_data;
+    this.number_of_members = 0;
+    this.target_div = ""
 
-    constructor(group_id, parent_div, recipient_group_data){
-        this.parent_div = parent_div;
-        this.group_id = group_id;
-        this.recipient_group_data = recipient_group_data;
-        this.number_of_members = 0;
-        this.target_div = ""
+    this.required = !(this.recipient_group_data.minListCount == 0);
+  }
+
+  createRecipientDiv(hide_predefined) {
+    const inputId = 'recipient_' + this.group_id;
+
+    // Create the div
+    var div = $('<div/>');
+    div.attr('id', "recipient_group_" + this.group_id);
+    div.addClass("add_border_bottom");
+
+    // Create the label
+    var label = $('<label/>')
+    label.html(this.recipient_group_data['label']);
+    label.attr("for", inputId);
+    label.addClass("recipient_label");
+
+    // Create the input
+    var input = $("<input/>");
+    input.attr({
+      type: "email",
+      id: inputId,
+      name: 'recipient_' + this.group_id,
+      placeholder: "Enter Recipient's Email"
+    });
+    input.addClass('recipient_form_input form-control');
+
+    if(this.required) {
+      input.attr('required', '');
+      label.addClass("required");
     }
 
-    createRecipientDiv() {
-        /***
-         * This function create recipient div
-         */
+    // If data is not blank, fill it in with predefine information
+    if (this.recipient_group_data['defaultValue'] !== "") {
+      input.val(this.recipient_group_data['defaultValue']);
+      input.addClass("predefined_input");
 
-        // Create the element
-        var recipient_div = document.createElement('div');
-        
-        // Add attributes
-        recipient_div.id = "recipient_group_" + this.group_id;
-        recipient_div.className = "add_border_bottom";
-        this.parent_div.children['recipient_section'].append(recipient_div);
+      if(this.recipient_group_data.editable) {
+        input.attr('readonly', '');
+      }
 
-        // Append to parent
-        this.target_div = recipient_div;
+      // Hide settings
+      if(hide_predefined) {
+          div.addClass('recipient_hidden');
+      }
     }
 
-    createRecipientLabelField() {
-        /***
-         * This function will add recipient label field
-         */
 
-        // Create label for recipient
-        var label = document.createElement('h3');
+    // This feature is currently blocked. There's a bug in Adobe API that
+    // has been reported. Once this bug is fixed, it will be enabled in
+    // the next version.
 
-        // Add attributes
-        label.className = "recipient_label";
-        label.innerHTML = this.recipient_group_data['label'];
+    // // If group is a recipient group
+    // if (this.recipient_group_data['maxListCount'] > 1) {
+    //     this.createAdditionalRecipientInput(input.id);
+    //     this.removeParticipentButton(this.target_div);
+    // }
 
-        // Append to parent
-        this.target_div.append(label)
-    }
+    div.append(label, input)
 
-    async createRecipientInputField(hide_all, hide_predefined) {
-        /***
-         * This function adds recipients input field
-         */
+    this.target_div = div;
+    return div
+  }
 
-        let hide_all_trigger = await hide_all;
-        let hide_predefined_trigger = await hide_predefined;
 
-        // Create the element
-        var input = document.createElement("input");
+  createAdditionalRecipientInput(recipient_id) {
+      /***
+       * This function add additions recipeints input
+       */
 
-        // Add Attributes
-        input.type = "text";
-        input.id = 'recipient_' + this.group_id;
-        input.name = 'recipient_' + this.group_id;
-        input.className = 'recipient_form_input';
-        input.placeholder = "Enter Recipient's Email";
+      var add_div = document.createElement('div');
+      add_div.id = 'add_section_' + this.group_id;
+      add_div.className = "add_section";
+      this.target_div.appendChild(add_div);
 
-        // If data is not blank, fill it in with predefine information
-        if (this.recipient_group_data['defaultValue'] !== "") {
-            input.value = this.recipient_group_data['defaultValue'];
-            input.className = input.className + " predefined_input"
+      // Create the add new recipient button
+      var add_marker_button = document.createElement("button");
+      add_marker_button.type = "button";
+      add_marker_button.id = "add_button";
 
-            // Hide all settings turned on
-            if(hide_all_trigger && !(hide_predefined_trigger)){
-                var recipient_div = document.getElementById("recipient_group_" + this.group_id);
-                recipient_div.className = 'recipient_hidden'
-            }
-            // Hide only defined workflows in config file
-            else if(!(hide_all_trigger) && hide_predefined_trigger){
-                var recipient_div = document.getElementById("recipient_group_" + this.group_id);
-                recipient_div.className = 'recipient_hidden'
-            }
-        }
+      // Add onclick function to allow us to create new recipient inputs
+      add_marker_button.onclick = function () {
+          let new_recipient_id = recipient_id + '_' + this.number_of_members;
+          this.number_of_members++;
+          this.appendNewParticipentInput(new_recipient_id);
+      }.bind(this);
 
-        this.target_div.append(input);
+      add_div.append(add_marker_button);
 
-        // This feature is currently blocked. There's a bug in Adobe API that
-        // has been reported. Once this bug is fixed, it will be enabled in
-        // the next version.
+      // Add the plus icon to the button
+      var add_recipient_marker = document.createElement("i");
+      add_recipient_marker.className = "fa fa-plus";
 
-        // // If group is a recipient group
-        // if (this.recipient_group_data['maxListCount'] > 1) {
-        //     this.createAdditionalRecipientInput(input.id);
-        //     this.removeParticipentButton(this.target_div);
-        // }
-    }
+      add_marker_button.appendChild(add_recipient_marker)
+  }
 
-    createAdditionalRecipientInput(recipient_id) {
-        /***
-         * This function add additions recipeints input
-         */
+  appendNewParticipentInput(participent_id) {
+      /***
+       * This functiuon appends a new recipient input
+       */
 
-        var add_div = document.createElement('div');
-        add_div.id = 'add_section_' + this.group_id;
-        add_div.className = "add_section";
-        this.target_div.append(add_div);
+      // Create a line break
+      var linebreak = document.createElement("br");
 
-        // Create the add new recipient button
-        var add_marker_button = document.createElement("button");
-        add_marker_button.type = "button";
-        add_marker_button.id = "add_button";
+      // Create new input field
+      var participent_input = document.createElement('input');
+      participent_input.type = "text";
+      participent_input.className = "recipient_form_input";
+      participent_input.placeholder = "Enter Recipient's Email";
+      participent_input.id = participent_id;
+      participent_input.name = participent_id;
 
-        // Add onclick function to allow us to create new recipient inputs
-        add_marker_button.onclick = function () {
-            let new_recipient_id = recipient_id + '_' + this.number_of_members;
-            this.number_of_members++;
-            this.appendNewParticipentInput(new_recipient_id);
-        }.bind(this);
+      // Append to the div before buttons
+      var target = document.getElementById("add_section_" + this.group_id);
+      this.target_div.insertBefore(participent_input, target);
+  }
 
-        add_div.append(add_marker_button);
+  removeParticipentButton() {
+      /***
+       * This function removes a recipient
+       */
 
-        // Add the plus icon to the button
-        var add_recipient_marker = document.createElement("i");
-        add_recipient_marker.className = "fa fa-plus";
+      var remove_button = document.createElement("button");
+      remove_button.type = "button";
+      remove_button.id = "remove_button";
+      remove_button.onclick = function () {
+          if(this.number_of_members > 0){
+              // remove input field
+              this.target_div.removeChild(this.target_div.querySelectorAll("input")[this.number_of_members]);
+              this.number_of_members--;
+          }
+      }.bind(this);
+      document.getElementById('add_section_' + this.group_id).appendChild(remove_button);
 
-        add_marker_button.append(add_recipient_marker)
-    }
-
-    appendNewParticipentInput(participent_id) {
-        /***
-         * This functiuon appends a new recipient input
-         */
-
-        // Create a line break
-        var linebreak = document.createElement("br");
-
-        // Create new input field
-        var participent_input = document.createElement('input');
-        participent_input.type = "text";
-        participent_input.className = "recipient_form_input";
-        participent_input.placeholder = "Enter Recipient's Email";
-        participent_input.id = participent_id;
-        participent_input.name = participent_id;
-
-        // Append to the div before buttons
-        var target = document.getElementById("add_section_" + this.group_id);
-        this.target_div.insertBefore(participent_input, target);
-    }
-
-    removeParticipentButton() {
-        /***
-         * This function removes a recipient
-         */
-
-        var remove_button = document.createElement("button");
-        remove_button.type = "button";
-        remove_button.id = "remove_button";
-        remove_button.onclick = function () {
-            if(this.number_of_members > 0){
-                // remove input field
-                this.target_div.removeChild(this.target_div.querySelectorAll("input")[this.number_of_members]);
-                this.number_of_members--;
-            }
-        }.bind(this);
-        document.getElementById('add_section_' + this.group_id).append(remove_button);
-
-        var remove_button_marker = document.createElement("i");
-        remove_button_marker.className = "fa fa-minus";
-        remove_button.append(remove_button_marker);
-    }
+      var remove_button_marker = document.createElement("i");
+      remove_button_marker.className = "fa fa-minus";
+      remove_button.appendChild(remove_button_marker);
+  }
 
 }

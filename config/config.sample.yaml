@@ -12,13 +12,6 @@ publicPath: '/'
 # This is the base URL all client API calls will be made to
 apiBaseURL: '/'
 
-CSS:
-  # Autoprefixer will make sure your CSS works with these browsers
-  browsers:
-    - "last 2 versions"
-    - "ie >= 9"
-    - "ios >= 7"
-
 # This is the server information needed to point the application to your Sign Console.
 adobeApi:
   # The host address to your Sign Console.

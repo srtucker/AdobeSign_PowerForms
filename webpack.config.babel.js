@@ -13,10 +13,11 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 var config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, 'config', 'config.yaml'), 'utf-8'));
 
 // detect if webpack bundle is being processed in a production or development env
-let isDev = !(yargs.argv.env == "production" || false);
-let isDevServer = process.argv[1].indexOf('webpack-dev-server') !== -1;
+const isDev = !(yargs.argv.env == "production" || false);
+const isDevClient = (yargs.argv.devClient || false);
+const isDevServer = process.argv[1].indexOf('webpack-dev-server') !== -1;
 
-var buildFolder = isDev ? 'client/dev' : 'client/dist';
+const buildFolder = isDev ? 'client/dev' : 'client/dist';
 
 var webpackConfig = {
   mode: isDev ? 'development' : 'production',
@@ -32,32 +33,32 @@ var webpackConfig = {
   },
   module: {
     rules: [
-      /*{
+      {
         test: /\.(js|jsx)$/,
-        exclude: /node_modules(?!(\/|\\)(autotrack|dom-utils|query-string|strict-uri-encode))/,
+        exclude: /node_modules(?!(\/|\\)(autotrack|dom-utils|query-string|strict-uri-encode|split-on-first))/,
         use: [
           {
             loader: 'babel-loader',
             options: {
-              presets: ['react'],
+              presets: ['@babel/preset-env'],
               cacheDirectory: "temp/babel-cache"
             }
           }
         ]
-      },*/
+      },
       /*{
         // make all files ending in .json5 use the `json5-loader`
         test: /\.json5$/,
         use: ['json5-loader']
       },*/
       {
-        test: /\.css$/,
+        test: /\.(scss$|css$)$/,
         use: [
           isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
           {
             loader: "css-loader", // translates CSS into CommonJS
             options: {
-              importLoaders: 1,
+              importLoaders: 2,
               sourceMap: true
             }
           },
@@ -68,13 +69,15 @@ var webpackConfig = {
               plugins: (loader) => [
                 require('autoprefixer')(),
                 require('cssnano')()
-              ],
-              config: {
-                ctx: {
-                  autoprefixer: {
-                    browsers: config.CSS.browsers
-                  }
-                }
+              ]
+            }
+          },
+          {
+            loader: "sass-loader",
+            options: {
+              sourceMap: true,
+              sassOptions: {
+                //includePaths: config.CSS.sassLibs
               }
             }
           }
@@ -91,6 +94,10 @@ var webpackConfig = {
       {
           test: /\.png$/,
           loader: "file-loader?name=images/[name].[ext]?[hash]&mimetype=image/png"
+      },
+      {
+        test: /\.hbs$/,
+        loader: "handlebars-loader"
       }
     ]
   },
@@ -107,7 +114,7 @@ var webpackConfig = {
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
-      filename: 'css/stylesheet.css?[contenthash]',
+      filename: 'css/styles.css?[contenthash]',
       chunkFilename: '[id].css?[contenthash]',
     }),
   ],
@@ -120,7 +127,9 @@ var webpackConfig = {
     ],
   },
   node: {
-    fs: "empty" // avoids error messages
+    fs: "empty", // avoids error messages
+    net: "empty",
+    tls: "empty"
   },
   devServer: {
     contentBase: buildFolder,
@@ -149,10 +158,10 @@ if(yargs.argv.profile) {
   );
 }
 
-/*if(!isDevServer) {
+if(!isDevServer && !isDevClient) {
   webpackConfig.plugins.push(
     new CleanWebpackPlugin()
   );
-}*/
+}
 
 module.exports = webpackConfig;

@@ -1,74 +1,59 @@
-export class CarbonCopy{
+export default class CarbonCopy {
+  constructor(id, parent_div, email, required){
+    this.id = id;
+    this.parent_div = parent_div;
+    this.email = email;
+    this.required = required;
+    this.target_div = "";
+    this.predefined = false;
+  }
 
-    constructor(parent_div, email, id){
-        this.parent_div = parent_div;
-        this.email = email;
-        this.id = id;
-        this.target_div = "";
-        this.predefined = false;
+  createCcDiv(){
+    const inputId = 'cc_123' + this.id;
+
+    // Create the element
+    var div = $('<div/>');
+    div.attr('id', "cc_div_" + this.id);
+    div.addClass("add_border_bottom");
+
+    // Create the label
+    var label = $('<label/>')
+    label.html("CC");
+    label.attr("for", inputId);
+    label.addClass("recipient_label");
+
+    // Create the input
+    var input = $("<input/>");
+    input.attr({
+      type: "email",
+      id: inputId,
+      name: 'cc_' + this.id,
+      placeholder: "Enter Cc's Email"
+    });
+    input.addClass('recipient_form_input form-control');
+
+    if(this.required) {
+      input.attr('required', '');
+      label.addClass("required");
     }
 
-    createCcDiv(){
-        /***
-         * This function create cc div
-         */
+    // Add predefine tags
+    if( typeof this.email !== "undefined"){
+      input.val(this.email);
+      input.addClass("predefined_input");
 
-        // Create the element
-        var cc_div = document.createElement('div');
-
-        // Add attributes
-        cc_div.id = "cc_div_" + this.id;
-        cc_div.className = "add_border_bottom";
-        this.parent_div.children['cc_section'].append(cc_div);
-
-        // Append to parent
-        this.target_div = cc_div;
+      this.predefined = true;
     }
 
-    createCcLabelField(){
-        /***
-         * This function will add cc label field
-         */
+    // Add on change event to update user email
+    input.change(this, (event) => {
+      event.data.email = $(event.target).val();
+    });
 
-        // Create label for recipient
-        var label = document.createElement('h3');
+    div.append(label, input)
 
-        // Add attributes
-        label.className = "recipient_label";
-        label.innerHTML = "CC";
-
-        // Append to parent
-        this.target_div.append(label);
-    }
-
-    createCcInputField(){
-        /***
-         * This function adds recipients input field
-         */
-
-        // Create the element
-        var input = document.createElement("input");
-
-        // Add Attributes
-        input.type = "text";
-        input.id = 'cc_123' + this.id;
-        input.name = 'cc_' + this.id;
-        input.className = 'recipient_form_input';
-        input.placeholder = "Enter Cc's Email";
-
-        // Add predefine tags
-        if( typeof this.email !== "undefined"){
-            input.value = this.email;
-            input.className = input.className + " predefined_input";
-            this.predefined = true;
-        }
-
-        // Add on change event to update user email
-        input.onchange = function(){
-            this.email = input.value;
-        }.bind(this)
-
-        // Append to parent
-        this.target_div.append(input);
-    }
+    // Append to parent
+    this.target_div = div;
+    return div;
+  }
 }

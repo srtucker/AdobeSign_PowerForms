@@ -1,4 +1,4 @@
-export class Workflow {
+export default class Workflow {
 
     constructor(workflow_id) {
         this.workflow_id = workflow_id;

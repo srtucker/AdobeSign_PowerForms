@@ -1,5 +1,5 @@
-const { Workflow } = require('./Workflow');
-const { DynamicForm } = require('./DynamicForm');
+const Workflow = require('./Workflow');
+const DynamicForm = require('./DynamicForm');
 
 async function updateDropdownMenu(workflow_data) {
     /**

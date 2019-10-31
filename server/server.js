@@ -23,8 +23,8 @@ const isDevClient = (yargs.argv.devClient || false);
 
 var clientFolder = isDev ? 'client/dev' : 'client/dist';
 
-console.log(yargs.argv)
-console.log({isDev, isDevClient})
+//console.log(yargs.argv)
+//console.log({isDev, isDevClient})
 
 // js-yaml
 const yaml = require('js-yaml');
@@ -44,11 +44,19 @@ var url = config.adobeApi.url;
 var port = process.env.PORT || config.port || 80;
 var publicPath = config.publicPath || "/";
 
+//rewrite urls to root for workflow
+app.use(function(req, res, next) {
+  if (/\/workflow\/\S*$/.test(req.url)) {
+    req.url = '/';
+  }
+  next();
+});
+
 if (isDevClient) {
   const webpackDevMiddleware = require('webpack-dev-middleware');
   const webpackHotMiddleware = require('webpack-hot-middleware');
   const webpack = require('webpack');
-  const webpackConfig = require('../webpack.config.js');
+  const webpackConfig = require('../webpack.config.babel.js');
 
   //reload=true:Enable auto reloading when changing JS files or content
   //timeout=1000:Time from disconnecting from server to reconnecting
@@ -68,6 +76,9 @@ if (isDevClient) {
   app.use(webpackHotMiddleware(webpackCompiler));
 }
 
+/*app.get(publicPath + 'workflow/*', function (req, res) {
+    res.sendFile(path.join(__dirname, '../', clientFolder, 'index.html'));
+});*/
 
 app.use(publicPath, express.static(path.join(__dirname, '../', clientFolder)));
 app.use(bodyParser.urlencoded({
@@ -77,7 +88,13 @@ app.use(bodyParser.json());
 
 // Get features from config files
 app.get(publicPath + 'features', function (req, res){
-    res.json(config['features'])
+  /*let features = config['features'];
+  if(!features.hide_workflow_list) {
+    features.hide_workflow_list = [];
+  }
+  res.json(features)*/
+
+  res.json(config['features'])
 })
 
 // GET /workflows
@@ -207,6 +224,6 @@ app.post(publicPath + 'api/postTransient', upload.single('myfile'), async functi
     });
 
     res.json(data)
-  })
+});
 
 app.listen(port, () => console.log(`Server started on port ${port}`));

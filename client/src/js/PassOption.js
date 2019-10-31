@@ -1,4 +1,4 @@
-export class PassOption{
+export default class PassOption {
 
     constructor(parent_div, data){
         this.parent_div = parent_div;
@@ -19,7 +19,7 @@ export class PassOption{
 
         // Create the element
         var pass_div = document.createElement('div');
-        
+
         // Add attributes
         pass_div.id = "pass_div";
         pass_div.className = "add_border_bottom";
@@ -96,7 +96,7 @@ export class PassOption{
 
         // Create the element
         var sub_pass_div = document.createElement('div');
-        
+
         // Add attributes
         if(this.required){
             sub_pass_div.hidden = false;
@@ -152,11 +152,11 @@ export class PassOption{
         input.className = 'recipient_form_input';
         input.placeholder = placeholder;
         input.maxLength = 32;
-        
+
         // Append to parent
         this.sub_target_div.append(input);
     }
-    
+
     createInputCheckbox(){
         /***
          * This function creates the show pass checkbox

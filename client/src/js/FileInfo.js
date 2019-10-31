@@ -1,4 +1,4 @@
-export class FileInfo {
+export default class FileInfo {
 
     constructor(parent_div, file_name, label, required, workflow_lib_doc_id = null) {
         this.parent_div = parent_div;

@@ -1,11 +1,11 @@
-const { RecipientGroup } = require('./RecipientGroup');
-const { CarbonCopy } = require('./CarbonCopy');
-const { FileInfo } = require('./FileInfo');
-const { MergeField } = require('./MergeField');
-const { Deadline } = require('./Deadline');
-const { PassOption } = require('./PassOption');
+import RecipientGroup from './RecipientGroup';
+import CarbonCopy from './CarbonCopy';
+import FileInfo from './FileInfo';
+import MergeField from './MergeField';
+import Deadline from './Deadline';
+import PassOption from './PassOption';
 
-export class DynamicForm {
+export default class DynamicForm {
 
     constructor(parent_div, data, agreement_data, features) {
         this.parent_div = parent_div;
@@ -27,9 +27,6 @@ export class DynamicForm {
          */
 
         // Clear out the old dynamic form
-        this.removeRecipientForm('agreement_section');
-        this.removeRecipientForm('recipient_section');
-        this.removeRecipientForm('cc_section');
         this.removeRecipientForm('upload_section');
         this.removeRecipientForm('merge_section');
         this.removeRecipientForm('deadline_section');
@@ -39,54 +36,12 @@ export class DynamicForm {
         // Get workflow information
         this.data = await this.workflow_data;
 
-        // Set up triggers for features in config
-        let hide_predefined_setting = this.getHidePredefinedSetting();
-        let hidden_list = this.getHiddenWorkflowList();
-        let hide_all_trigger = this.setHideAllTrigger(hide_predefined_setting, hidden_list);
-        let hide_predefined_trigger = this.setHidePredefinedTrigger(
-            hide_all_trigger, hide_predefined_setting, this.data['displayName'], hidden_list);
-
         // TODO: set triggers for CC and Uploads
 
-        this.creatAgreementLabelField();
-        this.createAgreementInputField();
-
-        // Get Recipient Information
-        for (let counter = 0; counter < this.data['recipientsListInfo'].length; counter++) {
-
-            let recipient_group_data = this.data['recipientsListInfo'][counter];
-
-            this.recipient_groups.push(new RecipientGroup(
-                this.recipeint_group_id, this.parent_div, recipient_group_data));
-            this.recipient_groups[counter].createRecipientDiv();
-            this.recipient_groups[counter].createRecipientLabelField();
-            this.recipient_groups[counter].createRecipientInputField(hide_all_trigger, hide_predefined_trigger);
-
-            this.recipeint_group_id++;
-        }
-
-        // Get CC Information
+        this.createAgreementSection($(this.parent_div));
+        this.createRecipientSection($(this.parent_div));
         if ('ccsListInfo' in this.data) {
-            let cc_group_data = this.data['ccsListInfo'][0];
-            let cc_group_recipients = cc_group_data['defaultValue'].split(",");
-            for (let counter = 0; counter < cc_group_data['maxListCount']; counter++) {
-                // If cc group is editable we create the max # of cc recipients
-                if (cc_group_data['editable']) {
-                    this.cc_group.push(new CarbonCopy(this.parent_div, cc_group_recipients[counter], (counter + 1)))
-                    this.cc_group[counter].createCcDiv();
-                    this.cc_group[counter].createCcLabelField();
-                    this.cc_group[counter].createCcInputField();
-                }
-                // If not editable only create the predefine ones
-                else {
-                    if (counter < cc_group_recipients.length) {
-                        this.cc_group.push(new CarbonCopy(this.parent_div, cc_group_recipients[counter], (counter + 1)))
-                        this.cc_group[counter].createCcDiv();
-                        this.cc_group[counter].createCcLabelField();
-                        this.cc_group[counter].createCcInputField();
-                    }
-                }
-            }
+          this.createCCSection($(this.parent_div));
         }
 
         // Get FileInfo information
@@ -129,106 +84,24 @@ export class DynamicForm {
         this.createRecipientFormButton(this.agreement_data, this.workflow_data);
     }
 
-    async getHidePredefinedSetting() {
-        /***
-         * This function gets the hide_predefined setting from the config file
-         */
+    getHidePredefinedTrigger() {
+      //This function sets the hide_predefed trigger for workflows
+      let workflow_name = this.data['displayName'];
+      let hide_predefined = this.features['hide_predefined'];
+      let hidden_list = this.features['hide_workflow_list'];
 
-        let hide_predefined_setting = await this.features;
+      let hide_trigger = false;
 
-        return hide_predefined_setting['hide_predefined'];
-    }
-
-    async getHiddenWorkflowList() {
-        /***
-         * This function gets the hide_workflow_list from the config file
-         */
-
-        let feature = await this.features;
-
-        return feature['hide_workflow_list'];
-    }
-
-    async setHideAllTrigger(settings, hidden_list) {
-        /***
-         * This function sets the hide all trigger for predefined workflows.
-         * @param {Object} setting Hide_Predefined settings
-         * @param {Object} hidden_list Hide_Workflw_List
-         */
-
-        this.settings = await settings;
-        this.hidden_list = await hidden_list;
-        let hide_all_trigger = false
-
-        if (this.settings === 'yes' && this.hidden_list === null) {
-            hide_all_trigger = true;
+      if (hide_predefined === 'yes') {
+        if(hidden_list === null) {
+          hide_trigger = true;
         }
-
-        return hide_all_trigger;
-
-    }
-
-    async setHidePredefinedTrigger(hide_all_trigger, hide_predefined_setting, workflow_name, hidden_list) {
-        /***
-         * This function sets the hide_predefed trigger for workflows
-         * @param {Object} hide_all_trigger Hide all trigger settings
-         * @param {Object} hide_predefined_setting Hide predefined settings
-         * @param {String} workflow_name Selected workflow name
-         * @param {Object} hidden_list Hidden list from config
-         */
-
-        let trigger = await hide_all_trigger;
-        let settings = await hide_predefined_setting;
-        let list = await hidden_list;
-        var hide_predefined_trigger = false;
-
-        if (!(trigger)) {
-            if (settings === 'yes') {
-                hide_predefined_trigger = list.includes(workflow_name);
-            }
+        else {
+          hide_trigger = hidden_list.includes(workflow_name);
         }
+      }
 
-        return hide_predefined_trigger;
-    }
-
-    creatAgreementLabelField() {
-        /**
-         * This function will create the agreement name label
-         */
-
-        // Create element
-        var agreement_name_label = document.createElement('h3');
-
-        // Assign properties
-        agreement_name_label.innerHTML = "Document Name";
-        agreement_name_label.className = 'recipient_label';
-
-        // Append to parent
-        this.parent_div.children['agreement_section'].append(agreement_name_label);
-    }
-
-    createAgreementInputField() {
-        /**
-         * This function will create the agreement name input field
-         */
-
-        // Create element
-        var agreement_name_input = document.createElement('input');
-
-        // Assign properties
-        agreement_name_input.id = "agreement_name";
-        agreement_name_input.name = 'agreement_name';
-        agreement_name_input.placeholder = "Enter Agreement Name";
-        agreement_name_input.className = 'recipient_form_input';
-        agreement_name_input.required = true;
-
-        // Check to see if there's a default value
-        if (this.data['agreementNameInfo']['defaultValue'] !== null) {
-            agreement_name_input.value = this.data['agreementNameInfo']['defaultValue'];
-        }
-
-        // Append to parent
-        this.parent_div.children['agreement_section'].append(agreement_name_input);
+      return hide_trigger;
     }
 
     async createRecipientFormButton(workflow_object, workflow_data) {
@@ -307,4 +180,96 @@ export class DynamicForm {
             removed_div.removeChild(removed_div.firstChild)
         }
     }
+
+    createAgreementSection(formElm) {
+      let sectionElm = $('<div/>').attr('id', 'agreement_section');
+
+      // label
+      var agreement_name_label = $('<h3/>')
+      agreement_name_label.html("Document Name");
+      agreement_name_label.addClass('recipient_label');
+
+      // input
+      var agreement_name_input = $('<input/>');
+
+      // Assign properties
+      agreement_name_input.attr({
+        id: "agreement_name",
+        name: 'agreement_name',
+        placeholder: "Enter Agreement Name",
+        required: true
+      });
+      agreement_name_input.addClass('recipient_form_input');
+
+      // Check to see if there's a default value
+      if (this.data['agreementNameInfo']['defaultValue'] !== null) {
+          agreement_name_input.val(this.data['agreementNameInfo']['defaultValue']);
+      }
+
+      sectionElm.append(agreement_name_label, agreement_name_input);
+      formElm.append(sectionElm);
+      //$('#agreement_section',formElm).replaceWith(sectionElm);
+
+    }
+
+  createRecipientSection(formElm) {
+    let sectionElm = $('<div/>').attr('id', 'recipient_section');
+    sectionElm.append($('<h2>Recipients</h2>'));
+
+    // Set up triggers for features in config
+    let hide_predefined_trigger = this.getHidePredefinedTrigger();
+
+    let grps = this.recipient_groups;
+
+    // Get Recipient Information
+    for (let counter = 0; counter < this.data['recipientsListInfo'].length; counter++) {
+
+      let recipient_group_data = this.data['recipientsListInfo'][counter];
+      let recipientGrp = new RecipientGroup(this.recipeint_group_id, sectionElm, recipient_group_data);
+      let recipientNode = recipientGrp.createRecipientDiv(hide_predefined_trigger);
+
+      this.recipient_groups.push(recipientGrp);
+      this.recipeint_group_id++;
+
+      sectionElm.append(recipientNode);
+    }
+
+
+    formElm.append(sectionElm);
+  }
+
+  createCCSection(formNode) {
+    let sectionNode = $('<div/>').attr('id', 'recipient_section');
+
+    console.log(this.data)
+
+    // Get CC Information
+    let cc_group_data = this.data['ccsListInfo'][0];
+
+    let label = cc_group_data.label;
+    sectionNode.append($('<h2/>').html(label));
+
+    let cc_group_recipients = cc_group_data['defaultValue'].split(",");
+    let maxCount = cc_group_data['maxListCount'];
+    let minCount = cc_group_data['minListCount'];
+    let defaultCount = cc_group_recipients.length;
+
+    //let availableCount = maxCount - defaultCount;
+
+
+    for (let counter = 1; counter <= maxCount; counter++) {
+      // If cc group is editable or count is less than number preset we will create them
+      if (cc_group_data['editable'] ||  counter < cc_group_recipients.length) {
+        let required = (counter <= minCount);
+        let ccGrp = new CarbonCopy(counter, this.parent_div, cc_group_recipients[counter-1], required);
+        let ccNode = ccGrp.createCcDiv();
+
+        this.cc_group.push(ccGrp);
+
+        sectionNode.append(ccNode);
+      }
+    }
+
+    formNode.append(sectionNode);
+  }
 }
