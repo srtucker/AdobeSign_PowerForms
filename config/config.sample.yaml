@@ -59,3 +59,7 @@ features:
     #- Notice how list items are comment out
     - "Workflow name here"
     - "Another workflow namer here"
+
+  recipients:
+    hide_predefined: no
+    hide_readonly: yes

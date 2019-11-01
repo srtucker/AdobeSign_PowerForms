@@ -320,19 +320,17 @@ export default class DynamicForm {
     let newNodes = [];
     newNodes.push($('<h2>Recipients</h2>'));
 
-    // Set up triggers for features in config
-    let hide_predefined = this.features['hide_predefined'];
-    let hidden_list = this.features['hide_workflow_list'];
-    let hide_predefined_trigger = this.getHidePredefinedTrigger(hide_predefined, hidden_list);
+    let settings = this.features.recipients;
+    let data = this.data.recipientsListInfo;
 
     let grps = this.recipient_groups;
 
     // Get Recipient Information
-    for (let counter = 0; counter < this.data['recipientsListInfo'].length; counter++) {
+    for (let counter = 0; counter < data.length; counter++) {
 
-      let recipient_group_data = this.data['recipientsListInfo'][counter];
+      let recipient_group_data = data[counter];
       let recipientGrp = new RecipientGroup(this.recipeint_group_id, recipient_group_data);
-      let recipientNode = recipientGrp.createRecipientDiv(hide_predefined_trigger);
+      let recipientNode = recipientGrp.createRecipientDiv(settings);
 
       this.recipient_groups.push(recipientGrp);
       this.recipeint_group_id++;

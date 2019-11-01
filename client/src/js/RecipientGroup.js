@@ -9,8 +9,11 @@ export default class RecipientGroup {
     this.required = !(this.recipient_group_data.minListCount == 0);
   }
 
-  createRecipientDiv(hide_predefined) {
+  createRecipientDiv(settings) {
     const inputId = 'recipient_' + this.group_id;
+
+    let hide_predefined = settings.hide_predefined;
+    let hide_readonly = settings.hide_readonly;
 
     // Create the div
     var div = $('<div/>');
@@ -45,6 +48,10 @@ export default class RecipientGroup {
 
       if(!this.recipient_group_data.editable) {
         input.attr('readonly', '');
+
+        if(hide_readonly) {
+          div.addClass('recipient_hidden');
+        }
       }
 
       // Hide settings
