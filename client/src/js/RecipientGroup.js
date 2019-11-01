@@ -1,10 +1,10 @@
 export default class RecipientGroup {
-  constructor(group_id, parent_div, recipient_group_data){
-    this.parent_div = parent_div;
+  constructor(group_id, recipient_group_data){
     this.group_id = group_id;
     this.recipient_group_data = recipient_group_data;
     this.number_of_members = 0;
-    this.target_div = ""
+    this.target_div = "";
+    this.inputNode = null;
 
     this.required = !(this.recipient_group_data.minListCount == 0);
   }
@@ -28,7 +28,7 @@ export default class RecipientGroup {
     input.attr({
       type: "email",
       id: inputId,
-      name: 'recipient_' + this.group_id,
+      name: inputId,
       placeholder: "Enter Recipient's Email"
     });
     input.addClass('recipient_form_input form-control');
@@ -43,7 +43,7 @@ export default class RecipientGroup {
       input.val(this.recipient_group_data['defaultValue']);
       input.addClass("predefined_input");
 
-      if(this.recipient_group_data.editable) {
+      if(!this.recipient_group_data.editable) {
         input.attr('readonly', '');
       }
 
@@ -52,6 +52,9 @@ export default class RecipientGroup {
           div.addClass('recipient_hidden');
       }
     }
+
+    //Track inputNode for retrieval later
+    this.inputNode = input
 
 
     // This feature is currently blocked. There's a bug in Adobe API that
@@ -64,7 +67,7 @@ export default class RecipientGroup {
     //     this.removeParticipentButton(this.target_div);
     // }
 
-    div.append(label, input)
+    div.append(label, input);
 
     this.target_div = div;
     return div
@@ -145,4 +148,7 @@ export default class RecipientGroup {
       remove_button.appendChild(remove_button_marker);
   }
 
+  getEmail() {
+    return this.inputNode.val();
+  }
 }

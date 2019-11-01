@@ -11,10 +11,11 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <!-- Base CSS -->
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
   <script type="text/javascript">
     var apiBaseURL = <%= JSON.stringify(htmlWebpackPlugin.options.apiBaseURL) %>;
   </script>
+  <!-- Base CSS -->
 </head>
 <body>
 
@@ -43,11 +44,33 @@
               <div class="row">
                 <div class="col-lg-12">
                   <form id="recipient_form" enctype="multipart/form-data">
-                    <div id="upload_section"></div>
-                    <div id="merge_section"></div>
-                    <div id="send_options_section"></div>
-                    <div id="deadline_section"></div>
-                    <div id="button_section"></div>
+                    <div class="col-lg-12" id="bottom_form_top">
+                      <div class="form_hidden" id="instruction_section"></div>
+                      <div class="form_hidden" id="recipient_section"></div>
+                      <div class="form_hidden" id="cc_section"></div>
+                    </div>
+                    <div class="col-lg-12" id="bottom_form_bottom">
+                      <div class="row">
+                        <div class="col-lg-7">
+                          <div class="form_hidden" id="agreement_section"></div>
+                          <div class="form_hidden" id="message_section"></div>
+                          <div class="form_hidden" id="upload_section"></div>
+                          <div class="form_hidden" id="merge_section"></div>
+                        </div>
+                        <div class="col-lg-5">
+                          <div class="option_wrapper">
+                            <div id="options" class="col-lg-12">
+                              <div class="form_hidden" id="send_options_section"></div>
+                              <div class="form_hidden" id="deadline_section"></div>
+                              <div class="form_hidden" id="reminder_section"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-12" id="form_submit">
+                      <div class="form_hidden" id="button_section"></div>
+                    </div>
                   </form>
                 </div>
               </div>

@@ -23,7 +23,9 @@ export default class PassOption {
         // Add attributes
         pass_div.id = "pass_div";
         pass_div.className = "add_border_bottom";
-        this.parent_div.children['send_options_section'].append(pass_div);
+
+        var parent_div = document.getElementById('send_options_section')
+        parent_div.append(pass_div);
 
         // Append to parent
         this.target_div = pass_div;
@@ -106,7 +108,9 @@ export default class PassOption {
         }
         sub_pass_div.id = "sub_pass_div";
         sub_pass_div.className = "add_border_bottom";
-        this.parent_div.children['send_options_section'].append(sub_pass_div);
+
+        var parent_div = document.getElementById('send_options_section')
+        parent_div.append(sub_pass_div);
 
         // Append to parent
         this.sub_target_div = sub_pass_div;

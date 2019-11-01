@@ -34,6 +34,8 @@ function runWorkflow() {
     // Get workflow ID
     var workflow_id = getWorkflowId();
 
+    $('$dynamic_form').hide();
+
     // Fetch workflow data by ID
     var workflow_data = fetch(apiBaseURL + 'api/getWorkflowById/' + workflow_id)
         .then(function (resp) {

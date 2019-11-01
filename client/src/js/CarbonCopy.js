@@ -1,15 +1,15 @@
 export default class CarbonCopy {
-  constructor(id, parent_div, email, required){
+  constructor(id, email, required){
     this.id = id;
-    this.parent_div = parent_div;
     this.email = email;
     this.required = required;
-    this.target_div = "";
     this.predefined = false;
+
+    this.inputNode = null;
   }
 
-  createCcDiv(){
-    const inputId = 'cc_123' + this.id;
+  createCcDiv(hide_predefined){
+    const inputId = 'cc_' + this.id;
 
     // Create the element
     var div = $('<div/>');
@@ -27,7 +27,7 @@ export default class CarbonCopy {
     input.attr({
       type: "email",
       id: inputId,
-      name: 'cc_' + this.id,
+      name: inputId,
       placeholder: "Enter Cc's Email"
     });
     input.addClass('recipient_form_input form-control');
@@ -43,6 +43,11 @@ export default class CarbonCopy {
       input.addClass("predefined_input");
 
       this.predefined = true;
+
+      // Hide settings
+      if(hide_predefined) {
+          div.addClass('recipient_hidden');
+      }
     }
 
     // Add on change event to update user email
@@ -50,10 +55,14 @@ export default class CarbonCopy {
       event.data.email = $(event.target).val();
     });
 
-    div.append(label, input)
+    //Track inputNode for retrieval later
+    this.inputNode = input
 
-    // Append to parent
-    this.target_div = div;
+    div.append(label, input);
     return div;
+  }
+
+  getEmail() {
+    return this.inputNode.val();
   }
 }

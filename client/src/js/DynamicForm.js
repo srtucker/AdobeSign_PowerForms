@@ -4,6 +4,7 @@ import FileInfo from './FileInfo';
 import MergeField from './MergeField';
 import Deadline from './Deadline';
 import PassOption from './PassOption';
+import Reminder from './Reminder';
 
 export default class DynamicForm {
 
@@ -19,6 +20,7 @@ export default class DynamicForm {
         this.features = features;
         this.cc_group = [];
         this.pass_option = "";
+        this.reminders = "";
     }
 
     async buildRecipientsForm() {
@@ -30,25 +32,39 @@ export default class DynamicForm {
         this.removeRecipientForm('upload_section');
         this.removeRecipientForm('merge_section');
         this.removeRecipientForm('deadline_section');
-        this.removeRecipientForm('send_options_section')
-        this.removeRecipientForm('button_section');
+        this.removeRecipientForm('reminder_section');
+        this.removeRecipientForm('send_options_section');
+        this.removeRecipientForm('form_submit');
+
+        // Hide merge
+        $('#merge_section', this.parent_div).hide();
 
         // Get workflow information
         this.data = await this.workflow_data;
 
         // TODO: set triggers for CC and Uploads
 
-        this.createAgreementSection($(this.parent_div));
-        this.createRecipientSection($(this.parent_div));
+        //bottom_form_top
+        this.createInstructionSection($('#instruction_section', this.parent_div), this.data['description']);
+        this.createRecipientSection($('#recipient_section', this.parent_div));
         if ('ccsListInfo' in this.data) {
-          this.createCCSection($(this.parent_div));
+          this.createCCSection($('#cc_section', this.parent_div));
         }
+
+        //bottom_form_bottom
+        this.createAgreementSection($('#agreement_section', this.parent_div));
+        this.createMessageSection($('#message_section', this.parent_div));
+        this.createLayoutDivs("upload");
+        this.createHeaderLabel("upload", "Files");
+        this.createLayoutDivs("merge");
+        this.createHeaderLabel("merge", "Fields");
+
 
         // Get FileInfo information
         for (let counter = 0; counter < this.data['fileInfos'].length; counter++) {
             let file = this.data['fileInfos'][counter];
             this.file_info.push(new FileInfo(
-                this.parent_div, file['name'], file['label'], file['required'], file['workflowLibraryDocumentSelectorList']));
+                this.parent_div.children[1], file['name'], file['label'], file['required'], file['workflowLibraryDocumentSelectorList']));
             this.file_info[counter].createFileInfoDiv();
             this.file_info[counter].createDocumentTitleLabel();
             this.file_info[counter].createFileLabelName(this.file_info[counter]['required']);
@@ -56,9 +72,10 @@ export default class DynamicForm {
 
         // Get merged field information
         if ('mergeFieldsInfo' in this.data) {
+            $('#merge_section', this.parent_div).show();
             for (let counter = 0; counter < this.data['mergeFieldsInfo'].length; counter++) {
                 let merge_field_data = this.data['mergeFieldsInfo'][counter];
-                this.merge_fields.push(new MergeField(this.parent_div, merge_field_data));
+                this.merge_fields.push(new MergeField(this.parent_div.children[1], merge_field_data));
                 this.merge_fields[counter].createMergeFieldDiv();
                 this.merge_fields[counter].createMergeFieldLabel();
                 this.merge_fields[counter].createMergeFieldInput();
@@ -66,29 +83,37 @@ export default class DynamicForm {
         }
 
         // Get Deadline information
-        this.deadline = new Deadline(this.parent_div, this.data['expirationInfo']);
-        if (this.deadline.visable) {
-            this.deadline.createDeadlineDiv();
-            this.deadline.createCheckbox();
-            this.deadline.createSubDiv();
+        if( 'expirationInfo' in this.data){
+            this.deadline = new Deadline(this.parent_div.children[1], this.data['expirationInfo']);
+            if (this.deadline.visable) {
+                this.deadline.createDeadlineDiv();
+                this.deadline.createCheckbox();
+                this.deadline.createSubDiv();
+            }
         }
 
         // Get Password information
         if (this.data['passwordInfo'].visible) {
-            this.pass_option = new PassOption(this.parent_div, this.data['passwordInfo']);
+            this.pass_option = new PassOption(this.parent_div.children[1], this.data['passwordInfo']);
             this.pass_option.createPassDiv();
             this.pass_option.createCheckbox();
             this.pass_option.createSubPassDiv();
         }
 
+        // Get Reminder information
+        this.reminders = new Reminder(this.parent_div.children[1]);
+        this.reminders.createReminderDiv();
+        this.reminders.createReminderbox();
+        this.reminders.createSubDiv();
+
         this.createRecipientFormButton(this.agreement_data, this.workflow_data);
+
+        $('#dynamic_form').show();
     }
 
-    getHidePredefinedTrigger() {
+    getHidePredefinedTrigger(hide_predefined, hidden_list) {
       //This function sets the hide_predefed trigger for workflows
       let workflow_name = this.data['displayName'];
-      let hide_predefined = this.features['hide_predefined'];
-      let hidden_list = this.features['hide_workflow_list'];
 
       let hide_trigger = false;
 
@@ -102,6 +127,42 @@ export default class DynamicForm {
       }
 
       return hide_trigger;
+    }
+
+    createLayoutDivs(name){
+        /***
+         * This function will create the file info div
+         */
+
+        // Create the element
+        var file_header_div = document.createElement('div');
+        var file_body_div = document.createElement('div');
+
+        // Assign the attributes
+        file_header_div.id = name + "_header";
+        file_body_div.id = name + "_body";
+
+        // Append
+        var parent_div = document.getElementById(name + '_section')
+        parent_div.append(file_header_div);
+        parent_div.append(file_body_div);
+    }
+
+    createHeaderLabel(name, inner_html){
+        /***
+         * This function will append the file label to the file header
+         */
+
+        // Create the element
+        var file_header_label = document.createElement('h3');
+
+        // Assign the attributes
+        file_header_label.id = name + "_header_label";
+        file_header_label.className = "recipient_label";
+        file_header_label.innerHTML = inner_html;
+
+        // Append
+        document.getElementById(name + '_header').append(file_header_label);
     }
 
     async createRecipientFormButton(workflow_object, workflow_data) {
@@ -131,7 +192,12 @@ export default class DynamicForm {
             async_wf_obj.updateRecipientGroup(wf_data['recipientsListInfo'], this.recipient_groups);
             async_wf_obj.updateFileInfos(this.file_info);
             async_wf_obj.updateMergeFieldInfos(this.merge_fields);
-            async_wf_obj.createOpenPass(this.pass_option.getPass(), this.pass_option.getProtection());
+            async_wf_obj.updateReminder(this.reminders);
+            async_wf_obj.updateMessage(document.getElementById('messages_input').value);
+
+            if (wf_data['passwordInfo'].visible) {
+                async_wf_obj.createOpenPass(this.pass_option.getPass(), this.pass_option.getProtection());
+            }
 
             if (this.deadline.checked) {
                 async_wf_obj.updateDeadline(this.deadline.today_date);
@@ -165,7 +231,7 @@ export default class DynamicForm {
         }.bind(this);
 
         // Add button to the parent div
-        this.parent_div.children['button_section'].append(form_button);
+        this.parent_div.children['form_submit'].append(form_button);
     }
 
     removeRecipientForm(target_div) {
@@ -174,50 +240,90 @@ export default class DynamicForm {
          * @param {Object} target_div The div to the dynamic form
          */
 
-        var removed_div = this.parent_div.children[target_div];
+        var removed_div = document.getElementById(target_div);
 
         while (removed_div.firstChild) {
             removed_div.removeChild(removed_div.firstChild)
         }
     }
 
-    createAgreementSection(formElm) {
-      let sectionElm = $('<div/>').attr('id', 'agreement_section');
+  createInstructionSection(sectionNode, msg){
+    // Create element
+    var instructionsNode = $('<p/>');
 
-      // label
-      var agreement_name_label = $('<h3/>')
-      agreement_name_label.html("Document Name");
-      agreement_name_label.addClass('recipient_label');
+    // Assign properties
+    instructionsNode.html(msg.replace(/(?:\r\n|\r|\n)/g, '</br>'));
+    instructionsNode.addClass('instructions');
 
-      // input
-      var agreement_name_input = $('<input/>');
+    sectionNode.empty().append(instructionsNode);
+  }
 
-      // Assign properties
-      agreement_name_input.attr({
-        id: "agreement_name",
-        name: 'agreement_name',
-        placeholder: "Enter Agreement Name",
-        required: true
-      });
-      agreement_name_input.addClass('recipient_form_input');
+  createMessageSection(sectionNode) {
+    const inputId = "messages_input";
 
-      // Check to see if there's a default value
-      if (this.data['agreementNameInfo']['defaultValue'] !== null) {
-          agreement_name_input.val(this.data['agreementNameInfo']['defaultValue']);
-      }
+    // Create the label
+    var label = $('<label/>')
+    label.html("Messages");
+    label.attr("for", inputId);
+    label.addClass("recipient_label");
 
-      sectionElm.append(agreement_name_label, agreement_name_input);
-      formElm.append(sectionElm);
-      //$('#agreement_section',formElm).replaceWith(sectionElm);
+    // Create the input
+    var input = $("<textarea/>");
+    input.attr({
+      id: inputId,
+      name: 'messages_input',
+      rows: 3,
+      placeholder: "Message"
+    });
+    input.addClass('recipient_form_input form-control');
 
+    // Check to see if there's a default value
+    if (this.data['messageInfo']['defaultValue'] !== null) {
+      input.val(this.data['messageInfo']['defaultValue']);
     }
 
-  createRecipientSection(formElm) {
-    let sectionElm = $('<div/>').attr('id', 'recipient_section');
-    sectionElm.append($('<h2>Recipients</h2>'));
+    // Append to parent
+    sectionNode.empty().append(label, input);
+  }
+
+  createAgreementSection(sectionNode) {
+    const inputId = "agreement_name";
+
+    // Create the label
+    var label = $('<label/>');
+    label.html("Document Name");
+    label.attr("for", inputId);
+    label.addClass('recipient_label required');
+
+    // Create the input
+    var input = $('<input/>');
+    input.attr({
+      id: inputId,
+      name: 'agreement_name',
+      placeholder: "Enter Agreement Name",
+      required: true
+    });
+    input.addClass('recipient_form_input form-control');
+
+    // Check to see if there's a default value
+    if (this.data['agreementNameInfo']['defaultValue'] !== null) {
+      input.val(this.data['agreementNameInfo']['defaultValue']);
+    }
+
+    sectionNode.empty().append(label, input);
+    //formElm.append(sectionElm);
+    //$('#agreement_section',formElm).replaceWith(sectionElm);
+
+  }
+
+  createRecipientSection(sectionNode) {
+    let newNodes = [];
+    newNodes.push($('<h2>Recipients</h2>'));
 
     // Set up triggers for features in config
-    let hide_predefined_trigger = this.getHidePredefinedTrigger();
+    let hide_predefined = this.features['hide_predefined'];
+    let hidden_list = this.features['hide_workflow_list'];
+    let hide_predefined_trigger = this.getHidePredefinedTrigger(hide_predefined, hidden_list);
 
     let grps = this.recipient_groups;
 
@@ -225,29 +331,32 @@ export default class DynamicForm {
     for (let counter = 0; counter < this.data['recipientsListInfo'].length; counter++) {
 
       let recipient_group_data = this.data['recipientsListInfo'][counter];
-      let recipientGrp = new RecipientGroup(this.recipeint_group_id, sectionElm, recipient_group_data);
+      let recipientGrp = new RecipientGroup(this.recipeint_group_id, recipient_group_data);
       let recipientNode = recipientGrp.createRecipientDiv(hide_predefined_trigger);
 
       this.recipient_groups.push(recipientGrp);
       this.recipeint_group_id++;
 
-      sectionElm.append(recipientNode);
+      newNodes.push(recipientNode);
     }
 
-
-    formElm.append(sectionElm);
+    sectionNode.append(newNodes);
   }
 
-  createCCSection(formNode) {
-    let sectionNode = $('<div/>').attr('id', 'recipient_section');
+  createCCSection(sectionNode) {
+    let newNodes = [];
+    //let sectionNode = $('<div/>').attr('id', 'recipient_section');
 
     console.log(this.data)
+    // Set up triggers for features in config
+    let hide_predefined = this.features['hide_cc'];
+    let hidden_list = this.features['hide_cc_workflow_list'];
+    let hide_predefined_trigger = this.getHidePredefinedTrigger(hide_predefined, hidden_list);
 
     // Get CC Information
     let cc_group_data = this.data['ccsListInfo'][0];
 
-    let label = cc_group_data.label;
-    sectionNode.append($('<h2/>').html(label));
+    newNodes.push($('<h2/>').html(cc_group_data.label));
 
     let cc_group_recipients = cc_group_data['defaultValue'].split(",");
     let maxCount = cc_group_data['maxListCount'];
@@ -256,20 +365,19 @@ export default class DynamicForm {
 
     //let availableCount = maxCount - defaultCount;
 
-
     for (let counter = 1; counter <= maxCount; counter++) {
       // If cc group is editable or count is less than number preset we will create them
       if (cc_group_data['editable'] ||  counter < cc_group_recipients.length) {
         let required = (counter <= minCount);
-        let ccGrp = new CarbonCopy(counter, this.parent_div, cc_group_recipients[counter-1], required);
-        let ccNode = ccGrp.createCcDiv();
+        let ccGrp = new CarbonCopy(counter, cc_group_recipients[counter-1], required);
+        let ccNode = ccGrp.createCcDiv(hide_predefined_trigger);
 
         this.cc_group.push(ccGrp);
 
-        sectionNode.append(ccNode);
+        newNodes.push(ccNode);
       }
     }
 
-    formNode.append(sectionNode);
+    sectionNode.append(newNodes);
   }
 }

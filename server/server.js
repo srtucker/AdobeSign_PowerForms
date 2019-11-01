@@ -14,7 +14,6 @@ const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
 // HTTPS & Path
-const https = require('https');
 const path = require('path');
 
 // detect if running in a production or development env
@@ -86,14 +85,14 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+//log endpoint
+app.use(function (req, res, next) {
+    console.info('REQUEST %s %s', req.method, req.originalUrl)
+    next() // pass control to the next handler
+});
+
 // Get features from config files
 app.get(publicPath + 'features', function (req, res){
-  /*let features = config['features'];
-  if(!features.hide_workflow_list) {
-    features.hide_workflow_list = [];
-  }
-  res.json(features)*/
-
   res.json(config['features'])
 })
 

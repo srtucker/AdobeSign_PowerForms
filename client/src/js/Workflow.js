@@ -10,6 +10,8 @@ export default class Workflow {
         this.merge_field_group = [];
         this.pass_option = "";
         this.deadline = "";
+        this.reminders = "";
+        this.message = "";
     }
 
     setAgreementName(agreement_name) {
@@ -43,16 +45,21 @@ export default class Workflow {
                     let addition_recipient = recipient_groups[i]['target_div'].querySelectorAll('input');
 
                     for (let recipient_counter = 0; recipient_counter < addition_recipient.length; recipient_counter++) {
-                        this.addToRecipientGroup(addition_recipient[recipient_counter].value);
+                        this.addToRecipientGroup(addition_recipient[recipient_counter].email);
                     }
                 } else {
                     let recipient_id = document.getElementById("recipient_" + i);
-                    this.addToRecipientGroup(recipient_id.value);
+                    this.addToRecipientGroup(recipient_id.email);
                 }
-            } else {
-                this.addToRecipientGroup(recipient_group_data[i]['defaultValue'])
             }
-
+            else {
+                if(recipient_group_data[i]['editable']){
+                    this.addToRecipientGroup(recipient_groups[i].email)
+                }
+                else{
+                    this.addToRecipientGroup(recipient_group_data[i]['defaultValue'])
+                }
+            }
             this.addToRecipientsList(recipient_group_data[i]['name']);
             this.clearRecipientGroup();
         }
@@ -207,6 +214,26 @@ export default class Workflow {
         this.pass_option = data;
     }
 
+    updateReminder(reminder){
+        /***
+         * Thie function update the reminder API key.
+         * @param {Object} reminder Reminder object created in dynamic form
+         */
+
+        if(reminder.checked){
+            this.reminders = reminder_dropdown.value;
+        }
+    }
+
+    updateMessage(msg){
+        /***
+         * This section will update the message for the API dynamic form.
+         * @param {String} msg Message set in the dynamic form
+         */
+
+        this.message = msg;
+    }
+
     clearData(){
         /***
          * This function clears data from the workflow.
@@ -216,13 +243,19 @@ export default class Workflow {
         this.recipients_list = [];
         this.recipient_group = [];
         this.merge_field_group = [];
-
     }
 
     jsonData() {
         /***
          * This function returns the json data formate of the workflow
          */
+
+         //to add
+         //documentCreationInfo.message = workflow_data.messageInfo.defaultValue
+         //documentCreationInfo.formFields
+         //documentCreationInfo.postSignOptions.redirectUrl
+         //documentCreationInfo.postSignOptionsredirectDelay
+
 
         if( this.deadline === ""){
             return {
@@ -232,7 +265,9 @@ export default class Workflow {
                     "recipientsListInfo": this.recipients_list,
                     "ccs": this.carbon_copy_group,
                     "securityOptions": this.pass_option,
-                    "mergeFieldInfo": this.merge_field_group
+                    "mergeFieldInfo": this.merge_field_group,
+                    "reminderFrequency": this.reminders,
+                    "message": this.msg
                 }
             };
         }
@@ -245,7 +280,9 @@ export default class Workflow {
                     "ccs": this.carbon_copy_group,
                     "securityOptions": this.pass_option,
                     "mergeFieldInfo": this.merge_field_group,
-                    "daysUntilSigningDeadline": this.deadline
+                    "daysUntilSigningDeadline": this.deadline,
+                    "reminderFrequency": this.reminders,
+                    "message": this.msg
                 }
             };
         }

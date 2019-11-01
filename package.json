@@ -69,7 +69,8 @@
   "nodemonConfig": {
     "ignore": [
       "client/*"
-    ]
+    ],
+    "ext": "*.js,*.json,*.yaml"
   },
   "browserslist": [
     "last 2 versions",

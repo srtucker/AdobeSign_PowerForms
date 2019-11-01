@@ -7,7 +7,6 @@ import Axios from 'axios';
 import Workflow from './Workflow';
 import DynamicForm from './DynamicForm';
 import ParsePath from './ParsePath';
-//const app = require('./app');
 
 import '../scss/style.scss';
 
@@ -62,6 +61,8 @@ async function showWorkflowSelector() {
 }
 
 async function runWorkflow(workflowId, showSelector) {
+  $('#dynamic_form').hide();
+
   // Fetch workflow data by ID
   const workflowReq = Axios.get(apiBaseURL + 'api/getWorkflowById/' + workflowId);
 
@@ -81,6 +82,7 @@ async function runWorkflow(workflowId, showSelector) {
 
   // Grab the parent div from the dynamic form
   var parent_form_div = document.getElementById("recipient_form");
+  //var parent_form_div = $("#recipient_form");
 
   // Create the dynamic form
   var dynamic_form = new DynamicForm(parent_form_div, workflow_data, workflow_agreement_data, get_features);

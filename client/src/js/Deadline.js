@@ -4,7 +4,6 @@ export default class Deadline {
         this.parent_div = parent_div;
         this.target_div = "";
         this.sub_div = "";
-        this.required = deadline_data['required'];
         this.default_value = deadline_data['defaultValue'];
         this.editable = deadline_data['editable'];
         this.visable = deadline_data['visible'];
@@ -24,7 +23,9 @@ export default class Deadline {
         // Add attributes
         deadline_div.id = "deadline_div";
         deadline_div.className = "add_border_bottom";
-        this.parent_div.children['deadline_section'].append(deadline_div);
+
+        var parent_div = document.getElementById('deadline_section')
+        parent_div.append(deadline_div);
 
         // Append to parent
         this.target_div = deadline_div;
@@ -101,7 +102,9 @@ export default class Deadline {
         else{
             sub_deadline_div.hidden = true;
         }
-        this.parent_div.children['deadline_section'].append(sub_deadline_div);
+
+        var parent_div = document.getElementById('deadline_section')
+        parent_div.append(sub_deadline_div);
 
         // Append to parent
         this.sub_div = sub_deadline_div;
@@ -122,6 +125,7 @@ export default class Deadline {
         deadline_input.type = "date";
         deadline_input.name = "deadline_input";
         deadline_input.id = "deadline_input";
+        deadline_input.className = 'recipient_form_input'
 
         this.setDateValues(deadline_input);
         this.sub_div.append(deadline_input);

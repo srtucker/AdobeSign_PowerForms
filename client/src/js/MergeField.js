@@ -20,10 +20,21 @@ export default class MergeField {
 
         // Add attributes
         merge_field_div.id = "merge_" + this.field_name;
-        this.parent_div.children['merge_section'].append(merge_field_div);
+        merge_field_div.className = "merge_div row";
+
+        // Create grids
+        var merge_field_col_4 = document.createElement('div');
+        merge_field_col_4.className = "col-lg-4";
+        var merge_field_col_8 = document.createElement('div');
+        merge_field_col_8.className = "col-lg-8";
+
+        var parent_div = document.getElementById('merge_body')
+        parent_div.append(merge_field_div);
 
         // Append to parent
         this.target_div = merge_field_div;
+        this.target_div.append(merge_field_col_4);
+        this.target_div.append(merge_field_col_8);
     }
 
     createMergeFieldLabel(){
@@ -38,7 +49,8 @@ export default class MergeField {
         merge_field_label.innerText = this.display_name;
 
         // Append to parent
-        this.target_div.append(merge_field_label);
+        this.target_div.children[0].append(merge_field_label);
+        // this.target_div.append(merge_field_label);
     }
 
     createMergeFieldInput(){
@@ -50,7 +62,7 @@ export default class MergeField {
         var merge_field_input = document.createElement('input');
 
         // Add attributes
-        merge_field_input.className = 'recipient_form_input';
+        merge_field_input.className = 'merge_input';
         merge_field_input.id = 'merge_input_' + this.field_name;
 
         if(this.default_value !== ""){
@@ -62,7 +74,7 @@ export default class MergeField {
         }.bind(this);
 
         // Append to parents
-        this.target_div.append(merge_field_input);
+        this.target_div.children[1].append(merge_field_input);
     }
 
 }
