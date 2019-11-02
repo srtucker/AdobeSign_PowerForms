@@ -49,7 +49,6 @@ h4{
 
 /********** workflow_form **********/
 #workflow_form{
-    width: 100%;
     background: var(--workflow-form-body-color);
     font-size: 20px;
     box-shadow: 0 10px 20px 5px grey;
@@ -227,6 +226,7 @@ h4{
     background-color: #f5f5f5;
     border-radius: 5px;
     padding: 15px;
+    margin: 10px 0 10px 0;
 }
 
 #deadline_input{
@@ -237,19 +237,15 @@ h4{
     width: 100%;
 }
 
-@media only screen and (max-width: 600px) {
-    #workflow_form{
-        width: 100vw;
-    }
-
-    .option_wrapper{
-        margin: 10px 0 10px 0;
-    }
+.container {
+  min-width: 480px;
 }
 
-@media only screen and (min-width: 600px) {
+
+// md
+@media only screen and (min-width: 768px) {
     #workflow_form{
-        width: 100vw;
+        width: 768px;
     }
 
     .option_wrapper{
@@ -258,28 +254,24 @@ h4{
 
 }
 
-@media only screen and (min-width: 798) {
-    #workflow_form{
-        width: 60vw;
-    }
-
-    .option_wrapper{
-        margin-top: 37px;
-    }
-}
-
+// lg
 @media only screen and (min-width: 992px) {
     #workflow_form{
-        width: 60vw;
+        width: 881px;
     }
 
     .option_wrapper{
         margin-top: 37px;
     }
+}
+
+// xl
+@media only screen and (min-width: 1200px) {
+
 }
 
 //CP CUSTOM
-label {
+#workflow_form label {
   font-size: 16px;
   font-weight: bold;
   color: #2d2d2d;
@@ -294,4 +286,33 @@ label {
     vertical-align: top;
     top:-2px
   }
+}
+
+.hidden{
+    visibility: hidden;
+    display:none;
+    width: 0;
+    height: 0;
+}
+
+fieldset {
+    border: 1px solid #c2c2c2;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+
+    legend {
+      width: inherit;
+      font-size: 1.25rem;
+      margin-bottom: 0;
+    }
+}
+
+.merge-field-label {
+    height: 100%;
+    color: #707070;
+    font-weight: 400;
+    padding: 0;
+    font-size: 16px;
+    margin-left: 0px;
 }

@@ -3,65 +3,64 @@ export default class RecipientGroup {
     this.group_id = group_id;
     this.recipient_group_data = recipient_group_data;
     this.number_of_members = 0;
-    this.target_div = "";
+    this.divNode = "";
     this.inputNode = null;
 
     this.required = !(this.recipient_group_data.minListCount == 0);
   }
 
   createRecipientDiv(settings) {
-    const inputId = 'recipient_' + this.group_id;
-
     let hide_predefined = settings.hide_predefined;
     let hide_readonly = settings.hide_readonly;
+    const inputId = 'recipient_' + this.group_id;
 
     // Create the div
-    var div = $('<div/>');
-    div.attr('id', "recipient_group_" + this.group_id);
-    div.addClass("add_border_bottom");
+    var divNode = document.createElement('div');
+    divNode.id = "recipient_group_" + this.group_id;
+    divNode.className = "form-group";
+    this.divNode = divNode;
 
     // Create the label
-    var label = $('<label/>')
-    label.html(this.recipient_group_data['label']);
-    label.attr("for", inputId);
-    label.addClass("recipient_label");
+    var labelNode = document.createElement('label');
+    labelNode.innerHTML = this.recipient_group_data['label'];
+    labelNode.htmlFor = inputId;
+    divNode.appendChild(labelNode);
 
     // Create the input
-    var input = $("<input/>");
-    input.attr({
-      type: "email",
-      id: inputId,
-      name: inputId,
-      placeholder: "Enter Recipient's Email"
-    });
-    input.addClass('recipient_form_input form-control');
+    var inputNode = document.createElement("input");
+    inputNode.type = "email";
+    inputNode.id = inputId;
+    inputNode.name = inputId;
+    inputNode.className = 'form-control';
+    inputNode.placeholder = "Enter Recipient's Email";
+    divNode.appendChild(inputNode);
 
     if(this.required) {
-      input.attr('required', '');
-      label.addClass("required");
+      inputNode.required = true;
+      labelNode.classList.add("required");
     }
 
     // If data is not blank, fill it in with predefine information
     if (this.recipient_group_data['defaultValue'] !== "") {
-      input.val(this.recipient_group_data['defaultValue']);
-      input.addClass("predefined_input");
+      inputNode.value = this.recipient_group_data['defaultValue'];
+      inputNode.classList.add("predefined_input");
 
       if(!this.recipient_group_data.editable) {
-        input.attr('readonly', '');
+        inputNode.readonly = true;
 
         if(hide_readonly) {
-          div.addClass('recipient_hidden');
+          divNode.classList.add('recipient_hidden');
         }
       }
 
       // Hide settings
       if(hide_predefined) {
-          div.addClass('recipient_hidden');
+        divNode.classList.add('recipient_hidden');
       }
     }
 
     //Track inputNode for retrieval later
-    this.inputNode = input
+    this.inputNode = inputNode;
 
 
     // This feature is currently blocked. There's a bug in Adobe API that
@@ -70,14 +69,11 @@ export default class RecipientGroup {
 
     // // If group is a recipient group
     // if (this.recipient_group_data['maxListCount'] > 1) {
-    //     this.createAdditionalRecipientInput(input.id);
-    //     this.removeParticipentButton(this.target_div);
+    //     this.createAdditionalRecipientInput(inputNode.id);
+    //     this.removeParticipentButton(this.divNode);
     // }
 
-    div.append(label, input);
-
-    this.target_div = div;
-    return div
+    return divNode;
   }
 
 
@@ -89,7 +85,7 @@ export default class RecipientGroup {
       var add_div = document.createElement('div');
       add_div.id = 'add_section_' + this.group_id;
       add_div.className = "add_section";
-      this.target_div.appendChild(add_div);
+      this.divNode.appendChild(add_div);
 
       // Create the add new recipient button
       var add_marker_button = document.createElement("button");
@@ -130,7 +126,7 @@ export default class RecipientGroup {
 
       // Append to the div before buttons
       var target = document.getElementById("add_section_" + this.group_id);
-      this.target_div.insertBefore(participent_input, target);
+      this.divNode.insertBefore(participent_input, target);
   }
 
   removeParticipentButton() {
@@ -144,7 +140,7 @@ export default class RecipientGroup {
       remove_button.onclick = function () {
           if(this.number_of_members > 0){
               // remove input field
-              this.target_div.removeChild(this.target_div.querySelectorAll("input")[this.number_of_members]);
+              this.divNode.removeChild(this.divNode.querySelectorAll("input")[this.number_of_members]);
               this.number_of_members--;
           }
       }.bind(this);
@@ -156,6 +152,6 @@ export default class RecipientGroup {
   }
 
   getEmail() {
-    return this.inputNode.val();
+    return this.inputNode.value;
   }
 }

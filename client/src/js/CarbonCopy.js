@@ -1,68 +1,78 @@
 export default class CarbonCopy {
-  constructor(id, email, required){
+  constructor(id, email, required, editable){
     this.id = id;
     this.email = email;
     this.required = required;
+    this.editable = editable;
     this.predefined = false;
 
     this.inputNode = null;
   }
 
-  createCcDiv(hide_predefined){
+  createCcDiv(settings){
+    let hide_predefined = settings.hide_predefined;
+    let hide_readonly = settings.hide_readonly;
     const inputId = 'cc_' + this.id;
 
-    // Create the element
-    var div = $('<div/>');
-    div.attr('id', "cc_div_" + this.id);
-    div.addClass("add_border_bottom");
+    // Create the div
+    var divNode = document.createElement('div');
+    divNode.id = "cc_div_" + this.id;
+    divNode.className = "add_border_bottom";
 
     // Create the label
-    var label = $('<label/>')
-    label.html("CC");
-    label.attr("for", inputId);
-    label.addClass("recipient_label");
+    var labelNode = document.createElement('label');
+    labelNode.innerHTML = "CC";
+    labelNode.htmlFor = inputId;
+    labelNode.className = "recipient_label";
+    divNode.appendChild(labelNode);
 
     // Create the input
-    var input = $("<input/>");
-    input.attr({
-      type: "email",
-      id: inputId,
-      name: inputId,
-      placeholder: "Enter Cc's Email"
-    });
-    input.addClass('recipient_form_input form-control');
+    var inputNode = document.createElement("input");
+    inputNode.type = "email";
+    inputNode.id = inputId;
+    inputNode.name = inputId;
+    inputNode.className = 'recipient_form_input form-control';
+    inputNode.placeholder = "Enter Cc's Email";
+    divNode.appendChild(inputNode);
 
     if(this.required) {
-      input.attr('required', '');
-      label.addClass("required");
+      inputNode.required = true;
+      labelNode.classList.add("required");
     }
 
     // Add predefine tags
     if( typeof this.email !== "undefined"){
-      input.val(this.email);
-      input.addClass("predefined_input");
+      inputNode.value = this.email;
+      inputNode.classList.add("predefined_input");
 
       this.predefined = true;
 
+      if(!this.editable) {
+        inputNode.readonly = true;
+
+        if(hide_readonly) {
+          divNode.classList.add('recipient_hidden');
+        }
+      }
+
       // Hide settings
       if(hide_predefined) {
-          div.addClass('recipient_hidden');
+        divNode.classList.add('recipient_hidden');
       }
     }
 
     // Add on change event to update user email
-    input.change(this, (event) => {
-      event.data.email = $(event.target).val();
-    });
+    inputNode.onchange = function(){
+        this.email = inputNode.value;
+    }.bind(this);
 
     //Track inputNode for retrieval later
-    this.inputNode = input
+    this.inputNode = inputNode
 
-    div.append(label, input);
-    return div;
+    return divNode;
   }
 
   getEmail() {
-    return this.inputNode.val();
+    return this.inputNode.value;
   }
 }

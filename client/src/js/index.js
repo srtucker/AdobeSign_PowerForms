@@ -72,6 +72,7 @@ async function runWorkflow(workflowId, showSelector) {
   let workflow_data = (await workflowReq).data;
   let get_features = (await featuresReq).data;
 
+  console.log({get_features})
 
   // Create new workflow object for API calls
   let workflow_agreement_data = new Workflow(workflowId);

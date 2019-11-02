@@ -1,57 +1,59 @@
 export default class FileInfo {
+  constructor(data) {
+    this.file_name = data['name'];
+    this.label = data['label'];
+    this.required = data['required'];
 
-    constructor(parent_div, file_name, label, required, workflow_lib_doc_id = null) {
-        this.parent_div = parent_div;
-        this.file_name = file_name;
-        this.label = label;
-        this.required = required;
-        this.workflow_lib_doc_id = workflow_lib_doc_id;
-        this.transient_id = null;
-        this.target_div = "";
-        this.fileInfo = {};
+    this.libDocList = (data['workflowLibraryDocumentSelectorList'] || null);
+
+    this.workflow_lib_doc_id = (data['workflowLibraryDocumentSelectorList'] || null);
+
+    this.transient_id = null;
+    this.target_div = "";
+    this.fileInfo = {};
+  }
+
+  createFileInfoDiv(settings) {
+    let hide_predefined = settings.hide_predefined;
+    let hide_readonly = settings.hide_readonly;
+    const inputId = 'file_' + this.file_name;
+
+    // Create the div
+    var divNode = document.createElement('div');
+    divNode.id = "file_info_" + this.file_name;
+    divNode.className = "form-group form-row file_info_div";
+    this.divNode = divNode;
+
+    // Create the label
+    var labelNode = document.createElement('label');
+    labelNode.innerText = this.label;
+    labelNode.htmlFor = inputId;
+    labelNode.className = 'col-md-4 col-form-label';
+    divNode.appendChild(labelNode);
+
+    var inputDivNode = document.createElement('div');
+    inputDivNode.className = "col-md-8";
+    divNode.appendChild(inputDivNode);
+
+    if (this.libDocList !== null) {
+      var selectNode = document.createElement('select');
+      selectNode.id = inputId;
+      selectNode.name = inputId;
+      selectNode.className = 'form-control';
+      inputDivNode.appendChild(selectNode);
+
+      this.libDocList.forEach(doc => {
+        let optionNode = document.createElement('option');
+        optionNode.innerText = doc.label;
+        optionNode.value = doc.workflowLibDoc;
+        selectNode.appendChild(optionNode);
+      });
+
+
     }
 
-    createFileInfoDiv() {
-        /***
-         * This function will create the file info div
-         */
-
-        // Create the element
-        var file_info_div = document.createElement('div');
-
-        // Assign the attributes
-        file_info_div.id = "file_info_" + this.file_name;
-        file_info_div.className = 'file_info_div row';
-
-        // Create grid
-        var upload_field_col_4 = document.createElement('div');
-        upload_field_col_4.className = "col-lg-4";
-        var upload_field_col_8 = document.createElement('div');
-        upload_field_col_8.className = "col-lg-8";
-
-        var parent_div = document.getElementById('upload_body')
-        parent_div.append(file_info_div);
-
-        // Append element to parent
-        this.target_div = file_info_div;
-        this.target_div.append(upload_field_col_4);
-        this.target_div.append(upload_field_col_8);
-    }
-
-    createDocumentTitleLabel() {
-        /***
-         * This function will create the file info title
-         */
-
-        // Create the element
-        var doc_label = document.createElement('h3');
-
-        // Add the attributes
-        doc_label.innerText = this.label;
-
-        // Appened element to parent
-        this.target_div.children[0].append(doc_label);
-    }
+    return divNode;
+  }
 
     createFileLabelName(required) {
         /***

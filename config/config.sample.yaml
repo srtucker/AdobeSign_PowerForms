@@ -61,5 +61,12 @@ features:
     - "Another workflow namer here"
 
   recipients:
-    hide_predefined: no
-    hide_readonly: yes
+    hide_predefined: false
+    hide_readonly: true
+  cc:
+    hide_predefined: false
+    hide_readonly: true
+  agreementName:
+    hide: false
+  message:
+    hide: false
