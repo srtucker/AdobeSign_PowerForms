@@ -1,7 +1,7 @@
 import Utils from '../util/Utils';
 import CarbonCopyLine from './CarbonCopyLine';
 
-export default class CarbonCopy {
+export default class CarbonCopyGroup {
   constructor(id, config){
     this.id = id;
     this.config = config;

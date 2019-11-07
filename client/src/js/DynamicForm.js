@@ -1,4 +1,4 @@
-import CarbonCopy from './form_components/CarbonCopy';
+import CarbonCopyGroup from './form_components/CarbonCopyGroup';
 import Expiration from './form_components/Expiration';
 import FileInfo from './form_components/FileInfo';
 import MergeField from './form_components/MergeField';
@@ -171,7 +171,7 @@ export default class DynamicForm {
       let config = this.config.carbonCopies;
 
       for (let counter = 0; counter < config.length; counter++) {
-        let ccGrp = new CarbonCopy(counter, config[counter]);
+        let ccGrp = new CarbonCopyGroup(counter, config[counter]);
         ccGrp.addToDOM(sectionNode);
         ccGrp.setupValidation(this.validator);
 
