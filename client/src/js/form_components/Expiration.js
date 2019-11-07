@@ -1,6 +1,6 @@
-import deadlineSectionTemplate from 'DeadlineSection.hbs';
+import expirationSectionTemplate from 'ExpirationSection.hbs';
 
-export default class Deadline {
+export default class Expiration {
   constructor(config) {
     this.config = config;
 
@@ -21,7 +21,7 @@ export default class Deadline {
 
     // Create the div
     let div = document.createElement('div');
-    div.innerHTML = deadlineSectionTemplate();
+    div.innerHTML = expirationSectionTemplate();
     div.className = "expiration-section compose-option-section";
     parentNode.appendChild(div);
 
