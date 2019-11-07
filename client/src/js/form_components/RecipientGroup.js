@@ -11,13 +11,14 @@ export default class RecipientGroup {
     this.required = !(this.config.minListCount == 0);
   }
 
-  createDiv() {
+  addToDOM(parentNode) {
     const inputId = 'recipient_' + this.id;
 
     // Create the div
     var divNode = document.createElement('div');
     divNode.id = "recipient_group_" + this.id;
     divNode.className = "form-group";
+    parentNode.appendChild(divNode);
     this.divNode = divNode;
 
     // Create the label
@@ -68,7 +69,7 @@ export default class RecipientGroup {
     //     this.removeParticipentButton(this.divNode);
     // }
 
-    return divNode;
+    return;
   }
 
   setupValidation(validator) {

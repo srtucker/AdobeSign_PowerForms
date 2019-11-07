@@ -15,14 +15,14 @@ export default class FileInfo {
     this.fileInfo = {};
   }
 
-  createDiv() {
+  addToDOM(parentNode) {
     const inputId = 'file_' + this.file_name;
 
     // Create the div
     var divNode = document.createElement('div');
     divNode.id = "file_info_" + this.file_name;
     divNode.className = "form-group form-row file_info_div";
-    this.divNode = divNode;
+    parentNode.appendChild(divNode);
 
     // Create the label
     var labelNode = document.createElement('label');
@@ -64,7 +64,7 @@ export default class FileInfo {
       labelNode.classList.add("required");
     }
 
-    return divNode;
+    return;
   }
 
   createFileUpload(inputId) {

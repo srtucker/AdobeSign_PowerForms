@@ -15,7 +15,7 @@ export default class PassOption {
     this.checked = false;
   }
 
-  createDiv(parentNode){
+  addToDOM(parentNode){
     // Create the div
     let div = document.createElement('div');
     div.innerHTML = template();

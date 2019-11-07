@@ -160,9 +160,8 @@ export default class DynamicForm {
     // Get Recipient Information
     for (let counter = 0; counter < config.length; counter++) {
       let recipientGrp = new RecipientGroup(counter, config[counter]);
-      let recipientNode = recipientGrp.createDiv();
+      recipientGrp.addToDOM(fieldsetNode);
       recipientGrp.setupValidation(this.validator);
-      fieldsetNode.appendChild(recipientNode);
 
       this.workflow.recipientGroups.push(recipientGrp);
     }
@@ -192,9 +191,8 @@ export default class DynamicForm {
 
         let required = (counter <= config.minListCount);
         let ccGrp = new CarbonCopy(counter, defaultCCs[counter-1], required, config.editable);
-        let ccNode = ccGrp.createDiv();
+        ccGrp.addToDOM(fieldsetNode);
         ccGrp.setupValidation(this.validator);
-        fieldsetNode.appendChild(ccNode);
 
         this.cc_group.push(ccGrp);
       }
@@ -288,8 +286,7 @@ export default class DynamicForm {
       // Get FileInfo information
       for (let counter = 0; counter < config.length; counter++) {
           let file = new FileInfo(config[counter]);
-          let fileNode = file.createDiv();
-          fieldsetNode.appendChild(fileNode);
+          file.addToDOM(fieldsetNode);
 
           this.file_info.push(file);
       }
@@ -315,8 +312,7 @@ export default class DynamicForm {
       // Get merged field information
       for (let counter = 0; counter < config.length; counter++) {
         let mergeField = new MergeField(config[counter]);
-        let mergeFieldNode = mergeField.createDiv();
-        fieldsetNode.appendChild(mergeFieldNode);
+        mergeField.addToDOM(fieldsetNode);
 
         this.merge_fields.push(mergeField);
       }
@@ -351,7 +347,7 @@ export default class DynamicForm {
     // Get Password information
     if (config.visible) {
       this.pass_option = new PassOption(config);
-      return this.pass_option.createDiv(sectionNode);
+      return this.pass_option.addToDOM(sectionNode);
     }
 
     return false;
@@ -363,7 +359,7 @@ export default class DynamicForm {
 
       if (config.visible) {
         this.deadline = new Deadline(config);
-        return this.deadline.createDiv(sectionNode);
+        return this.deadline.addToDOM(sectionNode);
       }
     }
 
@@ -376,7 +372,7 @@ export default class DynamicForm {
 
       if(config.visible) {
         this.reminders = new Reminder(config);
-        return this.reminders.createDiv(sectionNode);
+        return this.reminders.addToDOM(sectionNode);
       }
     }
 

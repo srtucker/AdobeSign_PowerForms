@@ -12,7 +12,7 @@ export default class CarbonCopy {
     this.inputId;
   }
 
-  createDiv(){
+  addToDOM(parentNode) {
     const inputId = 'cc_' + this.id;
     this.inputId = inputId;
 
@@ -20,6 +20,7 @@ export default class CarbonCopy {
     var divNode = document.createElement('div');
     divNode.id = "cc_div_" + this.id;
     divNode.className = "add_border_bottom";
+    parentNode.appendChild(divNode);
 
     // Create the label
     var labelNode = document.createElement('label');
@@ -62,7 +63,7 @@ export default class CarbonCopy {
     //Track inputNode for retrieval later
     this.inputNode = inputNode
 
-    return divNode;
+    return;
   }
 
   setupValidation(validator) {

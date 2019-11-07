@@ -14,14 +14,14 @@ export default class MergeField {
     this.visable = config['visible'];
   }
 
-  createDiv() {
+  addToDOM(parentNode) {
     const inputId = 'merge_input_' + this.field_name;
 
     // Create the div
     var divNode = document.createElement('div');
     divNode.id = "merge_" + this.field_name;
     divNode.className = "form-group form-row";
-    this.divNode = divNode;
+    parentNode.appendChild(divNode);
 
     // Create the label
     var labelNode = document.createElement('label');
@@ -62,7 +62,7 @@ export default class MergeField {
         this.default_value = inputNode.value;
     }.bind(this);
 
-    return divNode;
+    return;
   }
 
 }
