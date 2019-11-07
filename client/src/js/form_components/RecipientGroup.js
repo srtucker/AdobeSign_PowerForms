@@ -11,7 +11,7 @@ export default class RecipientGroup {
     this.required = !(this.config.minListCount == 0);
   }
 
-  createRecipientDiv() {
+  createDiv() {
     const inputId = 'recipient_' + this.id;
 
     // Create the div

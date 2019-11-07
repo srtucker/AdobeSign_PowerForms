@@ -9,7 +9,7 @@ export default class Reminder{
     this.reminderSelect;
   }
 
-  createReminderDiv(parentNode) {
+  createDiv(parentNode) {
     let data = {
       reminderFrequencyOptions: [
         {

@@ -14,7 +14,7 @@ export default class MergeField {
     this.visable = config['visible'];
   }
 
-  createMergeFieldDiv() {
+  createDiv() {
     const inputId = 'merge_input_' + this.field_name;
 
     // Create the div

@@ -1,10 +1,11 @@
-import RecipientGroup from './RecipientGroup';
-import CarbonCopy from './CarbonCopy';
-import FileInfo from './FileInfo';
-import MergeField from './MergeField';
-import Deadline from './Deadline';
-import PassOption from './PassOption';
-import Reminder from './Reminder';;
+import CarbonCopy from './form_components/CarbonCopy';
+import Deadline from './form_components/Deadline';
+import FileInfo from './form_components/FileInfo';
+import MergeField from './form_components/MergeField';
+import PassOption from './form_components/PassOption';
+import RecipientGroup from './form_components/RecipientGroup';
+import Reminder from './form_components/Reminder';
+
 import FormErrors from './FormErrors';
 
 import Validator from './Validator';
@@ -159,7 +160,7 @@ export default class DynamicForm {
     // Get Recipient Information
     for (let counter = 0; counter < config.length; counter++) {
       let recipientGrp = new RecipientGroup(counter, config[counter]);
-      let recipientNode = recipientGrp.createRecipientDiv();
+      let recipientNode = recipientGrp.createDiv();
       recipientGrp.setupValidation(this.validator);
       fieldsetNode.appendChild(recipientNode);
 
@@ -191,7 +192,7 @@ export default class DynamicForm {
 
         let required = (counter <= config.minListCount);
         let ccGrp = new CarbonCopy(counter, defaultCCs[counter-1], required, config.editable);
-        let ccNode = ccGrp.createCcDiv();
+        let ccNode = ccGrp.createDiv();
         ccGrp.setupValidation(this.validator);
         fieldsetNode.appendChild(ccNode);
 
@@ -287,7 +288,7 @@ export default class DynamicForm {
       // Get FileInfo information
       for (let counter = 0; counter < config.length; counter++) {
           let file = new FileInfo(config[counter]);
-          let fileNode = file.createFileInfoDiv();
+          let fileNode = file.createDiv();
           fieldsetNode.appendChild(fileNode);
 
           this.file_info.push(file);
@@ -314,7 +315,7 @@ export default class DynamicForm {
       // Get merged field information
       for (let counter = 0; counter < config.length; counter++) {
         let mergeField = new MergeField(config[counter]);
-        let mergeFieldNode = mergeField.createMergeFieldDiv();
+        let mergeFieldNode = mergeField.createDiv();
         fieldsetNode.appendChild(mergeFieldNode);
 
         this.merge_fields.push(mergeField);
@@ -350,7 +351,7 @@ export default class DynamicForm {
     // Get Password information
     if (config.visible) {
       this.pass_option = new PassOption(config);
-      return this.pass_option.createPassDiv(sectionNode);
+      return this.pass_option.createDiv(sectionNode);
     }
 
     return false;
@@ -362,7 +363,7 @@ export default class DynamicForm {
 
       if (config.visible) {
         this.deadline = new Deadline(config);
-        return this.deadline.createDeadlineDiv(sectionNode);
+        return this.deadline.createDiv(sectionNode);
       }
     }
 
@@ -375,7 +376,7 @@ export default class DynamicForm {
 
       if(config.visible) {
         this.reminders = new Reminder(config);
-        return this.reminders.createReminderDiv(sectionNode);
+        return this.reminders.createDiv(sectionNode);
       }
     }
 

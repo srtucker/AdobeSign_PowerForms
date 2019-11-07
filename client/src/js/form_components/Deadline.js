@@ -16,7 +16,7 @@ export default class Deadline {
     this.dateInput;
   }
 
-  createDeadlineDiv(parentNode) {
+  createDiv(parentNode) {
     let isVisible = true;
 
     // Create the div

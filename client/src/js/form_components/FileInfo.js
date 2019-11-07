@@ -15,7 +15,7 @@ export default class FileInfo {
     this.fileInfo = {};
   }
 
-  createFileInfoDiv() {
+  createDiv() {
     const inputId = 'file_' + this.file_name;
 
     // Create the div

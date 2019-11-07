@@ -12,7 +12,7 @@ export default class CarbonCopy {
     this.inputId;
   }
 
-  createCcDiv(){
+  createDiv(){
     const inputId = 'cc_' + this.id;
     this.inputId = inputId;
 
