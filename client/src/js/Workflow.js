@@ -18,6 +18,8 @@ export default class Workflow {
 
     this.workflowConfig;
     this.dynamicForm;
+
+    this.recipientGroups = [];
   }
 
   static async loadWorkflow(workflowId) {
@@ -47,7 +49,13 @@ export default class Workflow {
   buildAgreement() {
 
     let agreementData = {
-      //recipients
+      recipients: this.recipientGroups.reduce((results, group) => {
+        let val = group.getValues();
+        if(val !== null) {
+          results.push(val);
+        }
+        return results;
+      }, []),
       //carbonCopy
       //agreementName
       //message
@@ -57,6 +65,8 @@ export default class Workflow {
       //expiration
       //reminder
     }
+
+    console.log(agreementData)
   }
 
   setAgreementName(agreement_name) {

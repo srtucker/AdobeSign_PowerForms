@@ -20,8 +20,6 @@ export default class DynamicForm {
     this.formErrors;
 
     this.agreement_data = workflow;
-    this.recipient_groups = [];
-    this.recipeint_group_id = 0;
     this.file_info = [];
     this.merge_fields = [];
     this.deadline = null;
@@ -165,7 +163,7 @@ export default class DynamicForm {
       recipientGrp.setupValidation(this.validator);
       fieldsetNode.appendChild(recipientNode);
 
-      this.recipient_groups.push(recipientGrp);
+      this.workflow.recipientGroups.push(recipientGrp);
     }
   }
 

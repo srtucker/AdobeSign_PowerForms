@@ -35,11 +35,10 @@ export default class RecipientGroup {
     inputNode.placeholder = "Enter Recipient's Email";
     divNode.appendChild(inputNode);
 
-    var t = document.createElement('div');
-    t.className = "invalid-feedback";
-    t.innerText = "Please provide a valid email address"
-    divNode.appendChild(t);
-
+    var feedbackNode = document.createElement('div');
+    feedbackNode.className = "invalid-feedback";
+    feedbackNode.innerText = "Please provide a valid email address"
+    divNode.appendChild(feedbackNode);
 
     if(this.required) {
       inputNode.required = true;
@@ -51,7 +50,7 @@ export default class RecipientGroup {
       inputNode.value = this.config.defaultValue;
       inputNode.classList.add("predefined_input");
 
-      if(!this.recipient_group_data.editable) {
+      if(!this.config.editable) {
         inputNode.readonly = true;
       }
     }
@@ -110,6 +109,19 @@ export default class RecipientGroup {
     return status;
   }
 
+  getValues() {
+    if (this.config.editable) {
+      return {
+        name: this.config.name,
+        recipients: [
+          {
+            email: this.inputNode.value
+          }
+        ]
+      }
+    }
+    return null;
+  }
 
   createAdditionalRecipientInput(recipient_id) {
       /***
@@ -183,9 +195,5 @@ export default class RecipientGroup {
       var remove_button_marker = document.createElement("i");
       remove_button_marker.className = "fa fa-minus";
       remove_button.appendChild(remove_button_marker);
-  }
-
-  getEmail() {
-    return this.inputNode.value;
   }
 }
