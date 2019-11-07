@@ -1,5 +1,5 @@
 import CarbonCopy from './form_components/CarbonCopy';
-import Deadline from './form_components/Deadline';
+import Expiration from './form_components/Expiration';
 import FileInfo from './form_components/FileInfo';
 import MergeField from './form_components/MergeField';
 import PassOption from './form_components/PassOption';
@@ -23,7 +23,7 @@ export default class DynamicForm {
     this.agreement_data = workflow;
     this.file_info = [];
     this.merge_fields = [];
-    this.deadline = null;
+    this.expiration = null;
     this.cc_group = [];
     this.pass_option = "";
     this.reminders = "";
@@ -330,8 +330,8 @@ export default class DynamicForm {
     let showPassword = this.createPasswordSubsection(sectionNode);
     showSection = showSection || showPassword;
 
-    let showDeadline = this.createDeadlineSubsection(sectionNode);
-    showSection = showSection || showDeadline;
+    let showExpiration = this.createExpirationSubsection(sectionNode);
+    showSection = showSection || showExpiration;
 
     let showReminder = this.createReminderSubsection(sectionNode);
     showSection = showSection || showReminder;
@@ -353,13 +353,13 @@ export default class DynamicForm {
     return false;
   }
 
-  createDeadlineSubsection(sectionNode) {
+  createExpirationSubsection(sectionNode) {
     if('expiration' in this.config){
       let config = this.config.expiration;
 
       if (config.visible) {
-        this.deadline = new Deadline(config);
-        return this.deadline.addToDOM(sectionNode);
+        this.expiration = new Expiration(config);
+        return this.expiration.addToDOM(sectionNode);
       }
     }
 
