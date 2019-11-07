@@ -50,7 +50,7 @@ export default class FormErrors {
 
   scrollToError() {
     this._sectionNode.scrollIntoView({
-      behavior: 'smooth' 
+      behavior: 'smooth'
     });
   }
 }

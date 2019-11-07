@@ -63,8 +63,6 @@ async function showWorkflowSelector() {
 async function runWorkflow(workflowId, showSelector) {
   let workflow = await Workflow.loadWorkflow(workflowId);
 
-  let workflowConfig = workflow.getWorkflowConfig();
-
   // Create the dynamic form
   workflow.render(document.getElementById("app"));
 }

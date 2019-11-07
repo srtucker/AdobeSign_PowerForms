@@ -20,7 +20,6 @@ export default class DynamicForm {
     this.validator = new Validator();
     this.formErrors;
 
-    this.agreement_data = workflow;
     this.file_info = [];
     this.merge_fields = [];
     this.expiration = null;
@@ -52,18 +51,8 @@ export default class DynamicForm {
   }
 
   async createRecipientFormButton(submitButtonNode) {
-    let workflow_object = this.agreement_data;
-    let workflow_data = this.workflow_data;
-
-    var async_wf_obj = await workflow_object;
-    var wf_data = await workflow_data;
-
-    // Create the button and style it
-    var form_button = submitButtonNode;
-
     //connect the submit to Error handling
     this.formErrors.connectSubmitButton(submitButtonNode)
-
 
     // Add onClick event to submit button
     submitButtonNode.onclick = async function () {
@@ -82,7 +71,14 @@ export default class DynamicForm {
       //this.workflow.verify();
       //this.workflow.buildAgreement();
 
-      /*async_wf_obj.updateAgreementName();
+      /*
+      let workflow_object = this.workflow;
+      let workflow_data = this.workflow_data;
+
+      var async_wf_obj = await workflow_object;
+      var wf_data = await workflow_data;
+
+      async_wf_obj.updateAgreementName();
       async_wf_obj.updateRecipientGroup(wf_data['recipientsListInfo'], this.recipient_groups);
       async_wf_obj.updateFileInfos(this.file_info);
       async_wf_obj.updateMergeFieldInfos(this.merge_fields);
