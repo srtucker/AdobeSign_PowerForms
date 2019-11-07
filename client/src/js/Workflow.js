@@ -20,6 +20,7 @@ export default class Workflow {
     this.dynamicForm;
 
     this.recipientGroups = [];
+    this.carbonCopyGroups = [];
   }
 
   static async loadWorkflow(workflowId) {
@@ -56,7 +57,13 @@ export default class Workflow {
         }
         return results;
       }, []),
-      //carbonCopy
+      carbonCopy: this.carbonCopyGroups.reduce((results, group) => {
+        let val = group.getValues();
+        if(val !== null) {
+          results.push(val);
+        }
+        return results;
+      }, []),
       //agreementName
       //message
       //files

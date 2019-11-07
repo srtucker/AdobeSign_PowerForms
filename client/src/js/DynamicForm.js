@@ -167,30 +167,15 @@ export default class DynamicForm {
     //reset current node
     this.resetDOMNode(sectionNode, true);
 
-    if ('carbonCopy' in this.config) {
-      let config = this.config.carbonCopy;
+    if ('carbonCopies' in this.config) {
+      let config = this.config.carbonCopies;
 
-      let fieldsetNode = document.createElement('fieldset');
-      sectionNode.appendChild(fieldsetNode);
-
-      let headerNode = document.createElement('legend');
-      headerNode.innerHTML = config.label;
-      fieldsetNode.appendChild(headerNode);
-
-      let defaultCCs = config.defaultValues;
-      let maxCount = config.maxListCount;
-      let minCount = config.minListCount;
-      let defaultCount = defaultCCs.length;
-
-      for (let counter = 1; counter <= config.maxListCount; counter++) {
-        // If cc group is editable or count is less than number preset we will create them
-
-        let required = (counter <= config.minListCount);
-        let ccGrp = new CarbonCopy(counter, defaultCCs[counter-1], required, config.editable);
-        ccGrp.addToDOM(fieldsetNode);
+      for (let counter = 0; counter < config.length; counter++) {
+        let ccGrp = new CarbonCopy(counter, config[counter]);
+        ccGrp.addToDOM(sectionNode);
         ccGrp.setupValidation(this.validator);
 
-        this.cc_group.push(ccGrp);
+        this.workflow.carbonCopyGroups.push(ccGrp);
       }
 
       this.showDomNode(sectionNode);

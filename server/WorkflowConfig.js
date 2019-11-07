@@ -17,9 +17,9 @@ class WorkflowConfig {
 
     clientConfig.recipients = this.getRecipientsConfig();
 
-    const carbonCopy = this.getCarbonCopyConfig();
-    if (carbonCopy !== null) {
-      clientConfig.carbonCopy = carbonCopy;
+    const carbonCopies = this.getCarbonCopyConfig();
+    if (carbonCopies.length > 0) {
+      clientConfig.carbonCopies = carbonCopies;
     }
 
     const agreementName = this.getAgreementNameConfig();
@@ -77,47 +77,51 @@ class WorkflowConfig {
   }
 
   getCarbonCopyConfig() {
+    var carbonCopies = [];
+
     if('ccsListInfo' in this.wfData) {
-      let data = this.wfData.ccsListInfo[0];
       let hide_readonly = this.settings.cc.hide_readonly;
       let hide_predefined = this.settings.cc.hide_predefined;
 
-      if(hide_readonly && !data.editable) {
-        return null;
-      }
-
-      let defaultCCs = data.defaultValue.split(/,|;/);
-      let defaultCount = defaultCCs.length;
-
-      let carbonCopy = {
-        label: data.label,
-        defaultValues: defaultCCs,
-        minListCount: data.minListCount,
-        maxListCount: data.maxListCount,
-        editable: data.editable
-      };
-
-      if(hide_predefined) {
-        let minListCount = data.minListCount - defaultCount;
-        let maxListCount = data.maxListCount - defaultCount;
-
-        if(maxListCount <= 0) {
-          return false;
+      this.wfData.ccsListInfo.forEach(data => {
+        if(hide_readonly && !data.editable) {
+          return;
         }
 
-        if(minListCount < 0) {
-          minListCount = 0;
+        let defaultCCs = data.defaultValue.split(/,|;/);
+        let defaultCount = defaultCCs.length;
+
+        let carbonCopy = {
+          name: data.name,
+          label: data.label,
+          defaultValues: defaultCCs,
+          minListCount: data.minListCount,
+          maxListCount: data.maxListCount,
+          editable: data.editable
+        };
+
+        if(hide_predefined) {
+          let minListCount = data.minListCount - defaultCount;
+          let maxListCount = data.maxListCount - defaultCount;
+
+          if(maxListCount <= 0) {
+            return false;
+          }
+
+          if(minListCount < 0) {
+            minListCount = 0;
+          }
+
+          carbonCopy.minListCount = minListCount;
+          carbonCopy.maxListCount = maxListCount;
+          carbonCopy.defaultValues = [];
         }
 
-        carbonCopy.minListCount = minListCount;
-        carbonCopy.maxListCount = maxListCount;
-        carbonCopy.defaultValues = [];
-      }
-
-      return carbonCopy;
+        carbonCopies.push(carbonCopy);
+      });
     }
 
-    return null;
+    return carbonCopies;
   }
 
   getAgreementNameConfig() {

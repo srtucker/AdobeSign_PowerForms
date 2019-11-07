@@ -1,110 +1,60 @@
 import Utils from '../util/Utils';
+import CarbonCopyLine from './CarbonCopyLine';
 
 export default class CarbonCopy {
-  constructor(id, email, required, editable){
+  constructor(id, config){
     this.id = id;
-    this.email = email;
-    this.required = required;
-    this.editable = editable;
-    this.predefined = false;
+    this.config = config;
 
-    this.inputNode = null;
-    this.inputId;
+    //this.inputNodes = [];
+    this.carbonCopyLines = [];
   }
 
   addToDOM(parentNode) {
-    const inputId = 'cc_' + this.id;
-    this.inputId = inputId;
+    let fieldsetNode = document.createElement('fieldset');
+    parentNode.appendChild(fieldsetNode);
 
-    // Create the div
-    var divNode = document.createElement('div');
-    divNode.id = "cc_div_" + this.id;
-    divNode.className = "add_border_bottom";
-    parentNode.appendChild(divNode);
+    let headerNode = document.createElement('legend');
+    headerNode.innerHTML = this.config.label;
+    fieldsetNode.appendChild(headerNode);
 
-    // Create the label
-    var labelNode = document.createElement('label');
-    labelNode.innerHTML = "CC";
-    labelNode.htmlFor = inputId;
-    labelNode.className = "recipient_label";
-    divNode.appendChild(labelNode);
+    let readOnly = !this.config.editable;
+    let defaultValuesCount = this.config.defaultValues.length;
+    let maxCount = (this.config.editable) ? this.config.maxListCount : defaultValuesCount;
 
-    // Create the input
-    var inputNode = document.createElement("input");
-    inputNode.type = "email";
-    inputNode.id = inputId;
-    inputNode.name = inputId;
-    inputNode.className = 'recipient_form_input form-control';
-    inputNode.placeholder = "Enter Cc's Email";
-    divNode.appendChild(inputNode);
-
-    if(this.required) {
-      inputNode.required = true;
-      labelNode.classList.add("required");
+    for (let i=1; i <= maxCount; i++) {
+      let required = (i <= this.config.minListCount);
+      let ccLine = new CarbonCopyLine(i, this.config.defaultValues[i-1], required, readOnly);
+      ccLine.addToDOM(fieldsetNode);
+      this.carbonCopyLines.push(ccLine);
     }
-
-    // Add predefine tags
-    if( typeof this.email !== "undefined"){
-      inputNode.value = this.email;
-      inputNode.classList.add("predefined_input");
-
-      this.predefined = true;
-
-      if(!this.editable) {
-        inputNode.readonly = true;
-      }
-    }
-
-    // Add on change event to update user email
-    inputNode.onchange = function(){
-        this.email = inputNode.value;
-    }.bind(this);
-
-    //Track inputNode for retrieval later
-    this.inputNode = inputNode
-
-    return;
   }
 
   setupValidation(validator) {
-    let validationFn = this.runValidation.bind(this);
-
-    let validationTracker = validator.createTracker(this.inputNode, validationFn);
-
-    this.inputNode.onchange = function() {
-      validationFn(validationTracker);
-    };
-
-    return [validationTracker];
+    this.carbonCopyLines.forEach(carbonCopyLine => {
+      carbonCopyLine.setupValidation(validator);
+    });
   }
 
   runValidation(validationTracker) {
-    let error = false;
-    let message = null;
-    let email = this.inputNode.value;
-
-    if(this.required && email == "") {
-      error = true;
-      message = `CC recipient ${this.id} is required.`
-    }
-    else if(email != "" && !Utils.isValidEmail(email)) {
-      error = true;
-      message = `The email "${email}" for CC recipient ${this.id} is not a valid email address.`
-    }
-
-    if(error) {
-      this.inputNode.classList.add("is-invalid");
-    }
-    else {
-      Utils.removeClass(this.inputNode, "is-invalid");
-    }
-
-    validationTracker.update(error, message);
-
-    return status;
+    this.carbonCopyLines.forEach(carbonCopyLine => {
+      carbonCopyLine.runValidation(validationTracker);
+    });
   }
 
-  getEmail() {
-    return this.inputNode.value;
+  getValues() {
+    if (this.config.editable) {
+      return {
+        name: this.config.name,
+        emails: this.carbonCopyLines.reduce((results, carbonCopyLine) => {
+          let val = carbonCopyLine.getValues();
+          if(val !== null && val != "") {
+            results.push(val);
+          }
+          return results;
+        }, []),
+      }
+    }
+    return null;
   }
 }
