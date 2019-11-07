@@ -70,3 +70,11 @@ features:
     hide: false
   message:
     hide: false
+  files:
+    hide_predefined: false
+  mergeFields:
+    hide_readonly: false
+  expiration:
+    hide: false
+  reminder:
+    hide: false

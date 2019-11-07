@@ -1,0 +1,18 @@
+#WF_container {
+  min-width: 480px;
+  height: 100%!important;
+
+}
+
+// md
+@include media-breakpoint-up(md) {
+    #WF_container{
+        width: 768px;
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    #WF_container{
+        width: 881px;
+    }
+}

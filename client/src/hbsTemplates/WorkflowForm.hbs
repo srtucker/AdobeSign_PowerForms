@@ -1,0 +1,29 @@
+<div class="container-fluid h-100" id="WF_container">
+  <div class="row h-100 justify-content-center align-items-center">
+    <div id="workflow_form">
+      <div class="workflow_header">
+        <h1>{{displayName}}</h1>
+      </div>
+      <div class="workflow_content">
+        <div id="form-errors"></div>
+        <form id="recipient_form" enctype="multipart/form-data">
+          <div id="instruction_section"></div>
+          <div id="recipient_section"></div>
+          <div id="cc_section"></div>
+          <div class="row">
+            <div class="col-lg-8">
+              <div id="agreement_section"></div>
+              <div id="message_section"></div>
+              <div id="upload_section"></div>
+              <div id="merge_section"></div>
+            </div>
+            <div class="col-lg-4">
+              <div class="option_wrapper" id="options_section"></div>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-custom" type="button" id="form_submit_button">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

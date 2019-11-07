@@ -1,28 +1,28 @@
+import Utils from './Utils';
+
 export default class RecipientGroup {
-  constructor(group_id, recipient_group_data){
-    this.group_id = group_id;
-    this.recipient_group_data = recipient_group_data;
+  constructor(id, config){
+    this.id = id;
+    this.config = config;
     this.number_of_members = 0;
     this.divNode = "";
     this.inputNode = null;
 
-    this.required = !(this.recipient_group_data.minListCount == 0);
+    this.required = !(this.config.minListCount == 0);
   }
 
-  createRecipientDiv(settings) {
-    let hide_predefined = settings.hide_predefined;
-    let hide_readonly = settings.hide_readonly;
-    const inputId = 'recipient_' + this.group_id;
+  createRecipientDiv() {
+    const inputId = 'recipient_' + this.id;
 
     // Create the div
     var divNode = document.createElement('div');
-    divNode.id = "recipient_group_" + this.group_id;
+    divNode.id = "recipient_group_" + this.id;
     divNode.className = "form-group";
     this.divNode = divNode;
 
     // Create the label
     var labelNode = document.createElement('label');
-    labelNode.innerHTML = this.recipient_group_data['label'];
+    labelNode.innerHTML = this.config.label;
     labelNode.htmlFor = inputId;
     divNode.appendChild(labelNode);
 
@@ -35,33 +35,29 @@ export default class RecipientGroup {
     inputNode.placeholder = "Enter Recipient's Email";
     divNode.appendChild(inputNode);
 
+    var t = document.createElement('div');
+    t.className = "invalid-feedback";
+    t.innerText = "Please provide a valid email address"
+    divNode.appendChild(t);
+
+
     if(this.required) {
       inputNode.required = true;
       labelNode.classList.add("required");
     }
 
     // If data is not blank, fill it in with predefine information
-    if (this.recipient_group_data['defaultValue'] !== "") {
-      inputNode.value = this.recipient_group_data['defaultValue'];
+    if (this.config.defaultValue !== "") {
+      inputNode.value = this.config.defaultValue;
       inputNode.classList.add("predefined_input");
 
       if(!this.recipient_group_data.editable) {
         inputNode.readonly = true;
-
-        if(hide_readonly) {
-          divNode.classList.add('recipient_hidden');
-        }
-      }
-
-      // Hide settings
-      if(hide_predefined) {
-        divNode.classList.add('recipient_hidden');
       }
     }
 
     //Track inputNode for retrieval later
     this.inputNode = inputNode;
-
 
     // This feature is currently blocked. There's a bug in Adobe API that
     // has been reported. Once this bug is fixed, it will be enabled in
@@ -74,6 +70,44 @@ export default class RecipientGroup {
     // }
 
     return divNode;
+  }
+
+  setupValidation(validator) {
+    let validationFn = this.runValidation.bind(this);
+
+    let validationTracker = validator.createTracker(this.inputNode, validationFn);
+
+    this.inputNode.onchange = function() {
+      validationFn(validationTracker);
+    };
+
+    return [validationTracker];
+  }
+
+  runValidation(validationTracker) {
+    let error = false;
+    let message = null;
+    let email = this.inputNode.value;
+
+    if(this.required && email == "") {
+      error = true;
+      message = `The recipient "${this.config.label}" is required.`
+    }
+    else if(email != "" && !Utils.isValidEmail(email)) {
+      error = true;
+      message = `The email "${email}" for recipient "${this.config.label}" is not a valid email address.`
+    }
+
+    if(error) {
+      this.inputNode.classList.add("is-invalid");
+    }
+    else {
+      Utils.removeClass(this.inputNode, "is-invalid");
+    }
+
+    validationTracker.update(error, message);
+
+    return status;
   }
 
 

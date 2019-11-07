@@ -1,3 +1,5 @@
+import Utils from './Utils';
+
 export default class CarbonCopy {
   constructor(id, email, required, editable){
     this.id = id;
@@ -7,12 +9,12 @@ export default class CarbonCopy {
     this.predefined = false;
 
     this.inputNode = null;
+    this.inputId;
   }
 
-  createCcDiv(settings){
-    let hide_predefined = settings.hide_predefined;
-    let hide_readonly = settings.hide_readonly;
+  createCcDiv(){
     const inputId = 'cc_' + this.id;
+    this.inputId = inputId;
 
     // Create the div
     var divNode = document.createElement('div');
@@ -49,15 +51,6 @@ export default class CarbonCopy {
 
       if(!this.editable) {
         inputNode.readonly = true;
-
-        if(hide_readonly) {
-          divNode.classList.add('recipient_hidden');
-        }
-      }
-
-      // Hide settings
-      if(hide_predefined) {
-        divNode.classList.add('recipient_hidden');
       }
     }
 
@@ -70,6 +63,44 @@ export default class CarbonCopy {
     this.inputNode = inputNode
 
     return divNode;
+  }
+
+  setupValidation(validator) {
+    let validationFn = this.runValidation.bind(this);
+
+    let validationTracker = validator.createTracker(this.inputNode, validationFn);
+
+    this.inputNode.onchange = function() {
+      validationFn(validationTracker);
+    };
+
+    return [validationTracker];
+  }
+
+  runValidation(validationTracker) {
+    let error = false;
+    let message = null;
+    let email = this.inputNode.value;
+
+    if(this.required && email == "") {
+      error = true;
+      message = `CC recipient ${this.id} is required.`
+    }
+    else if(email != "" && !Utils.isValidEmail(email)) {
+      error = true;
+      message = `The email "${email}" for CC recipient ${this.id} is not a valid email address.`
+    }
+
+    if(error) {
+      this.inputNode.classList.add("is-invalid");
+    }
+    else {
+      Utils.removeClass(this.inputNode, "is-invalid");
+    }
+
+    validationTracker.update(error, message);
+
+    return status;
   }
 
   getEmail() {

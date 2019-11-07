@@ -1,275 +1,158 @@
+import template from 'AgreementPassword.hbs'
+
 export default class PassOption {
+  constructor(config){
+    this.required = config['required'];
 
-    constructor(parent_div, data){
-        this.parent_div = parent_div;
-        this.required = data['required'];
-        this.visable = data['visable'];
-        this.default_value = data['defaultValue']
-        this.target_div = "";
-        this.sub_target_div = "";
-        this.input_type = "password";
+    this.protectCheckbox;
+    this.passContainer;
+    this.showPassCheckbox;
+    this.passwordInput;
+    this.passwordConfirmInput;
+
+    this.target_div = "";
+    this.disabled_button = false;
+    this.checked = false;
+  }
+
+  createPassDiv(parentNode){
+    // Create the div
+    let div = document.createElement('div');
+    div.innerHTML = template();
+    div.className = "pdf-protect-section compose-option-section";
+    parentNode.appendChild(div);
+
+    //create hooks
+    this.protectCheckbox = document.getElementById('pdf-protect');
+    this.passContainer = document.getElementById('password-container');
+    this.showPassCheckbox = document.getElementById('show-password');
+    this.passwordInput = document.getElementById('protect-password');
+    this.passwordConfirmInput = document.getElementById('protect-password-confirm');
+
+    //set initial values
+    if(this.required){
+      this.protectCheckbox.checked = true;
+      this.protectCheckbox.disabled = true;
+      //this.disabled_button = true;
+    }
+
+    // Add event handlers
+    this.protectCheckbox.onclick = function () {
+      this.checkBoxChangeHandler();
+    }.bind(this);
+
+    this.showPassCheckbox.onclick = function() {
+      if(this.showPassCheckbox.checked === false){
+        this.passwordInput.type = 'password';
+        this.passwordConfirmInput.type = 'password';
+      }
+      else{
+        this.passwordInput.type = 'text';
+        this.passwordConfirmInput.type = 'text';
+      }
+    }.bind(this);
+
+
+    // run change handler once to set inital settings
+    this.checkBoxChangeHandler();
+
+    return true;
+  }
+
+  checkBoxChangeHandler() {
+    // Hide sub pass div
+    if(this.protectCheckbox.checked === true){
+      this.passContainer.hidden = false;
+      this.checked = true;
+
+      // Disable button on empty
+      if(this.passwordInput.value.length === 0){
+        document.getElementById('recipient_submit_button').disabled = true;
+      }
+
+      // Reenable submit button if it's disabled
+      if (this.disabled_button) {
+        //var submit_button = document.getElementById('recipient_submit_button');
+        //submit_button.disabled = true;
         this.disabled_button = false;
-        this.checked = false;
+      }
     }
-
-    createPassDiv(){
-        /***
-         * This function create cc div
-         */
-
-        // Create the element
-        var pass_div = document.createElement('div');
-
-        // Add attributes
-        pass_div.id = "pass_div";
-        pass_div.className = "add_border_bottom";
-
-        var parent_div = document.getElementById('send_options_section')
-        parent_div.append(pass_div);
-
-        // Append to parent
-        this.target_div = pass_div;
-
+    // Show sub pass div
+    else {
+      this.passContainer.hidden = true;
+      //var submit_button = document.getElementById('recipient_submit_button');
+      //submit_button.disabled = false;
+      this.checked = false;;
     }
+  }
 
-    createCheckbox(){
-        /***
-         * This function creates the pass required checkbox
-         */
+  createErrorMsg(){
+      /***
+       * This function creates the error message
+       */
 
-        // Create the element
-        var checkbox = document.createElement('input')
+      // Create label for recipient
+      var label = document.createElement('h3');
 
-        // Add attributes
-        checkbox.type = "checkbox";
-        checkbox.name = "pass_checkbox";
-        checkbox.id = "pass_checkbox";
+      // Add attributes
+      label.className = "recipient_label error_msg";
+      label.innerHTML = "Password Requirment Not Met";
+      label.hidden = true;
 
-        if(this.required){
-            this.checked = true;
-            checkbox.checked = true;
-            checkbox.disabled = true;
-            this.disabled_button = true;
-        }
+      // Get divs for validations
+      var pass_input = document.getElementById('Password');
+      var confirm_input = document.getElementById('Confirm Password');
 
-        // Add onclick functions
-        checkbox.onclick = function (){
-            // Hide sub pass div
-            if(document.getElementById("pass_checkbox").checked === true){
-                document.getElementById('sub_pass_div').hidden = false;
-                this.checked = true;
+      // Add validation functions
+      this.getValidation(pass_input, label);
+      this.getValidation(confirm_input, label);
 
-                // Disable button on empty
-                if(document.getElementById("Password").value.length === 0){
-                    document.getElementById('recipient_submit_button').disabled = true;
-                }
+  }
 
-                // Reenable submit button if it's disabled
-                if (this.disabled_button){
-                    var submit_button = document.getElementById('recipient_submit_button');
-                    submit_button.disabled = true;
-                    this.disabled_button = false;
-                }
-            }
-            // Show sub pass div
-            else{
-                document.getElementById('sub_pass_div').hidden = true;
-                var submit_button = document.getElementById('recipient_submit_button');
-                submit_button.disabled = false;
-                this.checked = false;;
-            }
-        }.bind(this)
+  getValidation(target_div,label){
+    /***
+     * This function checks for input validations
+     * @param {Object} target_div Div to apply event listener
+     * @param {Object} label error message label
+     */
 
-        // Create the label for the checkbox
-        var label = document.createElement('label')
-        label.className = "checkbox_input";
-        label.htmlFor = "pass_checkbox";
-
-        // Append to parent
-        label.appendChild(document.createTextNode('Password Required'));
-        this.target_div.appendChild(checkbox);
-        this.target_div.appendChild(label);
-    }
-
-    createSubPassDiv(){
-        /***
-         * This function create cc div
-         */
-
-        // Create the element
-        var sub_pass_div = document.createElement('div');
-
-        // Add attributes
-        if(this.required){
-            sub_pass_div.hidden = false;
-        }
-        else{
-            sub_pass_div.hidden = true;
-        }
-        sub_pass_div.id = "sub_pass_div";
-        sub_pass_div.className = "add_border_bottom";
-
-        var parent_div = document.getElementById('send_options_section')
-        parent_div.append(sub_pass_div);
-
-        // Append to parent
-        this.sub_target_div = sub_pass_div;
-
-        // Add to sub div
-        this.createPassLabel();
-        this.createPassInput('Password');
-        this.createPassInput('Confirm Password');
-        this.createErrorMsg();
-        this.createInputCheckbox();
-
-    }
-
-    createPassLabel(){
-        /***
-         * This function will add cc label field
-         */
-
-        // Create label for recipient
-        var label = document.createElement('h3');
-
-        // Add attributes
-        label.className = "recipient_label";
-        label.innerHTML = "Password must contain 1 to 32 characters.";
-
-        // Append to parent
-        this.sub_target_div.append(label);
-    }
-
-    createPassInput(placeholder){
-        /***
-         * This function adds recipients input field
-         * @param {String} placeholder Place holder for input
-         */
-
-        // Create the element
-        var input = document.createElement("input");
-
-        // Add Attributes
-        input.type = this.input_type;
-        input.id = placeholder;
-        input.name = placeholder;
-        input.className = 'recipient_form_input';
-        input.placeholder = placeholder;
-        input.maxLength = 32;
-
-        // Append to parent
-        this.sub_target_div.append(input);
-    }
-
-    createInputCheckbox(){
-        /***
-         * This function creates the show pass checkbox
-         */
-
-        // Create the element
-        var checkbox = document.createElement('input')
-
-        // Add attributes
-        checkbox.type = "checkbox";
-        checkbox.name = "input_checkbox";
-        checkbox.value = "true";
-        checkbox.id = "input_checkbox";
-
-        // Add on click to show or disable inputs
-        checkbox.onclick = function(){
-            if(document.getElementById("input_checkbox").checked === false){
-                document.getElementById('Password').type = 'password';
-                document.getElementById('Confirm Password').type = 'password';
-            }
-            else{
-                document.getElementById('Password').type = 'text';
-                document.getElementById('Confirm Password').type = 'text';
-            }
-        }.bind(this);
-
-        // Add label to checkbox
-        var label = document.createElement('label');
-        label.className = "checkbox_input";
-        label.htmlFor = "input_checkbox";
-
-        // Append to parent
-        label.appendChild(document.createTextNode('Show Password'));
-        this.sub_target_div.appendChild(checkbox);
-        this.sub_target_div.appendChild(label);
-    }
-
-    createErrorMsg(){
-        /***
-         * This function creates the error message
-         */
-
-        // Create label for recipient
-        var label = document.createElement('h3');
-
-        // Add attributes
-        label.className = "recipient_label error_msg";
-        label.innerHTML = "Password Requirment Not Met";
+    target_div.onchange = function(){
+      var submit_button = document.getElementById('recipient_submit_button');
+      // Enable submit and hide error msg if input matches
+      if(document.getElementById("Password").value === document.getElementById("Confirm Password").value
+      && document.getElementById('Password').value.length > 0){
+        submit_button.disabled = false;
         label.hidden = true;
+        this.disabled_button = false;
+      }
+      // Disable submit, set trigger, and show error message if mismatch
+      else{
+        submit_button.disabled = true;
+        this.disabled_button = true;
+        label.hidden = false;
+      }
+    }.bind(this)
+  }
 
-        // Get divs for validations
-        var pass_input = document.getElementById('Password');
-        var confirm_input = document.getElementById('Confirm Password');
-
-        // Add validation functions
-        this.getValidation(pass_input, label);
-        this.getValidation(confirm_input, label);
-
-        // Append to parent
-        this.sub_target_div.append(label);
+  getPass(){
+    if(this.checked){
+      return this.passwordInput.value;
     }
-
-    getValidation(target_div,label){
-        /***
-         * This function checks for input validations
-         * @param {Object} target_div Div to apply event listener
-         * @param {Object} label error message label
-         */
-
-        target_div.onchange = function(){
-            var submit_button = document.getElementById('recipient_submit_button');
-            // Enable submit and hide error msg if input matches
-            if(document.getElementById("Password").value === document.getElementById("Confirm Password").value
-            && document.getElementById('Password').value.length > 0){
-                submit_button.disabled = false;
-                label.hidden = true;
-                this.disabled_button = false;
-            }
-            // Disable submit, set trigger, and show error message if mismatch
-            else{
-                submit_button.disabled = true;
-                this.disabled_button = true;
-                label.hidden = false;
-            }
-        }.bind(this)
+    else{
+      return "";
     }
+  }
 
-    getPass(){
-        /***
-         * This function returns the pass
-         */
-        if(this.checked){
-            return document.getElementById('Password').value;
-        }
-        else{
-            return "";
-        }
+  getProtection(){
+    /***
+     * This function returns the protection mode
+     */
+
+    if(document.getElementById('Password').value === " "){
+      return false;
     }
-
-    getProtection(){
-        /***
-         * This function returns the protection mode
-         */
-
-        if(document.getElementById('Password').value === " "){
-            return false;
-        }
-        else{
-            return true;
-        }
+    else{
+      return true;
     }
+  }
 }

@@ -123,7 +123,7 @@ var webpackConfig = {
     modules: [
       path.join(__dirname, 'client', 'src'),
       "node_modules",
-      path.resolve(__dirname, "src/hbsTemplates")
+      path.resolve(__dirname, "client/src/hbsTemplates")
     ],
   },
   node: {

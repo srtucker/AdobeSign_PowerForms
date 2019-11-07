@@ -1,0 +1,9 @@
+{{#if errors}}
+<div class="alert alert-danger  fade in  alert-popup " role="alert" data-key="send">
+  <ol class="alert-errors">
+    {{#each errors}}
+    <li class="alert-error collapse in" data-itemkey="{{@key}}">{{message}}</li>
+    {{/each}}
+  </ol>
+</div>
+{{/if}}

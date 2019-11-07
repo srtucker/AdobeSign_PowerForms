@@ -1,80 +1,68 @@
 export default class MergeField {
+  constructor(config){
+    this.config = config;
 
-    constructor(parent_div, merge_field_data){
-        this.parent_div = parent_div;
-        this.target_div = "";
-        this.field_name = merge_field_data['fieldName'];
-        this.display_name = merge_field_data['displayName'];
-        this.default_value = merge_field_data['defaultValue'];
-        this.editable = merge_field_data['editable'];
-        this.visable = merge_field_data['visible'];
+    this.target_div = "";
+
+    this.inputNode = null;
+
+
+    this.field_name = config['fieldName'];
+    this.display_name = config['displayName'];
+    this.default_value = config['defaultValue'];
+    this.editable = config['editable'];
+    this.visable = config['visible'];
+  }
+
+  createMergeFieldDiv() {
+    const inputId = 'merge_input_' + this.field_name;
+
+    // Create the div
+    var divNode = document.createElement('div');
+    divNode.id = "merge_" + this.field_name;
+    divNode.className = "form-group form-row";
+    this.divNode = divNode;
+
+    // Create the label
+    var labelNode = document.createElement('label');
+    labelNode.innerText = this.display_name;
+    labelNode.htmlFor = inputId;
+    labelNode.className = 'col-md-4 col-form-label';
+    divNode.appendChild(labelNode);
+
+    var inputDivNode = document.createElement('div');
+    inputDivNode.className = "col-md-8";
+    divNode.appendChild(inputDivNode);
+
+    // Create the input
+    var inputNode = document.createElement("input");
+    inputNode.id = inputId;
+    inputNode.className = 'form-control merge_input';
+    inputDivNode.appendChild(inputNode);
+
+    /*if(this.required) {
+      inputNode.required = true;
+      labelNode.classList.add("required");
+    }*/
+
+    // If data is not blank, fill it in with predefine information
+    if(this.config.defaultValue !== ""){
+      inputNode.value = this.config.defaultValue;
+      inputNode.classList.add("predefined_input");
     }
 
-    createMergeFieldDiv(){
-        /***
-         * This function will add a merge field div
-         */
-
-        // Create element
-        var merge_field_div = document.createElement('div');
-
-        // Add attributes
-        merge_field_div.id = "merge_" + this.field_name;
-        merge_field_div.className = "merge_div row";
-
-        // Create grids
-        var merge_field_col_4 = document.createElement('div');
-        merge_field_col_4.className = "col-lg-4";
-        var merge_field_col_8 = document.createElement('div');
-        merge_field_col_8.className = "col-lg-8";
-
-        var parent_div = document.getElementById('merge_body')
-        parent_div.append(merge_field_div);
-
-        // Append to parent
-        this.target_div = merge_field_div;
-        this.target_div.append(merge_field_col_4);
-        this.target_div.append(merge_field_col_8);
+    if(!this.config.editable) {
+      inputNode.readonly = true;
     }
 
-    createMergeFieldLabel(){
-        /***
-         * This function will add a field label
-         */
+    //Track inputNode for retrieval later
+    this.inputNode = inputNode;
 
-        // Create element
-        var merge_field_label = document.createElement('h3');
+    inputNode.onchange = function () {
+        this.default_value = inputNode.value;
+    }.bind(this);
 
-        // Add attributes
-        merge_field_label.innerText = this.display_name;
-
-        // Append to parent
-        this.target_div.children[0].append(merge_field_label);
-        // this.target_div.append(merge_field_label);
-    }
-
-    createMergeFieldInput(){
-        /***
-         * This function will add a field input
-         */
-
-        // Create element
-        var merge_field_input = document.createElement('input');
-
-        // Add attributes
-        merge_field_input.className = 'merge_input';
-        merge_field_input.id = 'merge_input_' + this.field_name;
-
-        if(this.default_value !== ""){
-            merge_field_input.value = this.default_value;
-        }
-
-        merge_field_input.onchange = function () {
-            this.default_value = merge_field_input.value;
-        }.bind(this);
-
-        // Append to parents
-        this.target_div.children[1].append(merge_field_input);
-    }
+    return divNode;
+  }
 
 }

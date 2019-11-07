@@ -1,27 +1,72 @@
+import DynamicForm from './DynamicForm';
+import * as API from './API';
+
 export default class Workflow {
+  constructor(workflowId) {
+    this.workflowId = workflowId;
+    this.workflow_id = workflowId;
+    this.agreement_name = "";
+    this.file_infos = [];
+    this.recipients_list = [];
+    this.recipient_group = [];
+    this.carbon_copy_group = [];
+    this.merge_field_group = [];
+    this.pass_option = "";
+    this.deadline = "";
+    this.reminders = "";
+    this.message = "";
 
-    constructor(workflow_id) {
-        this.workflow_id = workflow_id;
-        this.agreement_name = "";
-        this.file_infos = [];
-        this.recipients_list = [];
-        this.recipient_group = [];
-        this.carbon_copy_group = [];
-        this.merge_field_group = [];
-        this.pass_option = "";
-        this.deadline = "";
-        this.reminders = "";
-        this.message = "";
+    this.workflowConfig;
+    this.dynamicForm;
+  }
+
+  static async loadWorkflow(workflowId) {
+    let workflowConfig = API.getWorflowConfig(workflowId);
+    let wf = new Workflow(workflowId);
+
+    wf.workflowConfig = await workflowConfig;
+
+    return wf;
+  }
+
+  getWorkflowConfig() {
+    return this.workflowConfig;
+  }
+
+  render(parentNode) {
+    var dynamicForm = new DynamicForm(this.workflowConfig, this);
+    dynamicForm.buildRecipientsForm(parentNode);
+
+    this.dynamicForm = dynamicForm;
+  }
+
+  verify() {
+
+  }
+
+  buildAgreement() {
+
+    let agreementData = {
+      //recipients
+      //carbonCopy
+      //agreementName
+      //message
+      //files
+      //mergeFields
+      //password
+      //expiration
+      //reminder
     }
+  }
 
-    setAgreementName(agreement_name) {
-        /***
-         * This function set the agreement name
-         * @param {String} agreement_name name of the agreement
-         */
+  setAgreementName(agreement_name) {
+    /***
+     * This function set the agreement name
+     * @param {String} agreement_name name of the agreement
+     */
 
-        this.agreement_name = agreement_name;
-    }
+    this.agreement_name = agreement_name;
+  }
 
     updateAgreementName() {
         /***

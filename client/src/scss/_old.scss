@@ -1,0 +1,199 @@
+body{
+    background: var(--application-background-color);
+    font-family: "adobe-clean-n4", "adobe-clean", Helvetica, Arial, sans-serif;
+}
+
+
+button, input, optgroup, select, textarea {
+    font-size: 14px;
+    padding: 10px;
+    color: #2d2d2d;
+}
+
+.predefined_input{
+    color: #2175c8;
+}
+
+input::-webkit-input-placeholder {
+    font-size: 14px;
+    color: #4b4b4b;
+}
+
+h3{
+    font-size: 16px;
+    font-weight: bold;
+    color: #2d2d2d;
+}
+
+h4{
+    font-size: 14px;
+}
+
+/********** workflow_selector **********/
+#workflow_selector{
+    text-align: center;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+#option_submit_button{
+    font-size: 15px;
+    padding: 0 14px;
+    line-height: 32px;
+    font-weight: 400;
+    min-width: 80px;
+    width: 100%;
+    background-color: var(--workflow-from-select-button-color);
+    color: black;
+}
+
+#workflow_dropdown_label{
+    font-size: 24px;
+    color: white;
+}
+
+#workflow_dropdown{
+    font-size: 14px;
+    border-radius: 1px;
+}
+
+/********** dynamic_form **********/
+#workflow_name h1 {
+    color: white;
+    text-align: center;
+}
+
+.form_hidden{
+    display: none;
+}
+
+#agreement_section{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.recipient_label{
+    margin-top: 10px;
+}
+
+.recipient_form_input{
+    max-width: 100%;
+    width: 100%;
+    background-color: white;
+    margin-bottom: 5px;
+    border: solid 1px #c2c2c2;
+    border-radius: 5px;
+}
+
+.recipient_hidden{
+    visibility: hidden;
+    display:none;
+    width: 0;
+    height: 0;
+}
+
+.add_section{
+    margin-bottom: 40px;
+}
+
+#add_button{
+    width: 50%;
+    float: left;
+    padding: 5px;
+}
+
+#remove_button{
+    width: 50%;
+    float: right;
+    padding: 5px;
+}
+
+.checkbox_input{
+    margin-left: 10px;
+    font-size: 16px;
+}
+
+#message_section{
+    margin-bottom: 10px;
+}
+
+.error_msg{
+    color: red;
+}
+
+.file_info_div h3{
+    margin-top: 10px;
+}
+
+.file_info_div h4{
+    margin: auto;
+    width: 95%;
+    padding: 10px;
+}
+
+.merge_input{
+    width: 100%;
+}
+
+.merge_div h3{
+    margin-top: 10px;
+}
+
+#merge_body{
+    border: 1px solid #c2c2c2;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.merge_div{
+    padding: 10px;
+}
+
+#button_section{
+    width: 100%;
+}
+
+.upload_section h3{
+    margin-top: 10px;
+}
+
+#upload_body{
+    border: 1px solid #c2c2c2;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+#deadline_input{
+    width: 100%;
+}
+
+#reminder_dropdown{
+    width: 100%;
+}
+
+
+//CP CUSTOM
+// md
+@media only screen and (min-width: 768px) {
+    .option_wrapper{
+        margin: 10px 0 10px 0;
+    }
+
+}
+
+// lg
+@media only screen and (min-width: 992px) {
+    .option_wrapper{
+        margin-top: 37px;
+    }
+}
+
+
+.hidden{
+    visibility: hidden;
+    display:none;
+    width: 0;
+    height: 0;
+}

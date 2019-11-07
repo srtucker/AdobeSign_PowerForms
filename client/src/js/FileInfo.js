@@ -1,21 +1,21 @@
+import Axios from 'axios';
+
 export default class FileInfo {
-  constructor(data) {
-    this.file_name = data['name'];
-    this.label = data['label'];
-    this.required = data['required'];
+  constructor(config) {
+    this.file_name = config['name'];
+    this.label = config['label'];
+    this.required = config['required'];
 
-    this.libDocList = (data['workflowLibraryDocumentSelectorList'] || null);
+    this.libDocList = (config['workflowLibraryDocumentSelectorList'] || null);
 
-    this.workflow_lib_doc_id = (data['workflowLibraryDocumentSelectorList'] || null);
+    this.workflow_lib_doc_id = (config['workflowLibraryDocumentSelectorList'] || null);
 
     this.transient_id = null;
     this.target_div = "";
     this.fileInfo = {};
   }
 
-  createFileInfoDiv(settings) {
-    let hide_predefined = settings.hide_predefined;
-    let hide_readonly = settings.hide_readonly;
+  createFileInfoDiv() {
     const inputId = 'file_' + this.file_name;
 
     // Create the div
@@ -42,128 +42,70 @@ export default class FileInfo {
       selectNode.className = 'form-control';
       inputDivNode.appendChild(selectNode);
 
+      if(!this.required) {
+        let optionNode = document.createElement('option');
+        optionNode.innerText = "-- None --";
+        selectNode.appendChild(optionNode);
+      }
+
       this.libDocList.forEach(doc => {
         let optionNode = document.createElement('option');
         optionNode.innerText = doc.label;
         optionNode.value = doc.workflowLibDoc;
         selectNode.appendChild(optionNode);
       });
+    }
+    else {
+      var uploadDivNode = this.createFileUpload(inputId);
+      inputDivNode.appendChild(uploadDivNode);
+    }
 
-
+    if(this.required) {
+      labelNode.classList.add("required");
     }
 
     return divNode;
   }
 
-    createFileLabelName(required) {
-        /***
-         * This function will create the file info label
-         */
+  createFileUpload(inputId) {
+    var uploadDivNode = document.createElement('div');
+    uploadDivNode.className = 'custom-file';
+    uploadDivNode.id = 'upload_' + this.file_name;
 
-        // If workload has file attachments
-        if (this.workflow_lib_doc_id !== null) {
-            var file_label_name = document.createElement('h4');
-            file_label_name.innerText = this.workflow_lib_doc_id[0]['label'];
-            this.target_div.children[1].append(file_label_name);
-        }
-        // Else create upload field
-        else {
-            // this.createUploadFieldDiv();
-            this.createUploadField(required);
-        }
+    var inputNode = document.createElement('input');
+    //inputNode.className = 'form-control-file';
+    inputNode.className = 'custom-file-input';
+    //inputNode.id = 'logo_' + this.file_name;
+    inputNode.id = inputId;
+    inputNode.type = 'file';
+    uploadDivNode.appendChild(inputNode);
+
+    var uploadLabelNode = document.createElement('span');
+    uploadLabelNode.innerText = "Please Upload A File";
+    uploadLabelNode.htmlFor = inputId;
+    uploadLabelNode.className = 'custom-file-label text-truncate';
+    uploadDivNode.appendChild(uploadLabelNode);
+
+    if(this.required) {
+      inputNode.required = true;
     }
 
-    createUploadFieldDiv(){
-        /***
-         * This function will create the upload div
-         */
+    inputNode.onchange = async function () {
+      this.handleFileUpload(inputNode, uploadLabelNode);
+    }.bind(this);
 
-        // Create the element
-        var upload_div = document.createElement('div');
+    return uploadDivNode;
+  }
 
-        // Add attributes
-        upload_div.className = 'custom-file';
-        upload_div.id = 'upload_' + this.file_name;
+  async handleFileUpload(inputNode, uploadLabelNode) {
+    var file = inputNode.files[0];
 
-        // Append to parent
-        this.target_div.children[1].append(upload_div);
+    uploadLabelNode.innerText = file.name;
 
-        return upload_div
-    }
+    var formData = new FormData();
+    formData.append('myfile', file);
 
-    createUploadFileInput(){
-        /***
-         * This function creates the file upload input.
-         */
-
-        // Create element
-        var upload_input = document.createElement('input');
-
-        // Add attributes
-        upload_input.className = 'custom-file-input';
-        upload_input.id = 'logo_' + this.file_name;
-        upload_input.type = 'file';
-
-        return upload_input
-    }
-
-    createUploadFileLabel(){
-        /***
-         * This function will create the file label
-         */
-
-        // Create the element
-        var upload_label = document.createElement('h4');
-
-        // Add attributes
-        upload_label.className = 'custom-file-label text-truncate';
-        upload_label.innerText = "Please Upload A File";
-
-        return upload_label
-    }
-
-    addOnChangeToFileUpload(upload_input, upload_label){
-        /***
-         * This function will add the on change attribute to file uploads
-         * @param {Object} upload_input the div to upload files
-         * @param {Object} upload_label the div to change upload file name
-         */
-
-        upload_input.onchange = async function () {
-            upload_label.innerText = upload_input.files[0]['name'];
-            var file = document.getElementById('logo_' + this.file_name);
-            var formData = new FormData();
-            formData.append('myfile', file.files[0]);
-
-            var response = await fetch(apiBaseURL + 'api/postTransient', {
-                method: 'POST',
-                body: formData
-            }).then(function (resp) {
-                return resp.json()
-            })
-            .then(function (data) {
-                return data;
-            });
-
-            this.transient_id = response['transientDocumentId'];
-        }.bind(this);
-    }
-
-    createUploadField(required) {
-        /***
-         * This function will create the upload field
-         */
-
-        let upload_div = this.createUploadFieldDiv();
-        let upload_input = this.createUploadFileInput();
-        let upload_label = this.createUploadFileLabel();
-
-        this.addOnChangeToFileUpload(upload_input, upload_label)
-
-        if (required) {
-            upload_input.required = required;
-        }
-        upload_div.append(upload_input);
-        upload_div.append(upload_label);
-    }
+    const api_response = await Axios.post(apiBaseURL + 'api/postTransient', formData);
+    this.transient_id =  (await api_response)['transientDocumentId'];
+  }
 }

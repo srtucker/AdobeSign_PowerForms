@@ -1,0 +1,90 @@
+#workflow_form {
+  background: var(--workflow-form-body-color);
+  //font-size: 20px;
+  box-shadow: 0 10px 20px 5px grey;
+  border-radius: 5px;
+
+  .workflow_header {
+    background-color: var(--workflow-form-top-color);
+
+    h1 {
+      padding: 20px 10px;
+      margin: 0 15px;
+      color: white;
+      text-align: center;
+    }
+  }
+
+  .workflow_content {
+    padding: 20px 10px;
+    margin: 0 15px;
+  }
+
+
+  label {
+    //font-size: 16px;
+    //font-weight: bold;
+    color: #2d2d2d;
+
+    &.required:after {
+      font-family: 'FontAwesome';
+      font-weight: normal;
+      font-size: 10px;
+      content: "\f069";
+      color:red;
+      margin-left:2px;
+      vertical-align: top;
+      top:-2px
+    }
+  }
+
+  fieldset {
+    border: 1px solid #c2c2c2;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+
+    legend {
+      width: inherit;
+      font-size: 1.25rem;
+      margin-bottom: 0;
+    }
+  }
+}
+
+div.custom-file span {
+  font-size: 1rem;
+}
+
+small, .small {
+    font-size: 85%;
+}
+
+
+.hidden{
+    visibility: hidden;
+    display:none;
+    width: 0;
+    height: 0;
+}
+
+
+.option_wrapper{
+    margin-top: 37px;
+    border: 1px solid #c2c2c2;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px 0 10px 0;
+}
+
+#form_submit_button{
+  margin-top: 10px;
+  font-size: 15px;
+  padding: 0 14px;
+  line-height: 32px;
+  font-weight: 400;
+  min-width: 80px;
+  width: 100%;
+  background-color: var(--workflow-form-submit-color);
+}

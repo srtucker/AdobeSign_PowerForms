@@ -37,6 +37,7 @@
     "css-loader": "^3.2.0",
     "cssnano": "^4.1.10",
     "file-loader": "^4.2.0",
+    "handlebars": "^4.5.1",
     "handlebars-loader": "^1.7.1",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.8.0",
@@ -78,5 +79,13 @@
     "ie >= 11",
     "not dead",
     "> 1% in US"
-  ]
+  ],
+  "cssnano": {
+    "preset": [
+      "default",
+      {
+        "normalizePositions":false
+      }
+    ]
+  }
 }

@@ -17,7 +17,7 @@ const parsePath = new ParsePath({
 });
 
 $("#workflow_selector").hide();
-$("#workflow_name").hide();
+//$("#workflow_name").hide();
 
 var params = parsePath.test('/workflow/:id', window.location.pathname);
 if(params !== false) {
@@ -61,45 +61,10 @@ async function showWorkflowSelector() {
 }
 
 async function runWorkflow(workflowId, showSelector) {
-  $('#dynamic_form').hide();
+  let workflow = await Workflow.loadWorkflow(workflowId);
 
-  // Fetch workflow data by ID
-  const workflowReq = Axios.get(apiBaseURL + 'api/getWorkflowById/' + workflowId);
-
-  // Fetch application features
-  const featuresReq = Axios.get(apiBaseURL + 'features');
-
-  let workflow_data = (await workflowReq).data;
-  let get_features = (await featuresReq).data;
-
-  console.log({get_features})
-
-  // Create new workflow object for API calls
-  let workflow_agreement_data = new Workflow(workflowId);
-
-  if(!showSelector) {
-    $("#workflow_name").html('<h1>'+workflow_data.displayName+'</h1>').show();
-  }
-
-  // Grab the parent div from the dynamic form
-  var parent_form_div = document.getElementById("recipient_form");
-  //var parent_form_div = $("#recipient_form");
+  let workflowConfig = workflow.getWorkflowConfig();
 
   // Create the dynamic form
-  var dynamic_form = new DynamicForm(parent_form_div, workflow_data, workflow_agreement_data, get_features);
-  dynamic_form.buildRecipientsForm();
-
-  showHiddenDiv();
-}
-
-function showHiddenDiv(){
-  /**
-   * This function will show all hidden divs when workflow is selected
-   */
-
-  var hidden_class = document.getElementsByClassName('form_hidden');
-
-  for (let i = 0; i < hidden_class.length; i++) {
-    hidden_class[i].style.display = 'block';
-  }
+  workflow.render(document.getElementById("app"));
 }
