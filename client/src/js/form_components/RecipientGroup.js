@@ -1,4 +1,4 @@
-import Utils from './Utils';
+import Utils from '../util/Utils';
 
 export default class RecipientGroup {
   constructor(id, config){

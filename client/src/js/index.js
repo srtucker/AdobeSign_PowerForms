@@ -6,7 +6,7 @@ import Axios from 'axios';
 
 import Workflow from './Workflow';
 import DynamicForm from './DynamicForm';
-import ParsePath from './ParsePath';
+import ParsePath from './util/ParsePath';
 
 import '../scss/style.scss';
 
