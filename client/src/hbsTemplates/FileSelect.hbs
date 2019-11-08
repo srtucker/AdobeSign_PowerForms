@@ -1,0 +1,13 @@
+<div class="form-group form-row file_info_div">
+  <label for="{{inputId}}" class="col-md-4 col-form-label {{#if required}}required{{/if}}">
+    {{label}}
+  </label>
+  <div class="col-md-8">
+    <select id="{{inputId}}" class="form-control">
+      {{#each libDocList}}
+        <option value="{{workflowLibDoc}}">{{label}}</option>
+      {{/each}}
+    </select>
+    <div class="invalid-feedback">Please select a file.</div>
+  </div>
+</div>

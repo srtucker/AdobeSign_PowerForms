@@ -2,10 +2,7 @@
 const yargs = require('yargs');
 const express = require('express');
 const async = require('express-async-await');
-const fetch = require('node-fetch');
 const bodyParser = require('body-parser');
-const FormData = require('form-data');
-const fs = require('fs');
 const path = require('path');
 const config = require('./config.js');
 

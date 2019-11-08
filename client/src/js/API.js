@@ -7,3 +7,14 @@ export async function getWorflowConfig(workflowId) {
 
   return workflowConfig
 }
+
+export async function postTransientDocument(file) {
+  var formData = new FormData();
+  formData.append('myfile', file);
+
+  const apiResponse = Axios.post(apiBaseURL + 'api/postTransient', formData);
+
+  let data = (await apiResponse).data;
+
+  return data;
+}

@@ -21,6 +21,7 @@ export default class Workflow {
 
     this.recipientGroups = [];
     this.carbonCopyGroups = [];
+    this.files = [];
   }
 
   static async loadWorkflow(workflowId) {
@@ -50,23 +51,11 @@ export default class Workflow {
   buildAgreement() {
 
     let agreementData = {
-      recipients: this.recipientGroups.reduce((results, group) => {
-        let val = group.getValues();
-        if(val !== null) {
-          results.push(val);
-        }
-        return results;
-      }, []),
-      carbonCopy: this.carbonCopyGroups.reduce((results, group) => {
-        let val = group.getValues();
-        if(val !== null) {
-          results.push(val);
-        }
-        return results;
-      }, []),
+      recipients: this.getReducedValues(this.recipientGroups),
+      carbonCopy: this.getReducedValues(this.carbonCopyGroups),
       //agreementName
       //message
-      //files
+      files: this.getReducedValues(this.files),
       //mergeFields
       //password
       //expiration
@@ -75,6 +64,18 @@ export default class Workflow {
 
     console.log(agreementData)
   }
+
+  getReducedValues(arr) {
+    return arr.reduce((results, elm) => {
+      let val = elm.getValues();
+      if(val !== null) {
+        results.push(val);
+      }
+      return results;
+    }, []);
+  }
+
+
 
   setAgreementName(agreement_name) {
     /***

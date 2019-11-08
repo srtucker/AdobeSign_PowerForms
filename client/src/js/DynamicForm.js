@@ -1,6 +1,7 @@
 import CarbonCopyGroup from './form_components/CarbonCopyGroup';
 import Expiration from './form_components/Expiration';
-import FileInfo from './form_components/FileInfo';
+import FileSelect from './form_components/FileSelect';
+import FileUpload from './form_components/FileUpload';
 import MergeField from './form_components/MergeField';
 import PassOption from './form_components/PassOption';
 import RecipientGroup from './form_components/RecipientGroup';
@@ -158,7 +159,6 @@ export default class DynamicForm {
       let recipientGrp = new RecipientGroup(counter, config[counter]);
       recipientGrp.addToDOM(fieldsetNode);
       recipientGrp.setupValidation(this.validator);
-
       this.workflow.recipientGroups.push(recipientGrp);
     }
   }
@@ -174,7 +174,6 @@ export default class DynamicForm {
         let ccGrp = new CarbonCopyGroup(counter, config[counter]);
         ccGrp.addToDOM(sectionNode);
         ccGrp.setupValidation(this.validator);
-
         this.workflow.carbonCopyGroups.push(ccGrp);
       }
 
@@ -266,10 +265,18 @@ export default class DynamicForm {
 
       // Get FileInfo information
       for (let counter = 0; counter < config.length; counter++) {
-          let file = new FileInfo(config[counter]);
+        if(config[counter].workflowLibraryDocumentSelectorList) {
+          let file = new FileSelect(config[counter]);
           file.addToDOM(fieldsetNode);
-
-          this.file_info.push(file);
+          file.setupValidation(this.validator);
+          this.workflow.files.push(file);
+        }
+        else {
+          let file = new FileUpload(config[counter]);
+          file.addToDOM(fieldsetNode);
+          file.setupValidation(this.validator);
+          this.workflow.files.push(file);
+        }
       }
 
       this.showDomNode(sectionNode);
