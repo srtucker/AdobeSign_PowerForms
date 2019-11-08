@@ -1,0 +1,15 @@
+<div class="form-group form-row">
+  <label for="{{inputId}}" class="col-md-4 col-form-label {{#if required}}required{{/if}}">
+    {{label}}
+  </label>
+  <div class="col-md-8">
+    <input
+      type="text"
+      id="{{inputId}}"
+      class="form-control {{#if defaultValue}}predefined_input{{/if}}"
+      {{#if defaultValue}} value="{{defaultValue}}"{{/if}}
+      {{#if required}} required {{/if}}
+      {{#if readonly}} readonly {{/if}}
+    >
+  </div>
+</div>

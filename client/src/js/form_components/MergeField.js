@@ -1,68 +1,75 @@
+import Utils from '../util/Utils';
+import mergeFieldTemplate from 'MergeField.hbs';
+
 export default class MergeField {
   constructor(config){
     this.config = config;
+    this.readonly = !config.editable;
 
-    this.target_div = "";
-
-    this.inputNode = null;
-
-
-    this.field_name = config['fieldName'];
-    this.display_name = config['displayName'];
-    this.default_value = config['defaultValue'];
-    this.editable = config['editable'];
-    this.visable = config['visible'];
+    this._inputNode;
   }
 
   addToDOM(parentNode) {
-    const inputId = 'merge_input_' + this.field_name;
+    let data = {
+      inputId: 'merge_input_' + this.config.fieldName,
+      label: this.config.displayName,
+      defaultValue: this.config.defaultValue,
+      //required: this.config.required,
+      readonly: this.readonly
+    };
 
     // Create the div
-    var divNode = document.createElement('div');
-    divNode.id = "merge_" + this.field_name;
-    divNode.className = "form-group form-row";
-    parentNode.appendChild(divNode);
+    var tempDiv = document.createElement('div');
+    tempDiv.innerHTML = mergeFieldTemplate(data);
+    var div = tempDiv.firstChild
+    parentNode.appendChild(div);
 
-    // Create the label
-    var labelNode = document.createElement('label');
-    labelNode.innerText = this.display_name;
-    labelNode.htmlFor = inputId;
-    labelNode.className = 'col-md-4 col-form-label';
-    divNode.appendChild(labelNode);
-
-    var inputDivNode = document.createElement('div');
-    inputDivNode.className = "col-md-8";
-    divNode.appendChild(inputDivNode);
-
-    // Create the input
-    var inputNode = document.createElement("input");
-    inputNode.id = inputId;
-    inputNode.className = 'form-control merge_input';
-    inputDivNode.appendChild(inputNode);
-
-    /*if(this.required) {
-      inputNode.required = true;
-      labelNode.classList.add("required");
-    }*/
-
-    // If data is not blank, fill it in with predefine information
-    if(this.config.defaultValue !== ""){
-      inputNode.value = this.config.defaultValue;
-      inputNode.classList.add("predefined_input");
-    }
-
-    if(!this.config.editable) {
-      inputNode.readonly = true;
-    }
-
-    //Track inputNode for retrieval later
-    this.inputNode = inputNode;
-
-    inputNode.onchange = function () {
-        this.default_value = inputNode.value;
-    }.bind(this);
+    //create hooks
+    this._inputNode = div.querySelector('input');
 
     return;
+  }
+
+  setupValidation(validator) {
+    let validationFn = this.runValidation.bind(this);
+    let validationTracker = validator.createTracker(this._inputNode, validationFn);
+
+    this._inputNode.onchange = function() {
+      validationFn(validationTracker);
+    };
+  }
+
+  runValidation(validationTracker) {
+    let error = false;
+    let message = null;
+    let value = this._inputNode.value;
+
+    /*
+    //required is not currently provided by the API
+    if(this.config.required && value == "") {
+      error = true;
+      message = `The field ${this.config.displayName} is required.`
+    }
+    */
+
+    if(error) {
+      this._inputNode.classList.add("is-invalid");
+    }
+    else {
+      Utils.removeClass(this._inputNode, "is-invalid");
+    }
+
+    validationTracker.update(error, message);
+  }
+
+  getValues() {
+    if (!this.readonly) {
+      return {
+        fieldName: this.config.fieldName,
+        defaultValue: this._inputNode.value
+      };
+    }
+    return null;
   }
 
 }

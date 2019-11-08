@@ -55,7 +55,7 @@ class WorkflowConfig {
     var recipients = [];
 
     this.wfData.recipientsListInfo.forEach(wfRecipient => {
-      if(hide_predefined && wfRecipient.defaultValue == "") {
+      if(hide_predefined && wfRecipient.defaultValue != "") {
         return;
       }
 
@@ -175,11 +175,15 @@ class WorkflowConfig {
 
     if('mergeFieldsInfo' in this.wfData) {
       let hide_readonly = this.settings.mergeFields.hide_readonly;
+      let hide_predefined = this.settings.files.hide_predefined;
 
       this.wfData.mergeFieldsInfo.forEach(wfField => {
-
         // skip config fields
         if(wfField.fieldName.startsWith("WFSetting")) {
+          return;
+        }
+
+        if(hide_predefined && wfField.defaultValue != "") {
           return;
         }
 
