@@ -3,7 +3,7 @@ import Expiration from './form_components/Expiration';
 import FileSelect from './form_components/FileSelect';
 import FileUpload from './form_components/FileUpload';
 import MergeField from './form_components/MergeField';
-import PassOption from './form_components/PassOption';
+import PasswordOption from './form_components/PasswordOption';
 import RecipientGroup from './form_components/RecipientGroup';
 import Reminder from './form_components/Reminder';
 
@@ -334,8 +334,10 @@ export default class DynamicForm {
 
     // Get Password information
     if (config.visible) {
-      this.pass_option = new PassOption(config);
-      return this.pass_option.addToDOM(sectionNode);
+      let passwordOption = new PasswordOption(config);
+      passwordOption.addToDOM(sectionNode);
+      passwordOption.setupValidation(this.validator);
+      return true;
     }
 
     return false;
