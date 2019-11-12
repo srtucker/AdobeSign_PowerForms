@@ -144,7 +144,10 @@ class WorkflowConfig {
       return null;
     }
 
-    return this.wfData.messageInfo.defaultValue;
+    return {
+      defaultValue: this.wfData.messageInfo.defaultValue,
+      editable: true,
+    }
   }
 
   getFilesConfig() {

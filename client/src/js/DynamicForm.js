@@ -5,6 +5,7 @@ import ExpirationDateTimeBased from './form_components/ExpirationDateTimeBased';
 import FileSelect from './form_components/FileSelect';
 import FileUpload from './form_components/FileUpload';
 import MergeField from './form_components/MergeField';
+import MessageSection from './form_components/MessageSection';
 import PasswordOption from './form_components/PasswordOption';
 import RecipientGroup from './form_components/RecipientGroup';
 import Reminder from './form_components/Reminder';
@@ -203,30 +204,11 @@ export default class DynamicForm {
     this.resetDOMNode(sectionNode, true);
 
     if ('message' in this.config) {
-      const inputId = "messages_input";
+      let config = this.config.message;
 
-      sectionNode.classList.add("form-group");
-
-      // Create the label
-      var labelNode = document.createElement('label');
-      labelNode.innerHTML = "Message";
-      labelNode.htmlFor = inputId;
-      labelNode.className = "recipient_label";
-      sectionNode.appendChild(labelNode);
-
-      // Create the input
-      var inputNode = document.createElement("textarea");
-      inputNode.id = inputId;
-      inputNode.name = inputId;
-      inputNode.rows = 3;
-      inputNode.className = 'recipient_form_input form-control';
-      inputNode.placeholder = "Message";
-      sectionNode.appendChild(inputNode);
-
-      // Check to see if there's a default value
-      if (this.config.message !== null) {
-        inputNode.value = this.config.message;
-      }
+      let messageSection = new MessageSection(config);
+      messageSection.addToDOM(sectionNode);
+      messageSection.setupValidation(this.validator);
 
       this.showDomNode(sectionNode);
     }

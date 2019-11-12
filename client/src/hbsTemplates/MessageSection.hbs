@@ -1,0 +1,7 @@
+<div id="message_section" class="form-group">
+  <label for="messages_input" class="recipient_label">Message</label>
+  <textarea id="messages_input" name="messages_input" class="recipient_form_input form-control"
+            rows="3"
+            placeholder="Message"
+            {{#if readonly}} readonly {{/if}}>{{#if defaultValue}}{{defaultValue}}{{/if}}</textarea>
+</div>
