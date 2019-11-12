@@ -364,8 +364,10 @@ export default class DynamicForm {
       let config = this.config.reminder;
 
       if(config.visible) {
-        this.reminders = new Reminder(config);
-        return this.reminders.addToDOM(sectionNode);
+        let reminder = new Reminder(config);
+        reminder.addToDOM(sectionNode);
+        //No validation
+        return;
       }
     }
 

@@ -219,7 +219,8 @@ class WorkflowConfig {
 
     return {
       visible: !hide,
-      defaultValue: ""
+      defaultValue: "",
+      editable: true,
     };
   }
 }
