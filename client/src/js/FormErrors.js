@@ -23,12 +23,12 @@ export default class FormErrors {
     let keys = Object.keys(errors);
     this._hasErrors = (keys.length > 0);
 
-    if (this._submitButtonNode !== null) {
-      this._submitButtonNode.disabled = this._hasErrors;
-    }
-
     if(this._showErrorDiv) {
       let data = {errors: false};
+
+      if (this._submitButtonNode !== null) {
+        this._submitButtonNode.disabled = this._hasErrors;
+      }
 
       if(this._hasErrors) {
         data.errors = {};

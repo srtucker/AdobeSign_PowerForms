@@ -5,6 +5,7 @@ const multer  = require('multer');
 const Axios = require('axios');
 const FormData = require('form-data');
 const WorkflowConfig = require('../WorkflowConfig.js');
+const WorkflowAgreementProcessor = require('../WorkflowAgreementProcessor.js');
 const config = require('../config.js');
 
 const fetch = require('node-fetch');
@@ -72,11 +73,30 @@ router.get('/workflows/:workflowId', async function(req, res, next){
 });
 
 router.post('/workflows/:workflowId/agreements', async function(req, res, next){
-  const config = req.app.locals.config;
+  try {
+    let worflowProcessor = new WorkflowAgreementProcessor(req.body, config.WorkFlowConfig);
 
-  console.log(req.body);
+    console.log("req.body", req.body);
 
-  res.json();
+    let agreement = worflowProcessor.getAgreement();
+
+    console.log("agreement", agreement);
+
+
+
+    res.json();
+  }
+  catch(err) {
+    console.error(err);
+    if(err.response) {
+      console.error(err.response);
+      if(err.response.status == 404) {
+        res.status(404).json(err.response.data);
+        return;
+      }
+    }
+    res.status(500).send();
+  }
 
   /*
 

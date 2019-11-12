@@ -80,8 +80,6 @@ export default class RecipientGroup {
     this.inputNode.onchange = function() {
       validationFn(validationTracker);
     };
-
-    return [validationTracker];
   }
 
   runValidation(validationTracker) {
@@ -106,8 +104,6 @@ export default class RecipientGroup {
     }
 
     validationTracker.update(error, message);
-
-    return status;
   }
 
   getValues() {

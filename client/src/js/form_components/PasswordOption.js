@@ -56,13 +56,11 @@ export default class PasswordOption {
         this._passwordConfirmInput.type = 'text';
       }
     }.bind(this);
-
-    return;
   }
 
   setupValidation(validator) {
     let validationFn = this.runValidation.bind(this);
-    let validationTracker = validator.createTracker(this._inputNode, validationFn);
+    let validationTracker = validator.createTracker(this._passwordInput, validationFn);
 
     this._protectCheckbox.addEventListener("click", (event) => {
       //only run when unchecking

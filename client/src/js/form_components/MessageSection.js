@@ -19,8 +19,6 @@ export default class MessageSection {
 
     //create hooks
     this._inputNode = parentNode.querySelector('textarea');
-
-    return;
   }
 
   setupValidation(validator) {

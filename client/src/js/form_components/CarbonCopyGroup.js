@@ -6,7 +6,6 @@ export default class CarbonCopyGroup {
     this.id = id;
     this.config = config;
 
-    //this.inputNodes = [];
     this.carbonCopyLines = [];
   }
 

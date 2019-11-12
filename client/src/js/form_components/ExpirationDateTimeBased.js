@@ -12,7 +12,7 @@ export default class ExpirationDateTimeBased {
     this._detailsDiv;
     this._expirationInput;
 
-    //minDays = 1
+    this.today = new Date();
 
     this.dateSettings = this.getDateSettings();
   }
@@ -47,13 +47,11 @@ export default class ExpirationDateTimeBased {
         this._detailsDiv.hidden = true;
       }
     }.bind(this);
-
-    return;
   }
 
   setupValidation(validator) {
     let validationFn = this.runValidation.bind(this);
-    let validationTracker = validator.createTracker(this._inputNode, validationFn);
+    let validationTracker = validator.createTracker(this._expirationInput, validationFn);
 
     this._expireCheckbox.addEventListener("click", (event) => {
       //only run when unchecking
@@ -104,32 +102,30 @@ export default class ExpirationDateTimeBased {
 
   getValues() {
     if(this._expireCheckbox.checked === true) {
-      const today = new Date();
       const selected_date = new Date(this._expirationInput.value);
 
-      const diffTime = Math.abs(selected_date - today_date);
+      const diffTime = Math.abs(selected_date - this.today);
       return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     }
     return null;
   }
 
   getDateSettings() {
-    let dateSettings = {}
-    var today = new Date();
+    let dateSettings = {};
 
     // Set max days and get string outputs
-    dateSettings.minDate = DateUtils.addDays(today, 1)
+    dateSettings.minDate = DateUtils.addDays(this.today, 1)
     dateSettings.minDateStr = DateUtils.format(dateSettings.minDate, 'YYYY-MM-DD');
-    dateSettings.maxDate = DateUtils.addDays(today, this.config.maxDays)
+    dateSettings.maxDate = DateUtils.addDays(this.today, this.config.maxDays)
     dateSettings.maxDateStr = DateUtils.format(dateSettings.maxDate, 'YYYY-MM-DD');
 
     // if default date
     if(this.config.defaultValue){
-      var defaultDate = DateUtils.addDays(today, Number(this.config.defaultValue))
+      var defaultDate = DateUtils.addDays(this.today, Number(this.config.defaultValue))
       dateSettings.defaultDateStr = DateUtils.format(defaultDate, 'YYYY-MM-DD')
     }
     else {
-      dateSettings.defaultDateStr = DateUtils.format(today, 'YYYY-MM-DD');
+      dateSettings.defaultDateStr = DateUtils.format(this.today, 'YYYY-MM-DD');
     }
 
     return dateSettings;

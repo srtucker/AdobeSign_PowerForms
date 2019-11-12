@@ -50,21 +50,18 @@ export default class FileSelect {
 
     //create hooks
     this._selectNode = div.querySelector('select');
-
-    return;
   }
 
   setupValidation(validator) {
     let validationFn = this.runValidation.bind(this);
     let validationTracker = validator.createTracker(this._selectNode, validationFn);
 
-    this._selectNode.onchange = function() {
-      validationFn(validationTracker);
-    };
-
+    this._selectNode.addEventListener("change", (event) => {
+      validationFn(validationTracker, event);
+    });
   }
 
-  runValidation(validationTracker) {
+  runValidation(validationTracker, event) {
     let error = false;
     let message = null;
     let docId = this._selectNode.value;

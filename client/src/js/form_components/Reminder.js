@@ -71,8 +71,6 @@ export default class Reminder{
         this._detailsDiv.hidden = true;
       }
     }.bind(this);
-
-    return;
   }
 
   getValues() {

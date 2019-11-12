@@ -23,13 +23,6 @@ export default class DynamicForm {
 
     this.validator = new Validator();
     this.formErrors;
-
-    this.file_info = [];
-    this.merge_fields = [];
-    this.expiration = null;
-    this.cc_group = [];
-    this.pass_option = "";
-    this.reminders = "";
   }
 
   async buildRecipientsForm(appDiv) {
@@ -69,6 +62,8 @@ export default class DynamicForm {
         return false;
       }
 
+      this.workflow.submit();
+
 
       return;
 
@@ -76,32 +71,7 @@ export default class DynamicForm {
       //this.workflow.buildAgreement();
 
       /*
-      let workflow_object = this.workflow;
-      let workflow_data = this.workflow_data;
-
-      var async_wf_obj = await workflow_object;
-      var wf_data = await workflow_data;
-
-      async_wf_obj.updateAgreementName();
-      async_wf_obj.updateRecipientGroup(wf_data['recipientsListInfo'], this.recipient_groups);
-      async_wf_obj.updateFileInfos(this.file_info);
-      async_wf_obj.updateMergeFieldInfos(this.merge_fields);
-      async_wf_obj.updateReminder(this.reminders);
-      async_wf_obj.updateMessage(document.getElementById('messages_input').value);
-
-      if (wf_data['passwordInfo'].visible) {
-        async_wf_obj.createOpenPass(this.pass_option.getPass(), this.pass_option.getProtection());
-      }
-
-      if (this.deadline.checked) {
-        async_wf_obj.updateDeadline(this.deadline.today_date);
-      }
-
-      if ('ccsListInfo' in wf_data) {
-        async_wf_obj.updateCcGroup(wf_data['ccsListInfo'][0], this.cc_group);
-      }
-
-      var response = await fetch(apiBaseURL + 'api/postAgreement/' + async_wf_obj.workflow_id, {
+      var response = await fetch(ClientConfig.apiBaseURL + 'api/postAgreement/' + async_wf_obj.workflow_id, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -162,7 +132,7 @@ export default class DynamicForm {
       let recipientGrp = new RecipientGroup(counter, config[counter]);
       recipientGrp.addToDOM(fieldsetNode);
       recipientGrp.setupValidation(this.validator);
-      this.workflow.recipientGroups.push(recipientGrp);
+      this.workflow.formHooks.recipientGroups.push(recipientGrp);
     }
   }
 
@@ -177,7 +147,7 @@ export default class DynamicForm {
         let ccGrp = new CarbonCopyGroup(counter, config[counter]);
         ccGrp.addToDOM(sectionNode);
         ccGrp.setupValidation(this.validator);
-        this.workflow.carbonCopyGroups.push(ccGrp);
+        this.workflow.formHooks.carbonCopyGroups.push(ccGrp);
       }
 
       this.showDomNode(sectionNode);
@@ -194,6 +164,7 @@ export default class DynamicForm {
       let agreementName = new AgreementName(config);
       agreementName.addToDOM(sectionNode);
       agreementName.setupValidation(this.validator);
+      this.workflow.formHooks.agreementName = agreementName;
 
       this.showDomNode(sectionNode);
     }
@@ -209,6 +180,7 @@ export default class DynamicForm {
       let messageSection = new MessageSection(config);
       messageSection.addToDOM(sectionNode);
       messageSection.setupValidation(this.validator);
+      this.workflow.formHooks.message = messageSection;
 
       this.showDomNode(sectionNode);
     }
@@ -234,13 +206,13 @@ export default class DynamicForm {
           let file = new FileSelect(config[counter]);
           file.addToDOM(fieldsetNode);
           file.setupValidation(this.validator);
-          this.workflow.files.push(file);
+          this.workflow.formHooks.files.push(file);
         }
         else {
           let file = new FileUpload(config[counter]);
           file.addToDOM(fieldsetNode);
           file.setupValidation(this.validator);
-          this.workflow.files.push(file);
+          this.workflow.formHooks.files.push(file);
         }
       }
 
@@ -266,8 +238,8 @@ export default class DynamicForm {
       for (let counter = 0; counter < config.length; counter++) {
         let mergeField = new MergeField(config[counter]);
         mergeField.addToDOM(fieldsetNode);
-
-        this.merge_fields.push(mergeField);
+        mergeField.setupValidation(this.validator);
+        this.workflow.formHooks.mergeFields.push(mergeField);
       }
 
       this.showDomNode(sectionNode);
@@ -302,6 +274,7 @@ export default class DynamicForm {
       let passwordOption = new PasswordOption(config);
       passwordOption.addToDOM(sectionNode);
       passwordOption.setupValidation(this.validator);
+      this.workflow.formHooks.passwordOption = passwordOption;
       return true;
     }
 
@@ -316,6 +289,7 @@ export default class DynamicForm {
         let expiration = (ClientConfig.expirationAsDate) ? new ExpirationDateTimeBased(config) : new Expiration(config);
         expiration.addToDOM(sectionNode);
         expiration.setupValidation(this.validator);
+        this.workflow.formHooks.expiration = expiration;
         return true;
       }
     }
@@ -331,6 +305,7 @@ export default class DynamicForm {
         let reminder = new Reminder(config);
         reminder.addToDOM(sectionNode);
         //No validation
+        this.workflow.formHooks.reminder = reminder;
         return;
       }
     }

@@ -26,20 +26,18 @@ export default class MergeField {
 
     //create hooks
     this._inputNode = div.querySelector('input');
-
-    return;
   }
 
   setupValidation(validator) {
     let validationFn = this.runValidation.bind(this);
     let validationTracker = validator.createTracker(this._inputNode, validationFn);
 
-    this._inputNode.onchange = function() {
-      validationFn(validationTracker);
-    };
+    this._inputNode.addEventListener("change", (event) => {
+      validationFn(validationTracker, event);
+    });
   }
 
-  runValidation(validationTracker) {
+  runValidation(validationTracker, event) {
     let error = false;
     let message = null;
     let value = this._inputNode.value;

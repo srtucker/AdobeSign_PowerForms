@@ -19,8 +19,6 @@ export default class AgreementName {
 
     //create hooks
     this._inputNode = parentNode.querySelector('input');
-
-    return;
   }
 
   setupValidation(validator) {

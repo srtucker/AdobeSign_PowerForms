@@ -25,21 +25,19 @@ export default class FileUpload {
     //create hooks
     this._uploadNode = div.querySelector('input');
     this._fileNameNode = div.querySelector('.custom-file-label');
-
-    return;
   }
 
   setupValidation(validator) {
     let validationFn = this.runValidation.bind(this);
-    let validationTracker = validator.createTracker(this.inputNode, validationFn);
+    let validationTracker = validator.createTracker(this._uploadNode, validationFn);
 
-    this._uploadNode.onchange = async function () {
+    this._uploadNode.addEventListener("change", async (event) => {
       this._transientDocumentId = await this.handleFileUpload();
-      validationFn(validationTracker);
-    }.bind(this);
+      validationFn(validationTracker, event);
+    });
   }
 
-  runValidation(validationTracker) {
+  runValidation(validationTracker, event) {
     let error = false;
     let message = null;
     let docId = this._transientDocumentId;

@@ -19,32 +19,28 @@ export default class CarbonCopyLine {
       placeholder: "Enter Cc's Email",
       required: this.required,
       readonly: this.readonly
-    }
+    };
 
     // Create the div
-    var div = document.createElement('div');
-    div.innerHTML = carbonCopyLineTemplate(data);
-    div.className = "form-group";
+    var tempDiv = document.createElement('div');
+    tempDiv.innerHTML = carbonCopyLineTemplate(data);
+    var div = tempDiv.firstChild
     parentNode.appendChild(div);
 
     //create hooks
     this._inputNode = div.querySelector('input');
-
-    return;
   }
 
   setupValidation(validator) {
     let validationFn = this.runValidation.bind(this);
     let validationTracker = validator.createTracker(this._inputNode, validationFn);
 
-    this._inputNode.onchange = function() {
-      validationFn(validationTracker);
-    };
-
-    return [validationTracker];
+    this._inputNode.addEventListener("change", (event) => {
+      validationFn(validationTracker, event);
+    });
   }
 
-  runValidation(validationTracker) {
+  runValidation(validationTracker, event) {
     let error = false;
     let message = null;
     let email = this._inputNode.value;
@@ -74,5 +70,4 @@ export default class CarbonCopyLine {
     }
     return null;
   }
-
 }

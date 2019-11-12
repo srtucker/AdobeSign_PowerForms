@@ -7,8 +7,6 @@ export default class Expiration {
   constructor(config) {
     this.config = config;
 
-    this.checked = false;
-
     this._expireCheckbox;
     this._detailsDiv;
     this._expirationInput;
@@ -54,13 +52,11 @@ export default class Expiration {
         this._detailsDiv.hidden = true;
       }
     }.bind(this);
-
-    return;
   }
 
   setupValidation(validator) {
     let validationFn = this.runValidation.bind(this);
-    let validationTracker = validator.createTracker(this._inputNode, validationFn);
+    let validationTracker = validator.createTracker(this._expirationInput, validationFn);
 
     this._expireCheckbox.addEventListener("click", (event) => {
       //only run when unchecking
@@ -123,6 +119,13 @@ export default class Expiration {
     validationTracker.update(error, message);
   }
 
+  getValues() {
+    if(this._expireCheckbox.checked === true) {
+      return this._expirationInput.value;
+    }
+    return null;
+  }
+
   updateExpirationAfterText() {
     let expirationDays = this._expirationInput.value;
     let daysInt = parseInt(expirationDays);
@@ -130,12 +133,5 @@ export default class Expiration {
 
     this._expirationAfterText.innerText = `Agreement expires after ${expirationDate.toLocaleDateString("en-us", {year: 'numeric', month: 'short', day: 'numeric' })}.`;
     this._expirationAfterText.hidden = false;
-  }
-
-  getValues() {
-    if(this._expireCheckbox.checked === true) {
-      return this._expirationInput.value;
-    }
-    return null;
   }
 }
