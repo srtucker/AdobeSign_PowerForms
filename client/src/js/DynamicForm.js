@@ -1,3 +1,4 @@
+import AgreementName from './form_components/AgreementName';
 import CarbonCopyGroup from './form_components/CarbonCopyGroup';
 import Expiration from './form_components/Expiration';
 import ExpirationDateTimeBased from './form_components/ExpirationDateTimeBased';
@@ -187,30 +188,11 @@ export default class DynamicForm {
     this.resetDOMNode(sectionNode, true);
 
     if ('agreementName' in this.config) {
-      const inputId = "agreement_name";
+      let config = this.config.agreementName;
 
-      sectionNode.classList.add("form-group");
-
-      // Create the label
-      var labelNode = document.createElement('label');
-      labelNode.innerHTML = "Agreement Name";
-      labelNode.htmlFor = inputId;
-      labelNode.className = "recipient_label required";
-      sectionNode.appendChild(labelNode);
-
-      // Create the input
-      var inputNode = document.createElement("input");
-      inputNode.id = inputId;
-      inputNode.name = 'agreement_name';
-      inputNode.placeholder = "Enter Agreement Name";
-      inputNode.className = 'recipient_form_input form-control';
-      inputNode.required = true;
-      sectionNode.appendChild(inputNode);
-
-      // Check to see if there's a default value
-      if (this.config.agreementName !== null) {
-        inputNode.value = this.config.agreementName;
-      }
+      let agreementName = new AgreementName(config);
+      agreementName.addToDOM(sectionNode);
+      agreementName.setupValidation(this.validator);
 
       this.showDomNode(sectionNode);
     }

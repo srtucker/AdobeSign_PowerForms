@@ -1,0 +1,8 @@
+<div class="form-group">
+  <label for="agreement_name" class="recipient_label required">Agreement Name</label>
+  <input id="agreement_name" name="agreement_name"
+         placeholder="Enter Agreement Name"
+         class="recipient_form_input form-control"
+         {{#if defaultValue}} value="{{defaultValue}}" {{/if}}
+         {{#if readonly}} readonly {{/if}}>
+</div>

@@ -131,7 +131,10 @@ class WorkflowConfig {
       return null;
     }
 
-    return this.wfData.agreementNameInfo.defaultValue;
+    return {
+      defaultValue: this.wfData.agreementNameInfo.defaultValue,
+      editable: true,
+    }
   }
 
   getMessageConfig() {
