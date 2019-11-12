@@ -9,9 +9,6 @@ port: 80
 # This is the public path the server will be located at.
 publicPath: '/'
 
-# This is the base URL all client API calls will be made to
-apiBaseURL: '/'
-
 # This is the server information needed to point the application to your Sign Console.
 adobeApi:
   # The host address to your Sign Console.
@@ -27,39 +24,7 @@ adobeApi:
   integrationKey:
 
 # This is the feature configuration.
-features:
-  # This feature will hide predefined recipients within your workflow.
-  # yes to hide
-  # no to show
-  hide_predefined: yes
-
-  # If hide_predefined is yes
-  # HIDE ALL PREDEFINED RECIPIENTS ACROSS ALL WORKFLOWS:
-  ## Comment out all the list items (-) by adding a # in front of it.
-
-  # HIDE PREDEFINED RECIPIENTS WITH TARGET WORKFLOWS
-  ## Add workflow names under hide_workflow_list such as " - Workflow name"
-  hide_workflow_list:
-    #- Notice how list items are comment out
-    - "Workflow name here"
-    - "Another workflow namer here"
-
-  # This feature will hide predefined cc recipients within your workflow
-  # yes to hide
-  # no to show
-  hide_cc: yes
-
-  # If hide_cc is yes
-  # HIDE ALL PREDEFINED CC RECIPIENTS ACROSS ALL WORKFLOWS:
-  ## Comment out all the list items (-) by adding a # in front of it.
-
-  # HIDE PREDEFINED CC RECIPIENTS WITH TARGET WORKFLOWS
-  ## Add workflow names under hide_cc_workflow_list such as " - Workflow name"
-  hide_cc_workflow_list:
-    #- Notice how list items are comment out
-    - "Workflow name here"
-    - "Another workflow namer here"
-
+WorkFlowConfig:
   recipients:
     hide_predefined: false
     hide_readonly: true
@@ -78,3 +43,10 @@ features:
     hide: false
   reminder:
     hide: false
+
+#these setings are included in the client
+ClientConfig:
+  # This is the base URL all client API calls will be made to
+  apiBaseURL: '/'
+
+  expirationAsDate: true

@@ -1,7 +1,7 @@
 import Axios from 'axios';
 
 export async function getWorflowConfig(workflowId) {
-  const workflowReq = Axios.get(apiBaseURL + 'api/workflows/' + workflowId);
+  const workflowReq = Axios.get(ClientConfig.apiBaseURL + 'api/workflows/' + workflowId);
 
   let workflowConfig = (await workflowReq).data;
 
@@ -12,7 +12,7 @@ export async function postTransientDocument(file) {
   var formData = new FormData();
   formData.append('myfile', file);
 
-  const apiResponse = Axios.post(apiBaseURL + 'api/postTransient', formData);
+  const apiResponse = Axios.post(ClientConfig.apiBaseURL + 'api/postTransient', formData);
 
   let data = (await apiResponse).data;
 

@@ -1,5 +1,6 @@
 import CarbonCopyGroup from './form_components/CarbonCopyGroup';
 import Expiration from './form_components/Expiration';
+import ExpirationDateTimeBased from './form_components/ExpirationDateTimeBased';
 import FileSelect from './form_components/FileSelect';
 import FileUpload from './form_components/FileUpload';
 import MergeField from './form_components/MergeField';
@@ -348,8 +349,10 @@ export default class DynamicForm {
       let config = this.config.expiration;
 
       if (config.visible) {
-        this.expiration = new Expiration(config);
-        return this.expiration.addToDOM(sectionNode);
+        let expiration = (ClientConfig.expirationAsDate) ? new ExpirationDateTimeBased(config) : new Expiration(config);
+        expiration.addToDOM(sectionNode);
+        expiration.setupValidation(this.validator);
+        return true;
       }
     }
 

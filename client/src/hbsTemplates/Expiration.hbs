@@ -1,0 +1,33 @@
+<div role="group" aria-labelledby="expiration-label">
+  <div class="compose-option-group checkbox-a12" role="presentation">
+    <label class="form-check-label">
+      <input type="checkbox" id="expiration-checkbox" class="expiration"
+             {{#if readonly}} readonly {{/if}}
+             {{checked}}>
+      <span id="expiration-label">Completion Deadline</span>
+    </label>
+  </div>
+  <div id="expiration-details" class="form-group expiration-in-days" role="presentation" {{#unless checked}}hidden {{/unless}}>
+    <div class="expiration-in-days-div form-inline" role="presentation">
+      <label class="control-label">
+        <input id="expiration-in-days-val" type="number" class="form-control expiration-input"
+               value="{{value}}"
+               min="{{minDays}}"
+               max="{{maxDays}}"
+               {{#if readonly}} readonly {{/if}}
+               aria-labelledby="expiration-in-days-label expiration-in-days-end-label"
+               aria-describedby="expiration-in-days-desc"
+               aria-controls="expiration-in-days-desc"
+               required />
+        <span id="expiration-in-days-label"> {{inputLabel}}</span>
+      </label>
+    </div>
+    <div class="ancillary-text" role="presentation">
+      <span class="medium expiration-label-end" id="expiration-in-days-end-label">{{inputLabelEnd}}</span>
+      <span id="expiration-in-days-desc" aria-live="polite" aria-relevant="additions text" aria-atomic="true">
+        <span class="medium expiration-after-text" hidden></span>
+        <span class="medium expiration-error-text" hidden></span>
+      </span>
+    </div>
+  </div>
+</div>

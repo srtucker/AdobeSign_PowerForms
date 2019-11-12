@@ -54,7 +54,7 @@ router.get('/getWorkflows', async function (req, res, next) {
 router.get('/workflows/:workflowId', async function(req, res, next){
   try {
     const api_response = await APIClient.get("/workflows/" + req.params.workflowId);
-    var workflowConfig = new WorkflowConfig(api_response.data, config.features);
+    var workflowConfig = new WorkflowConfig(api_response.data, config.WorkFlowConfig);
 
     res.json(workflowConfig.getClientConfig());
   }

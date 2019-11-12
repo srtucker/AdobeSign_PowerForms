@@ -71,11 +71,6 @@ if (isDevClient) {
 // Serve static files
 app.use(publicPath, express.static(path.join(__dirname, '../', clientFolder)));
 
-// Get features from config files
-app.get(publicPath + 'features', function (req, res){
-  res.json(config['features'])
-});
-
 app.use(publicPath + 'api', require('./routes/api.js'));
 
 // START THE SERVER

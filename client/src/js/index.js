@@ -32,7 +32,7 @@ async function showWorkflowSelector() {
   $("#workflow_selector").show();
 
   try {
-    const api_response = await Axios.get(apiBaseURL + 'api/getWorkflows');
+    const api_response = await Axios.get(ClientConfig.apiBaseURL + 'api/getWorkflows');
     const workflow_list = api_response.data;
 
     // Iterate through workflow data and assign text/value to array for drop-down options

@@ -1,132 +1,141 @@
-import expirationSectionTemplate from 'ExpirationSection.hbs';
+import Utils from '../util/Utils';
+import DateUtils from '../util/Date';
+import expirationTemplate from 'Expiration.hbs';
+import _ from 'lodash';
 
 export default class Expiration {
   constructor(config) {
     this.config = config;
 
-    this.default_value = config['defaultValue'];
-    this.editable = config['editable'];
-    this.visable = config['visible'];
-    this.max_days = config['maxDays'];
-    this.today_date = "";
     this.checked = false;
 
-    this.checkbox;
-    this.detailsDiv;
-    this.dateInput;
+    this._expireCheckbox;
+    this._detailsDiv;
+    this._expirationInput;
+
+    this.minDays = 1;
+    this.maxDays = config.maxDays;
+    this.today = new Date();
   }
 
   addToDOM(parentNode) {
-    let isVisible = true;
+    let data = {
+      checked: (this.config.defaultValue) ? "checked" : "",
+      readonly: !this.config.editable,
+      minDays: this.minDays,
+      maxDays: this.maxDays,
+      value: this.config.defaultValue,
+      inputLabelEnd: "to complete this agreement.",
+      inputLabel: "days",
+    };
 
     // Create the div
     let div = document.createElement('div');
-    div.innerHTML = expirationSectionTemplate();
+    div.innerHTML = expirationTemplate(data);
     div.className = "expiration-section compose-option-section";
     parentNode.appendChild(div);
 
     //create hooks
-    this.checkbox = document.getElementById('expiration-checkbox');
-    this.detailsDiv = document.getElementById('expiration-details');
-    this.dateInput = document.getElementById('expiration-time');
+    this._expireCheckbox = div.querySelector('#expiration-checkbox');
+    this._detailsDiv = div.querySelector('#expiration-details');
+    this._expirationInput = div.querySelector('#expiration-in-days-val');
+    this._expirationAfterText = div.querySelector(".expiration-after-text");
+    this._expirationError = div.querySelector(".expiration-error-text");
 
-    //set initial values
-    if(typeof this.config.defaultValue !== 'undefined') {
-      this.checkbox.checked = true;
-    }
-    this.setDateValues(this.dateInput);
+    this.updateExpirationAfterText();
 
     // Add event handlers
-    this.checkbox.onclick = function () {
-      this.checkBoxChangeHandler();
+    this._expireCheckbox.onclick = function () {
+      if (this._expireCheckbox.checked === true) {
+        this._detailsDiv.hidden = false;
+        this._expirationInput.focus()
+      }
+      else {
+        this._detailsDiv.hidden = true;
+      }
     }.bind(this);
 
-    // run change handler once to set inital settings
-    this.checkBoxChangeHandler();
-
-    return isVisible;
+    return;
   }
 
-  checkBoxChangeHandler() {
-    if (this.checkbox.checked === true) {
-      this.detailsDiv.hidden = false;
-      this.checked = true;
+  setupValidation(validator) {
+    let validationFn = this.runValidation.bind(this);
+    let validationTracker = validator.createTracker(this._inputNode, validationFn);
+
+    this._expireCheckbox.addEventListener("click", (event) => {
+      //only run when unchecking
+      if(this._expireCheckbox.checked !== true) {
+        validationFn(validationTracker, event);
+      }
+    });
+
+    this._expirationInput.addEventListener("change", (event) => {
+      validationFn(validationTracker, event);
+    });
+  }
+
+  runValidation(validationTracker, event) {
+    let error = false;
+    let message = null;
+    let expirationDays = this._expirationInput.value;
+    let daysInt = parseInt(expirationDays);
+
+    if(this._expireCheckbox.checked === true) {
+      if(this.config.editable && expirationDays == "") {
+        error = true;
+        message = "Please enter the number of days after which this document expires.";
+      }
+      else {
+        let minDays = this.minDays;
+        let maxDays = this.maxDays;
+
+        if(_.isNaN(daysInt)) {
+          error = true;
+          message = "Agreement expiration may only contain numbers.";
+        }
+        else if(expirationDays < minDays) {
+          error = true;
+          message = "There is a minimum of 1 day to set agreement expiration.";
+        }
+        else if(expirationDays > maxDays) {
+          error = true;
+          message = `There is a maximum of ${maxDays} days before agreement expiration.`;
+        }
+      }
     }
-    // Show sub pass div
+
+    if(error) {
+      this._expirationError.innerText = message;
+      this._expirationError.hidden = false;
+      this._expirationAfterText.innerText = "";
+      this._expirationAfterText.hidden = true;
+
+      this._expirationInput.classList.add("is-invalid");
+    }
     else {
-      this.detailsDiv.hidden = true;
-      this.checked = false;
+      this._expirationError.innerText = "";
+      this._expirationError.hidden = true;
+      this.updateExpirationAfterText();
+
+      Utils.removeClass(this._expirationInput, "is-invalid");
     }
+
+    validationTracker.update(error, message);
   }
 
-  setDateValues(target_input){
-    /***
-     * This function will add the date time logic
-     * @param {Object} target_input The target date input to add date logic
-     */
+  updateExpirationAfterText() {
+    let expirationDays = this._expirationInput.value;
+    let daysInt = parseInt(expirationDays);
+    let expirationDate = DateUtils.addDays(this.today, daysInt);
 
-    // Create Date objects
-    var today = new Date();
-    var max_days = new Date();
-    var predefine_date = new Date();
-
-    // Set max days and get string outputs
-    this.today_date = this.getDateFormat(today);
-    today.setDate(today.getDate() + 1);
-    max_days.setDate(today.getDate() + this.max_days);
-    var max_days_date = this.getDateFormat(max_days);
-
-    // Set range of dates
-    if(typeof this.default_value !== 'undefined'){
-      predefine_date.setDate(today.getDate() + Number(this.default_value));
-      let predefine_date_format = this.getDateFormat(predefine_date)
-      target_input.value = predefine_date_format;
-    }
-    else{
-      target_input.value = this.today_date;
-    }
-
-    target_input.min = this.today_date;
-    target_input.max = max_days_date;
-
+    this._expirationAfterText.innerText = `Agreement expires after ${expirationDate.toLocaleDateString("en-us", {year: 'numeric', month: 'short', day: 'numeric' })}.`;
+    this._expirationAfterText.hidden = false;
   }
 
-  addDays(date, days) {
-    /***
-     * This function will add days to the date
-     * @param {Date} date The date object we wish to target
-     * @param {Number} days The amount of days added to the target date
-     */
-
-    // Create new date object and add the days delta to it
-    var result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-  }
-
-  getDateFormat(date) {
-    /***
-     * This function will formate the date for input
-     * @param {Date} date The date object we wish to formate
-     */
-
-    // Create the day, month, and year variables
-    var dd = date.getDate();
-    var mm = date.getMonth() + 1;
-    var y = date.getFullYear();
-
-    // Month under 10 add leading 0
-    if (dd < 10) {
-      dd = '0' + dd
+  getValues() {
+    if(this._expireCheckbox.checked === true) {
+      return this._expirationInput.value;
     }
-    if (mm < 10) {
-      mm = '0' + mm
-    }
-
-    // Format
-    var date_format = y + '-' + mm + '-' + dd;
-
-    return date_format;
+    return null;
   }
-
 }
