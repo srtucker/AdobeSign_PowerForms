@@ -3,6 +3,8 @@ class WorkflowConfig {
   constructor(wfData, settings) {
     this.wfData = wfData;
     this.settings = settings;
+
+    this.wfSettings = {};
   }
 
   getClientConfig() {
@@ -13,6 +15,7 @@ class WorkflowConfig {
       instructions: this.wfData.description
     }
 
+    clientConfig.mergeFields = this.getMergeFieldConfig();
     clientConfig.instructions = this.wfData.description
 
     clientConfig.recipients = this.getRecipientsConfig();
@@ -33,7 +36,6 @@ class WorkflowConfig {
     }
 
     clientConfig.files = this.getFilesConfig();
-    clientConfig.mergeFields = this.getMergeFieldConfig();
     clientConfig.password = this.wfData.passwordInfo;
 
     const expiration = this.getExpirationConfig();
@@ -131,6 +133,10 @@ class WorkflowConfig {
       return null;
     }
 
+    if("HideAgreementName" in this.wfSettings && this.wfSettings.HideAgreementName.defaultValue.toLowerCase() == 'true') {
+      return null;
+    }
+
     return {
       defaultValue: this.wfData.agreementNameInfo.defaultValue,
       editable: true,
@@ -186,6 +192,10 @@ class WorkflowConfig {
       this.wfData.mergeFieldsInfo.forEach(wfField => {
         // skip config fields
         if(wfField.fieldName.startsWith("WFSetting")) {
+          this.wfSettings[wfField.fieldName.replace("WFSetting_", "")] = {
+            defaultValue: wfField.defaultValue,
+            editable: wfField.editable,
+          };
           return;
         }
 
@@ -222,12 +232,24 @@ class WorkflowConfig {
 
   getReminderConfig() {
     let hide = this.settings.reminder.hide;
+    let hide_predefined = this.settings.reminder.hide_predefined;
 
-    return {
-      visible: !hide,
-      defaultValue: "",
-      editable: true,
-    };
+    if(this.wfSettings.Reminder) {
+      return {
+        visible: !(hide || hide_predefined),
+        defaultValue: this.wfSettings.Reminder.defaultValue,
+        editable: this.wfSettings.Reminder.editable,
+      };
+    }
+    else {
+      return {
+        visible: !hide,
+        defaultValue: "",
+        editable: true,
+      };
+    }
+
+
   }
 }
 
