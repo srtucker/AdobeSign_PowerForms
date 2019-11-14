@@ -54,20 +54,26 @@ router.get('/getWorkflows', async function (req, res, next) {
 // GET /workflows/{workflowId}
 router.get('/workflows/:workflowId', async function(req, res, next){
   try {
-    const api_response = await APIClient.get("/workflows/" + req.params.workflowId);
-    var workflowConfig = new WorkflowConfig(api_response.data, config.WorkFlowConfig);
-
+    const workflowId = req.params.workflowId;
+    const api_response = await APIClient.get(`/workflows/${workflowId}`);
+    let workflowConfig = new WorkflowConfig(api_response.data, config.WorkFlowConfig);
     res.json(workflowConfig.getClientConfig());
   }
-  catch(err) {
-    console.error(err);
-    if(err.response) {
-      console.error(err.response);
-      if(err.response.status == 404) {
-        res.status(404).json(err.response.data);
-        return;
+  catch(e) {
+    if(e.response) {
+      console.error(`API Error: ${e.response.status}`, e.response);
+      if(e.response.status == 401) {
+        return res.status(500).send();
+      }
+      else if(e.response.status == 403) {
+        return res.status(403).json(e.response.data);
+      }
+      else if(e.response.status == 404) {
+        return res.status(404).json(e.response.data);
       }
     }
+
+    console.error(e);
     res.status(500).send();
   }
 });
@@ -75,70 +81,36 @@ router.get('/workflows/:workflowId', async function(req, res, next){
 router.post('/workflows/:workflowId/agreements', async function(req, res, next){
   try {
     const workflowId = req.params.workflowId;
-    const wfDataRequest = await APIClient.get("/workflows/"+workflowId);
-
-    console.log("req.body", req.body);
-
+    const wfDataRequest = await APIClient.get(`/workflows/${workflowId}`);
     let worflowProcessor = new WorkflowAgreementProcessor(wfDataRequest.data, config.WorkFlowConfig, req.body);
 
     let agreementData = worflowProcessor.getAgreement();
     let sendingAccount = worflowProcessor.getSendingAccount();
-
     let headers = {};
 
     if(sendingAccount) {
-      headers['x-api-user'] = "email:"+sendingAccount
+      headers["x-api-user"] = `email:${sendingAccount}`;
     }
 
-    const agreementRequest = await APIClient.post("/workflows/"+workflowId+"/agreements", agreementData, {headers});
+    const agreementRequest = await APIClient.post(`/workflows/${workflowId}/agreements`, agreementData, {headers});
 
     console.log("agreementRequest", agreementRequest);
-
-
-
-    //console.log("agreement", agreement);
-
-
-
-    res.json();
+    res.json(agreementRequest.data);
   }
-  catch(err) {
-    console.error(err);
-    if(err.response) {
-      console.error(err.response);
-      if(err.response.status == 404) {
-        res.status(404).json(err.response.data);
-        return;
+  catch(e) {
+    if(e.response) {
+      console.error(`API Error: ${e.response.status}`, e.response);
+      if(e.response.status == 403) {
+        return res.status(403).json(e.response.data);
+      }
+      else if(e.response.status == 404) {
+        return res.status(404).json(e.response.data);
       }
     }
+
+    console.error(e);
     res.status(500).send();
   }
-
-  /*
-
-  try {
-
-    const api_response = await Axios.get(config.adobeApi.url + "/workflows/" + req.params.workflowId, {
-      headers: {
-        'Access-Token': config.adobeApi.integrationKey
-      }
-    });
-
-    var workflowConfig = new WorkflowConfig(api_response.data, config.features);
-
-    res.json(workflowConfig.getClientConfig());
-  }
-  catch(err) {
-    console.error(err);
-    if(err.response) {
-      console.error(err.response);
-      if(err.response.status == 404) {
-        res.status(404).json(err.response.data);
-        return;
-      }
-    }
-    res.status(500).send();
-  }*/
 });
 
 // GET /libraryDocuments/{libraryDocumentId}/documents
@@ -161,31 +133,6 @@ router.get('/getLibraryDocuments/:id', async function(req, res, next) {
   const data = await library_document.json();
 
   es.json(data);
-});
-
-// POST /workflows/{workflowId}/agreements
-router.post('/postAgreement/:id', async function(req, res, next){
-  const config = req.app.locals.config;
-
-  function postAgreement() {
-    /***
-     * This function post agreements
-     */
-    return fetch(config.adobeApi.url + "/workflows/" + req.params.id + "/agreements", {
-      method:'POST',
-      headers: {
-        'Access-Token': config.adobeApi.integrationKey,
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(req.body)
-    });
-  }
-
-  const api_response = await postAgreement();
-  const data = await api_response.json();
-
-  res.json(data);
 });
 
 // POST /transientDocuments

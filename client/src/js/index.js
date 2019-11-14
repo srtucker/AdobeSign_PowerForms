@@ -1,12 +1,13 @@
-
 import "core-js";
 import "regenerator-runtime/runtime";
 import queryString from 'query-string';
 import Axios from 'axios';
-
 import Workflow from './Workflow';
 import DynamicForm from './DynamicForm';
 import ParsePath from './util/ParsePath';
+import { HandledException } from './util/Exceptions';
+
+import appErrorTemplate from 'AppError.hbs';
 
 import '../scss/style.scss';
 
@@ -16,13 +17,12 @@ const parsePath = new ParsePath({
   end: true,
 });
 
-$("#workflow_selector").hide();
-//$("#workflow_name").hide();
+let appNode = document.getElementById("app");
 
 var params = parsePath.test('/workflow/:id', window.location.pathname);
 if(params !== false) {
   var workflowId = params.id;
-  runWorkflow(workflowId, false);
+  runWorkflow(appNode, workflowId, false);
 }
 else {
   showWorkflowSelector()
@@ -60,9 +60,19 @@ async function showWorkflowSelector() {
   }
 }
 
-async function runWorkflow(workflowId, showSelector) {
-  let workflow = await Workflow.loadWorkflow(workflowId);
+async function runWorkflow(appNode, workflowId, showSelector) {
+  try {
+    let workflow = await Workflow.loadWorkflow(workflowId);
 
-  // Create the dynamic form
-  workflow.render(document.getElementById("app"));
+    // Create the dynamic form
+    workflow.render(appNode);
+  }
+  catch(e) {
+    if(e instanceof HandledException) {
+      appNode.innerHTML = appErrorTemplate(e.getTemplateVars());
+    }
+    else {
+      console.error(e);
+    }
+  }
 }

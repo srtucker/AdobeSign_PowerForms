@@ -1,38 +1,61 @@
 import Axios from 'axios';
+import { APIException, InternalServerError } from './util/Exceptions';
+
+const APIClient = Axios.create({
+  baseURL: ClientConfig.apiBaseURL,
+});
 
 export async function getWorflowConfig(workflowId) {
-  const workflowReq = Axios.get(ClientConfig.apiBaseURL + 'api/workflows/' + workflowId);
+  try {
+    const workflowReq = await APIClient.get(`/api/workflows/${workflowId}`);
+    return workflowReq.data;
+  }
+  catch(e) {
+    if(e.response) {
+      console.error(`API Error: ${e.response.status}`, e.name, e.response);
+      if(e.response.data && e.response.data.code) {
+        throw new APIException(e.response.data);
+      }
+      else if(e.response.status == 500) {
+        throw new InternalServerError(e.response.data);
+      }
+    }
 
-  let workflowConfig = (await workflowReq).data;
-
-  return workflowConfig
+    console.error(e);
+    throw e;
+  }
 }
 
 export async function postTransientDocument(file) {
   var formData = new FormData();
   formData.append('myfile', file);
 
-  const apiResponse = Axios.post(ClientConfig.apiBaseURL + 'api/postTransient', formData);
-
-  let data = (await apiResponse).data;
-
-  return data;
+  const apiResponse = await APIClient.post(`/api/postTransient`, formData);
+  return apiResponse.data;
 }
 
-
 export async function postWorkflowAgreement(workflowId, agreementData) {
-  //var formData = new FormData();
-  //formData.append('myfile', file);
-
-  const apiResponse = Axios.post(ClientConfig.apiBaseURL + 'api/workflows/'+workflowId+'/agreements', agreementData, {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+  try {
+    const apiResponse = await APIClient.post(`/api/workflows/${workflowId}/agreements`, agreementData, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      }
+    });
+    return apiResponse.data;
+  }
+  catch(e) {
+    if(e.response) {
+      console.error(`API Error: ${e.response.status}`, e.name, e.response);
+      if(e.response.data && e.response.data.code) {
+        throw new APIException(e.response.data);
+      }
+      else if(e.response.status == 500) {
+        throw new InternalServerError(e.response.data);
+      }
     }
-  });
 
-  let data = (await apiResponse).data;
-  console.log("apiResponse.data", data)
-
-  return data;
+    console.error(e);
+    throw e;
+  }
 }

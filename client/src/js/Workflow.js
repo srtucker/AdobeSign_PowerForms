@@ -1,5 +1,6 @@
 import DynamicForm from './DynamicForm';
 import * as API from './API';
+import { APIException, HandledException, InternalServerError } from './util/Exceptions';
 
 export default class Workflow {
   constructor(workflowId) {
@@ -25,12 +26,38 @@ export default class Workflow {
   }
 
   static async loadWorkflow(workflowId) {
-    let workflowConfig = API.getWorflowConfig(workflowId);
-    let wf = new Workflow(workflowId);
+    try {
+      let workflowConfig = API.getWorflowConfig(workflowId);
+      let wf = new Workflow(workflowId);
 
-    wf.workflowConfig = await workflowConfig;
+      wf.workflowConfig = await workflowConfig;
 
-    return wf;
+      return wf;
+    }
+    catch(e) {
+      if(e instanceof APIException) {
+        console.log(e.name,e.apiData)
+
+        if(e.apiData.code) {
+          if(e.apiData.code == "DISABLED_WORKFLOW") {
+            throw new HandledException("Error", `The requested workflow is not currently available.`);
+          }
+          else if(e.apiData.code == "PERMISSION_DENIED") {
+            throw new HandledException("Error", `The requested workflow is not currently available.`);
+          }
+          else if(e.apiData.code == "INVALID_WORKFLOW_ID") {
+            throw new HandledException("Error", `The requested workflow could not be found.`);
+          }
+        }
+      }
+      else if(e instanceof InternalServerError) {
+        console.log(e.name,e.message)
+
+        throw new HandledException("Error", "Sorry, a server error has occured. Please try again later or contact adobesign@calpoly.edu for support.");
+      }
+
+      throw e;
+    }
   }
 
   getWorkflowConfig() {
@@ -44,7 +71,7 @@ export default class Workflow {
     this.dynamicForm = dynamicForm;
   }
 
-  submit() {
+  async submit() {
     let agreementData = {
       recipients: this.getReducedValues(this.formHooks.recipientGroups),
       carbonCopy: this.getReducedValues(this.formHooks.carbonCopyGroups),
@@ -78,7 +105,7 @@ export default class Workflow {
     console.log(agreementData)
     this.agreementData = agreementData;
 
-    let apiResponse = API.postWorkflowAgreement(this.workflowId, agreementData);
+    let apiResponse = await API.postWorkflowAgreement(this.workflowId, agreementData);
     console.log("apiResponse", apiResponse);
   }
 
