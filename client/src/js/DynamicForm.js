@@ -190,7 +190,7 @@ export default class DynamicForm {
     //reset current node
     this.resetDOMNode(sectionNode, true);
 
-    if ('files' in this.config) {
+    if ('files' in this.config && this.config.files.length > 0) {
       let config = this.config.files;
 
       let fieldsetNode = document.createElement('fieldset');
@@ -224,7 +224,7 @@ export default class DynamicForm {
     //reset current node
     this.resetDOMNode(sectionNode, true);
 
-    if ('mergeFields' in this.config) {
+    if ('mergeFields' in this.config && this.config.mergeFields.length > 0) {
       let config = this.config.mergeFields;
 
       let fieldsetNode = document.createElement('fieldset');
