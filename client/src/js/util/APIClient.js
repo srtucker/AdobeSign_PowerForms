@@ -1,13 +1,13 @@
 import Axios from 'axios';
-import { APIException, InternalServerError } from './util/Exceptions';
+import { APIException, InternalServerError } from './Exceptions';
 
-const APIClient = Axios.create({
+const API = Axios.create({
   baseURL: ClientConfig.apiBaseURL,
 });
 
 export async function getWorflowConfig(workflowId) {
   try {
-    const workflowReq = await APIClient.get(`/api/workflows/${workflowId}`);
+    const workflowReq = await API.get(`/api/workflows/${workflowId}`);
     return workflowReq.data;
   }
   catch(e) {
@@ -30,13 +30,13 @@ export async function postTransientDocument(file) {
   var formData = new FormData();
   formData.append('myfile', file);
 
-  const apiResponse = await APIClient.post(`/api/postTransient`, formData);
+  const apiResponse = await API.post(`/api/postTransient`, formData);
   return apiResponse.data;
 }
 
 export async function postWorkflowAgreement(workflowId, agreementData) {
   try {
-    const apiResponse = await APIClient.post(`/api/workflows/${workflowId}/agreements`, agreementData, {
+    const apiResponse = await API.post(`/api/workflows/${workflowId}/agreements`, agreementData, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

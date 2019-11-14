@@ -1,4 +1,4 @@
-import * as API from '../API';
+import * as APIClient from '../util/APIClient';
 import Utils from '../util/Utils';
 import fileUploadTemplate from 'FileUpload.hbs';
 
@@ -71,7 +71,7 @@ export default class FileUpload {
   async handleFileUpload() {
     var file = this._uploadNode.files[0];
     this._fileNameNode.innerText = file.name;
-    let transientDocument = await API.postTransientDocument(file);
+    let transientDocument = await APIClient.postTransientDocument(file);
     return transientDocument.transientDocumentId;
   }
 }

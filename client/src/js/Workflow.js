@@ -1,5 +1,5 @@
 import DynamicForm from './DynamicForm';
-import * as API from './API';
+import * as APIClient from './util/APIClient';
 import { APIException, HandledException, InternalServerError } from './util/Exceptions';
 
 export default class Workflow {
@@ -27,7 +27,7 @@ export default class Workflow {
 
   static async loadWorkflow(workflowId) {
     try {
-      let workflowConfig = API.getWorflowConfig(workflowId);
+      let workflowConfig = APIClient.getWorflowConfig(workflowId);
       let wf = new Workflow(workflowId);
 
       wf.workflowConfig = await workflowConfig;
@@ -105,7 +105,7 @@ export default class Workflow {
     console.log(agreementData)
     this.agreementData = agreementData;
 
-    let apiResponse = await API.postWorkflowAgreement(this.workflowId, agreementData);
+    let apiResponse = await APIClient.postWorkflowAgreement(this.workflowId, agreementData);
     console.log("apiResponse", apiResponse);
   }
 
