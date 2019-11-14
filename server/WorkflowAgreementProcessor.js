@@ -8,9 +8,7 @@ class WorkflowAgreementProcessor {
     this.sendingAccount = null;
     this.dictionary = {};
 
-    this.agreementData = {
-      documentCreationInfo: {}
-    };
+    this.agreementData = {};
 
     this._buildMergeFields();
     this._buildRecipients();
@@ -20,21 +18,26 @@ class WorkflowAgreementProcessor {
     this._buildExpiration();
     this._buildReminder();
     this._buildAgreementName();
-    //this._buildMessage();
+    this._buildMessage();
   }
 
   getAgreement() {
     console.log("dictionary", this.dictionary);
-    console.log("documentCreationInfo", this.agreementData.documentCreationInfo);
+    console.log("documentCreationInfo", this.agreementData);
 
-    //documentCreationInfo.creationInfo.callbackInfo = this.();
-    //documentCreationInfo.creationInfo.formFieldLayerTemplates = this.();
-    //documentCreationInfo.creationInfo.formFields = this.();
-    //documentCreationInfo.creationInfo.locale = this.();
-    //documentCreationInfo.creationInfo.postSignOptions = this.();
-    //documentCreationInfo.creationInfo.vaultingInfo = this.();
+    //this.agreementData.callbackInfo
+    //this.agreementData.formFieldLayerTemplates
+    //this.agreementData.formFields
+    //this.agreementData.locale
+    //this.agreementData.postSignOptions
+    //this.agreementData.vaultingInfo
 
-    return this.agreementData;
+    return {
+      documentCreationInfo: this.agreementData,
+      options: {
+        autoLoginUser: false,
+      },
+    };
   }
 
   getSendingAccount() {
@@ -43,7 +46,7 @@ class WorkflowAgreementProcessor {
 
   _buildMergeFields() {
     if('mergeFieldsInfo' in this.wfData) {
-      let data = this.agreementData.documentCreationInfo.mergeFieldInfo = [];
+      let data = this.agreementData.mergeFieldInfo = [];
 
       this.wfData.mergeFieldsInfo.forEach(wf => {
         let val = wf.defaultValue;
@@ -73,7 +76,7 @@ class WorkflowAgreementProcessor {
   }
 
   _buildRecipients() {
-    let data = this.agreementData.documentCreationInfo.recipientsListInfo = [];
+    let data = this.agreementData.recipientsListInfo = [];
 
     this.wfData.recipientsListInfo.forEach(wf => {
       let recipients = [];
@@ -109,7 +112,7 @@ class WorkflowAgreementProcessor {
   _buildCarbonCopy() {
     //carbonCopies
     if('ccsListInfo' in this.wfData) {
-      let data = this.agreementData.documentCreationInfo.ccs = [];
+      let data = this.agreementData.ccs = [];
       let hide_predefined = this.settings.cc.hide_predefined;
 
       this.wfData.ccsListInfo.forEach(wf => {
@@ -148,8 +151,7 @@ class WorkflowAgreementProcessor {
   }
 
   _buildFiles() {
-    //files
-    let data = this.agreementData.documentCreationInfo.fileInfos = [];
+    let data = this.agreementData.fileInfos = [];
 
     this.wfData.fileInfos.forEach(wf => {
       let file = null;
@@ -189,7 +191,7 @@ class WorkflowAgreementProcessor {
       //TODO: error
     }
     else if(securityOptions) {
-      this.agreementData.documentCreationInfo.securityOptions = securityOptions;
+      this.agreementData.securityOptions = securityOptions;
     }
   }
 
@@ -219,7 +221,7 @@ class WorkflowAgreementProcessor {
       }
       */
 
-      this.agreementData.documentCreationInfo.daysUntilSigningDeadline = deadlineInt;
+      this.agreementData.daysUntilSigningDeadline = deadlineInt;
     }
   }
 
@@ -246,7 +248,7 @@ class WorkflowAgreementProcessor {
       }
       */
 
-      this.agreementData.documentCreationInfo.reminderFrequency = reminder;
+      this.agreementData.reminderFrequency = reminder;
     }
   }
 
@@ -263,7 +265,7 @@ class WorkflowAgreementProcessor {
       agreementName = processTemplateString(agreementName, this.dictionary);
     }
 
-    this.agreementData.documentCreationInfo.name = agreementName;
+    this.agreementData.name = agreementName;
   }
 
   _buildMessage() {
@@ -280,7 +282,7 @@ class WorkflowAgreementProcessor {
       message = processTemplateString(message, this.dictionary);
     }
 
-    this.agreementData.documentCreationInfo.message = message;
+    this.agreementData.message = message;
   }
 }
 
