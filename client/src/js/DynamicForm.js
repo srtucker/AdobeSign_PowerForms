@@ -306,7 +306,7 @@ export default class DynamicForm {
         reminder.addToDOM(sectionNode);
         //No validation
         this.workflow.formHooks.reminder = reminder;
-        return;
+        return true;
       }
     }
 
