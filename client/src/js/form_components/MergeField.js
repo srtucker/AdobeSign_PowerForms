@@ -14,8 +14,8 @@ export default class MergeField {
       inputId: 'merge_input_' + this.config.fieldName,
       label: this.config.displayName,
       defaultValue: this.config.defaultValue,
-      //required: this.config.required,
-      readonly: this.readonly
+      required: this.config.required,
+      readonly: this.readonly,
     };
 
     // Create the div
@@ -42,13 +42,10 @@ export default class MergeField {
     let message = null;
     let value = this._inputNode.value;
 
-    /*
-    //required is not currently provided by the API
     if(this.config.required && value == "") {
       error = true;
-      message = `The field ${this.config.displayName} is required.`
+      message = `The field "${this.config.displayName}" is required.`
     }
-    */
 
     if(error) {
       this._inputNode.classList.add("is-invalid");

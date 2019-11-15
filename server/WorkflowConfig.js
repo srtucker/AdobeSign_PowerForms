@@ -207,11 +207,13 @@ class WorkflowConfig {
           return;
         }
 
+        //required is not currently provided by the API so we are assuming it is required
         mergeFields.push({
           fieldName: wfField.fieldName,
           displayName: wfField.displayName,
           defaultValue: wfField.defaultValue,
-          editable: wfField.editable
+          editable: wfField.editable,
+          required: true,
         });
       });
 
