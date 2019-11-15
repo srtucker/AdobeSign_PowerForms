@@ -1,0 +1,56 @@
+@keyframes fadeIn {
+    from {opacity: 0}
+    to {opacity: 0.6}
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1040;
+  background-color: var(--application-background-color);
+
+  &.fadeIn {
+    animation: fadeIn 1s;
+    opacity: 0.6;
+  }
+}
+
+.loader {
+  position: fixed;
+  width: 300px;
+  height: 300px;
+  margin: -150px 0 0 -150px;
+  left: 50%;
+  top: 45%;
+  z-index: 1050;
+  text-align: center;
+
+  > div {
+    height: 100px;
+    width: 300px;
+    position: absolute;
+    margin: -50px 0 0 -150px;
+    left: 50%;
+    top: 50%;
+  }
+
+  h3 {
+    color: #797979;
+  }
+
+  svg {
+    width: 68px;
+    height: 68px;
+    stroke: #fff;
+
+    .loader-svg-bg {
+      stroke-opacity:1;
+    }
+    .loader-svg-top {
+      stroke: var(--workflow-accent-color);
+    }
+  }
+}

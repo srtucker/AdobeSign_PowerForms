@@ -5,7 +5,7 @@ export default class FormErrors {
   constructor(sectionNode, validator) {
     this._sectionNode = sectionNode;
     this._validator = validator;
-    this.submitButtonNode = null;
+    this._submitButton = null;
     this._showErrorDiv = false;
 
     this._observer = validator.createObserver("FormErrors");
@@ -16,8 +16,8 @@ export default class FormErrors {
     this._currentErrors = [];
   }
 
-  connectSubmitButton(submitButtonNode) {
-    this._submitButtonNode = submitButtonNode;
+  connectSubmitButton(submitButton) {
+    this._submitButton = submitButton;
   }
 
   handleErrors(errors) {
@@ -31,8 +31,8 @@ export default class FormErrors {
     if(this._showErrorDiv) {
       let data = {errors: false};
 
-      if (this._submitButtonNode !== null) {
-        this._submitButtonNode.disabled = this._hasErrors;
+      if (this._submitButton !== null) {
+        this._submitButton.disabled = this._hasErrors;
       }
 
       if(this._hasErrors) {

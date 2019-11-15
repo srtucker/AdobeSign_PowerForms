@@ -107,6 +107,8 @@ export default class Workflow {
 
     let apiResponse = await APIClient.postWorkflowAgreement(this.workflowId, agreementData);
     console.log("apiResponse", apiResponse);
+
+    return apiResponse;
   }
 
   getReducedValues(arr) {

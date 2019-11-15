@@ -15,7 +15,9 @@ import FormErrors from './FormErrors';
 
 import Validator from './Validator';
 
-import workflowFormTemplate from 'WorkflowForm.hbs'
+import workflowFormTemplate from 'WorkflowForm.hbs';
+import loaderTemplate from 'Loader.hbs';
+import submitCompleteTemplate from 'SubmitComplete.hbs';
 
 export default class DynamicForm {
   constructor(config, workflow) {
@@ -23,10 +25,14 @@ export default class DynamicForm {
     this.workflow = workflow;
 
     this.validator = new Validator();
-    this.formErrors;
+    this._appDiv;
+    this._formErrors;
+    this._submitButton;
   }
 
   async buildRecipientsForm(appDiv) {
+    this._appDiv = appDiv;
+
     //set template
     appDiv.innerHTML = workflowFormTemplate({displayName: this.config.displayName});
 
@@ -41,62 +47,59 @@ export default class DynamicForm {
     this.createMergeSection(appDiv.querySelector('#merge_section'));
     this.createOptionsSection(appDiv.querySelector('#options_section'));
 
-    this.createRecipientFormButton(appDiv.querySelector('button#form_submit_button'));
+    // deal with submit
+    this._submitButton = appDiv.querySelector('button#form_submit_button');
+    //connect the submit to Error handling
+    this._formErrors.connectSubmitButton(this._submitButton);
+    // Add onClick event to submit button
+    this._submitButton.onclick = this._handleSubmit.bind(this);
   }
 
   createErrorSection(sectionNode) {
-    this.formErrors = new FormErrors(sectionNode, this.validator);
+    this._formErrors = new FormErrors(sectionNode, this.validator);
   }
 
-  async createRecipientFormButton(submitButtonNode) {
-    //connect the submit to Error handling
-    this.formErrors.connectSubmitButton(submitButtonNode)
+  async _handleSubmit() {
+    this._formErrors.showErrorDiv();
+    this.validator.revalidateAll();
 
-    // Add onClick event to submit button
-    submitButtonNode.onclick = async function () {
-      this.formErrors.showErrorDiv();
-      this.validator.revalidateAll();
+    if(this._formErrors.hasErrors()) {
+      this._formErrors.scrollToError();
+      console.log("Validation errors found, not submitting form");
+      return false;
+    }
 
-      if(this.formErrors.hasErrors()) {
-        this.formErrors.scrollToError();
-        console.log("Validation errors found, not submitting form");
-        return false;
-      }
+    try {
+      //disable submit
+      this._submitButton.disabled = true;
 
-      this.workflow.submit();
+      var loadingDiv = document.createElement('div');
+      loadingDiv.innerHTML = loaderTemplate({text: "Submitting..."});
+      this._appDiv.appendChild(loadingDiv);
 
+      var backdropDiv = document.createElement('div');
+      backdropDiv.className = "modal-backdrop fadeIn"
+      document.body.appendChild(backdropDiv);
 
-      return;
+      //Submit the files
+      let result = await this.workflow.submit();
+      console.log("Submit result", result)
 
-      //this.workflow.verify();
-      //this.workflow.buildAgreement();
+      this._appDiv.querySelector('.workflow_content').innerHTML = submitCompleteTemplate({body: "The agreement has been submitted successfully. The first recipient should recieve an email shortly with a link to the agreement."});
 
-      /*
-      var response = await fetch(ClientConfig.apiBaseURL + 'api/postAgreement/' + async_wf_obj.workflow_id, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(async_wf_obj.jsonData())
-      }).then(function (resp) {
-        return resp.json()
-      }).then(function (data) {
-        return data;
-      });
+      DOMUtils.removeElement(loadingDiv);
+      DOMUtils.removeElement(backdropDiv);
+    }
+    catch(e) {
+      console.error(e);
 
-      if ('url' in response) {
-        alert('Agreement Sent');
-        window.location.reload();
-      }
-      else {
-        async_wf_obj.clearData();
-        alert(response['message']);
-      }*/
-    }.bind(this);
+      DOMUtils.removeElement(loadingDiv);
+      DOMUtils.removeElement(backdropDiv);
+
+      //enable submit
+      this._submitButton.disabled = false;
+    }
   }
-
-  // START of verified section
 
   createInstructionSection(sectionNode){
     //reset current node first
