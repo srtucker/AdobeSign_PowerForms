@@ -9,6 +9,7 @@ import MessageSection from './form_components/MessageSection';
 import PasswordOption from './form_components/PasswordOption';
 import RecipientGroup from './form_components/RecipientGroup';
 import Reminder from './form_components/Reminder';
+import Modal from './shared_components/Modal';
 import DOMUtils from './util/DOMUtils';
 
 import FormErrors from './FormErrors';
@@ -16,7 +17,6 @@ import FormErrors from './FormErrors';
 import Validator from './Validator';
 
 import workflowFormTemplate from 'WorkflowForm.hbs';
-import loaderTemplate from 'Loader.hbs';
 import submitCompleteTemplate from 'SubmitComplete.hbs';
 
 export default class DynamicForm {
@@ -73,13 +73,8 @@ export default class DynamicForm {
       //disable submit
       this._submitButton.disabled = true;
 
-      var loadingDiv = document.createElement('div');
-      loadingDiv.innerHTML = loaderTemplate({text: "Submitting..."});
-      this._appDiv.appendChild(loadingDiv);
-
-      var backdropDiv = document.createElement('div');
-      backdropDiv.className = "modal-backdrop fadeIn"
-      document.body.appendChild(backdropDiv);
+      let modal = new Modal(this._appDiv);
+      modal.showLoader("Submitting...");
 
       //Submit the files
       let result = await this.workflow.submit();
@@ -87,14 +82,12 @@ export default class DynamicForm {
 
       this._appDiv.querySelector('.workflow_content').innerHTML = submitCompleteTemplate({body: "The agreement has been submitted successfully. The first recipient should recieve an email shortly with a link to the agreement."});
 
-      DOMUtils.removeElement(loadingDiv);
-      DOMUtils.removeElement(backdropDiv);
+      modal.remove();
     }
     catch(e) {
       console.error(e);
 
-      DOMUtils.removeElement(loadingDiv);
-      DOMUtils.removeElement(backdropDiv);
+      modal.getModal().innerHTML = "A error occurred";
 
       //enable submit
       this._submitButton.disabled = false;
