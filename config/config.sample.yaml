@@ -42,8 +42,8 @@ WorkFlowConfig:
   expiration:
     hide: false
   reminder:
-    hide_predefined: true
-    hide: false
+    hide_readonly: true
+    hide_notpredefined: true
 
 #these setings are included in the client
 ClientConfig:

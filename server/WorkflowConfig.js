@@ -231,19 +231,19 @@ class WorkflowConfig {
   }
 
   getReminderConfig() {
-    let hide = this.settings.reminder.hide;
-    let hide_predefined = this.settings.reminder.hide_predefined;
+    let hide_readonly = this.settings.reminder.hide_readonly;
+    let hide_notpredefined = this.settings.reminder.hide_notpredefined;
 
     if(this.wfSettings.Reminder) {
       return {
-        visible: !(hide || hide_predefined),
+        visible: !(hide_readonly && !this.wfSettings.Reminder.editable),
         defaultValue: this.wfSettings.Reminder.defaultValue,
         editable: this.wfSettings.Reminder.editable,
       };
     }
     else {
       return {
-        visible: !hide,
+        visible: !hide_notpredefined,
         defaultValue: "",
         editable: true,
       };
