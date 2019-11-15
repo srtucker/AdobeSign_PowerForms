@@ -90,7 +90,7 @@ class WorkflowConfig {
           return;
         }
 
-        let defaultCCs = data.defaultValue.split(/,|;/);
+        let defaultCCs = (data.defaultValue) ? data.defaultValue.split(/,|;/) : [];
         let defaultCount = defaultCCs.length;
 
         let carbonCopy = {
