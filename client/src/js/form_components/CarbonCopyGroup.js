@@ -1,4 +1,3 @@
-import Utils from '../util/Utils';
 import CarbonCopyLine from './CarbonCopyLine';
 
 export default class CarbonCopyGroup {

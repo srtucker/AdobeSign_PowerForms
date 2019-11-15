@@ -1,4 +1,4 @@
-import Utils from '../util/Utils';
+import DOMUtils from '../util/DOMUtils';
 import passwordOptionTemplate from 'PasswordOption.hbs'
 import passwordOptionErrorTemplate from 'PasswordOptionError.hbs'
 
@@ -124,8 +124,8 @@ export default class PasswordOption {
     }
     else {
       this._passwordErrorDiv.innerText = "";
-      Utils.removeClass(passwordInput, "is-invalid");
-      Utils.removeClass(passwordConfirmInput, "is-invalid");
+      DOMUtils.removeClass(passwordInput, "is-invalid");
+      DOMUtils.removeClass(passwordConfirmInput, "is-invalid");
     }
 
     validationTracker.update(error, message);

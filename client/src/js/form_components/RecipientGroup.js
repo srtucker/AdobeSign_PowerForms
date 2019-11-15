@@ -1,4 +1,5 @@
 import Utils from '../util/Utils';
+import DOMUtils from '../util/DOMUtils';
 
 export default class RecipientGroup {
   constructor(id, config){
@@ -100,7 +101,7 @@ export default class RecipientGroup {
       this.inputNode.classList.add("is-invalid");
     }
     else {
-      Utils.removeClass(this.inputNode, "is-invalid");
+      DOMUtils.removeClass(this.inputNode, "is-invalid");
     }
 
     validationTracker.update(error, message);

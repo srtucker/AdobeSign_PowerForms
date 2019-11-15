@@ -1,4 +1,4 @@
-import Utils from '../util/Utils';
+import DOMUtils from '../util/DOMUtils';
 import mergeFieldTemplate from 'MergeField.hbs';
 
 export default class MergeField {
@@ -51,7 +51,7 @@ export default class MergeField {
       this._inputNode.classList.add("is-invalid");
     }
     else {
-      Utils.removeClass(this._inputNode, "is-invalid");
+      DOMUtils.removeClass(this._inputNode, "is-invalid");
     }
 
     validationTracker.update(error, message);

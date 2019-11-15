@@ -1,4 +1,4 @@
-import Utils from '../util/Utils';
+import DOMUtils from '../util/DOMUtils';
 import agreementNameTemplate from 'AgreementName.hbs';
 
 export default class AgreementName {
@@ -44,7 +44,7 @@ export default class AgreementName {
       this._inputNode.classList.add("is-invalid");
     }
     else {
-      Utils.removeClass(this._inputNode, "is-invalid");
+      DOMUtils.removeClass(this._inputNode, "is-invalid");
     }
 
     validationTracker.update(error, message);

@@ -1,4 +1,4 @@
-import Utils from '../util/Utils';
+import DOMUtils from '../util/DOMUtils';
 import fileSelectTemplate from 'FileSelect.hbs';
 
 export default class FileSelect {
@@ -75,7 +75,7 @@ export default class FileSelect {
       this._selectNode.classList.add("is-invalid");
     }
     else {
-      Utils.removeClass(this._selectNode, "is-invalid");
+      DOMUtils.removeClass(this._selectNode, "is-invalid");
     }
 
     validationTracker.update(error, message);

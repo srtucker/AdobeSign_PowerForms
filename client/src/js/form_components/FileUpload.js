@@ -1,5 +1,5 @@
 import * as APIClient from '../util/APIClient';
-import Utils from '../util/Utils';
+import DOMUtils from '../util/DOMUtils';
 import fileUploadTemplate from 'FileUpload.hbs';
 
 export default class FileUpload {
@@ -51,7 +51,7 @@ export default class FileUpload {
       this._uploadNode.classList.add("is-invalid");
     }
     else {
-      Utils.removeClass(this._uploadNode, "is-invalid");
+      DOMUtils.removeClass(this._uploadNode, "is-invalid");
     }
 
     validationTracker.update(error, message);

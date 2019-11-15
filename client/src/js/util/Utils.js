@@ -23,9 +23,4 @@ export default {
       return emailParts.length > 63
     });
   },
-  removeClass: function(node, className){
-    if(node.classList.contains(className)) {
-      node.classList.remove(className);
-    }
-  }
 }

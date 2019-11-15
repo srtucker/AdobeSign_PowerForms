@@ -1,4 +1,4 @@
-import Utils from '../util/Utils';
+import DOMUtils from '../util/DOMUtils';
 import messageSectionTemplate from 'MessageSection.hbs';
 
 export default class MessageSection {
@@ -44,7 +44,7 @@ export default class MessageSection {
       this._inputNode.classList.add("is-invalid");
     }
     else {
-      Utils.removeClass(this._inputNode, "is-invalid");
+      DOMUtils.removeClass(this._inputNode, "is-invalid");
     }
 
     validationTracker.update(error, message);

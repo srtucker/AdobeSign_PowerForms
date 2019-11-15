@@ -1,4 +1,5 @@
 import Utils from '../util/Utils';
+import DOMUtils from '../util/DOMUtils';
 import carbonCopyLineTemplate from 'CarbonCopyLine.hbs';
 
 export default class CarbonCopyLine {
@@ -58,7 +59,7 @@ export default class CarbonCopyLine {
       this._inputNode.classList.add("is-invalid");
     }
     else {
-      Utils.removeClass(this._inputNode, "is-invalid");
+      DOMUtils.removeClass(this._inputNode, "is-invalid");
     }
 
     validationTracker.update(error, message);

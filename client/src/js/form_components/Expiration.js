@@ -1,4 +1,4 @@
-import Utils from '../util/Utils';
+import DOMUtils from '../util/DOMUtils';
 import DateUtils from '../util/Date';
 import expirationTemplate from 'Expiration.hbs';
 import _ from 'lodash';
@@ -113,7 +113,7 @@ export default class Expiration {
       this._expirationError.hidden = true;
       this.updateExpirationAfterText();
 
-      Utils.removeClass(this._expirationInput, "is-invalid");
+      DOMUtils.removeClass(this._expirationInput, "is-invalid");
     }
 
     validationTracker.update(error, message);

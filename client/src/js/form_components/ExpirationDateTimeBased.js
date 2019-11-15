@@ -1,4 +1,4 @@
-import Utils from '../util/Utils';
+import DOMUtils from '../util/DOMUtils';
 import DateUtils from '../util/Date';
 import expirationDateTimeBasedTemplate from 'ExpirationDateTimeBased.hbs';
 
@@ -94,7 +94,7 @@ export default class ExpirationDateTimeBased {
       this._expirationInput.classList.add("is-invalid");
     }
     else {
-      Utils.removeClass(this._expirationInput, "is-invalid");
+      DOMUtils.removeClass(this._expirationInput, "is-invalid");
     }
 
     validationTracker.update(error, message);

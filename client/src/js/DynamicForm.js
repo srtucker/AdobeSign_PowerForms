@@ -9,6 +9,7 @@ import MessageSection from './form_components/MessageSection';
 import PasswordOption from './form_components/PasswordOption';
 import RecipientGroup from './form_components/RecipientGroup';
 import Reminder from './form_components/Reminder';
+import DOMUtils from './util/DOMUtils';
 
 import FormErrors from './FormErrors';
 
@@ -150,7 +151,7 @@ export default class DynamicForm {
         this.workflow.formHooks.carbonCopyGroups.push(ccGrp);
       }
 
-      this.showDomNode(sectionNode);
+      DOMUtils.removeClass(sectionNode, "hidden");
     }
   }
 
@@ -166,7 +167,7 @@ export default class DynamicForm {
       agreementName.setupValidation(this.validator);
       this.workflow.formHooks.agreementName = agreementName;
 
-      this.showDomNode(sectionNode);
+      DOMUtils.removeClass(sectionNode, "hidden");
     }
   }
 
@@ -182,7 +183,7 @@ export default class DynamicForm {
       messageSection.setupValidation(this.validator);
       this.workflow.formHooks.message = messageSection;
 
-      this.showDomNode(sectionNode);
+      DOMUtils.removeClass(sectionNode, "hidden");
     }
   }
 
@@ -216,7 +217,7 @@ export default class DynamicForm {
         }
       }
 
-      this.showDomNode(sectionNode);
+      DOMUtils.removeClass(sectionNode, "hidden");
     }
   }
 
@@ -242,7 +243,7 @@ export default class DynamicForm {
         this.workflow.formHooks.mergeFields.push(mergeField);
       }
 
-      this.showDomNode(sectionNode);
+      DOMUtils.removeClass(sectionNode, "hidden");
     }
   }
 
@@ -262,7 +263,7 @@ export default class DynamicForm {
     showSection = showSection || showReminder;
 
     if(showSection) {
-      this.showDomNode(sectionNode);
+      DOMUtils.removeClass(sectionNode, "hidden");
     }
   }
 
@@ -317,19 +318,13 @@ export default class DynamicForm {
     if(hide) {
       node.classList.add("hidden");
     }
-    else if(node.classList.contains("hidden")) {
-      node.classList.remove("hidden");
+    else {
+      DOMUtils.removeClass(node, "hidden");
     }
 
     //Remove children
     while (node.firstElementChild) {
         node.firstElementChild.remove();
-    }
-  }
-
-  showDomNode(node) {
-    if(node.classList.contains("hidden")) {
-      node.classList.remove("hidden");
     }
   }
 }
