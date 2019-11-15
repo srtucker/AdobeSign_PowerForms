@@ -13,6 +13,7 @@ export default class FormErrors {
 
 
     this._hasErrors = false;
+    this._currentErrors = [];
   }
 
   connectSubmitButton(submitButtonNode) {
@@ -20,7 +21,11 @@ export default class FormErrors {
   }
 
   handleErrors(errors) {
-    let keys = Object.keys(errors);
+    if(errors) {
+      this._currentErrors = errors;
+    }
+
+    let keys = Object.keys(this._currentErrors);
     this._hasErrors = (keys.length > 0);
 
     if(this._showErrorDiv) {
@@ -32,8 +37,8 @@ export default class FormErrors {
 
       if(this._hasErrors) {
         data.errors = {};
-        keys.sort().forEach(function(key) {
-          data.errors[key] = errors[key];
+        keys.sort().forEach(key => {
+          data.errors[key] = this._currentErrors[key];
         });
       }
       this._sectionNode.innerHTML = formErrorsTemplate(data);
@@ -42,6 +47,7 @@ export default class FormErrors {
 
   showErrorDiv() {
     this._showErrorDiv = true;
+    this.handleErrors();
   }
 
   hasErrors() {
