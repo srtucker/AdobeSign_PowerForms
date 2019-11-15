@@ -2,22 +2,42 @@
 <html>
 <head>
   <title><%= htmlWebpackPlugin.options.title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="content-language" content="en" />
+  <meta name="language" content="en" />
+  <style>
+    @-webkit-keyframes loadingRotate { from { -webkit-transform: rotate(0deg); } to { -webkit-transform: rotate(360deg); } }
+    @-moz-keyframes loadingRotate { from { -moz-transform: rotate(0deg); } to { -moz-transform: rotate(360deg); } }
+    @-ms-keyframes loadingRotate { from { -ms-transform: rotate(0deg); } to { -ms-transform: rotate(360deg); } }
+    @keyframes loadingRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  </style>
 
-  <link rel="shortcut icon" href="#" />
 
   <!-- Font Awesome -->
   <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
         integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  <!-- Bootstrap CSS
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
-  <meta content="width=device-width, initial-scale=1" name="viewport" />
   <script type="text/javascript">
     var ClientConfig = <%= JSON.stringify(htmlWebpackPlugin.options.ClientConfig) %>;
   </script>
   <!-- Base CSS -->
 </head>
 <body>
+  <div id='initial-loading'>
+    <div style='position:absolute;
+        background:url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4gIDxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+ICAgIDxjaXJjbGUgcj0nMjAnIGN4PScyMCcgY3k9JzIwJyBmaWxsPSdyZ2JhKDAsMCwwLDAuMjUpJyAvPiAgICA8cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTMyLjMzNywxOS45MzljMCwwLjAyMS0wLjAwMywwLjA0MS0wLjAwMywwLjA2MWgzLjAxOGMwLTAuMDIxLDAuMDAzLTAuMDQxLDAuMDAzLTAuMDYxYzAtOC40OTQtNi44NjktMTUuMzgtMTUuMzU1LTE1LjQxNHYxLjQzM3YxLjU4NUMyNi44MTksNy41NzYsMzIuMzM3LDEzLjExMiwzMi4zMzcsMTkuOTM5eiIvPiAgPC9nPjwvc3ZnPg==) 50% 50% no-repeat;
+        left:50%;
+        top:50%;
+        margin:-20px 0 0 -20px;
+        width:40px;
+        height:40px;
+        border-radius:50%;
+        -webkit-animation: loadingRotate 0.75s linear infinite;
+        -moz-animation: loadingRotate 0.75s linear infinite;
+        -ms-animation: loadingRotate 0.75s linear infinite;
+        animation: loadingRotate 0.75s linear infinite;'>
+    </div>
+    <span class="sr-only">Loading</span>
+  </div>
   <div id="app"></div>
 
   <!-- jQuery.js, Popper.js, Bootstrap.js -->

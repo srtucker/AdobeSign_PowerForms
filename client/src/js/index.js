@@ -6,6 +6,7 @@ import Workflow from './Workflow';
 import DynamicForm from './DynamicForm';
 import ParsePath from './util/ParsePath';
 import { HandledException } from './util/Exceptions';
+import DOMUtils from './util/DOMUtils';
 
 import appErrorTemplate from 'AppError.hbs';
 
@@ -17,6 +18,7 @@ const parsePath = new ParsePath({
   end: true,
 });
 
+let initialLoadingNode = document.getElementById('initial-loading');
 let appNode = document.getElementById("app");
 
 var params = parsePath.test('/workflow/:id', window.location.pathname);
@@ -49,6 +51,7 @@ async function showWorkflowSelector() {
         const option = workflow_list[j];
         selectBox.options.add(new Option(option.text, option.value, option.selected));
     }
+    DOMUtils.removeElement(initialLoadingNode);
 
     $('#workflow_selector #option_submit_button').click(() => {
       var workflowId = $("#workflow_dropdown").val();
@@ -66,6 +69,7 @@ async function runWorkflow(appNode, workflowId, showSelector) {
 
     // Create the dynamic form
     workflow.render(appNode);
+    DOMUtils.removeElement(initialLoadingNode);
   }
   catch(e) {
     if(e instanceof HandledException) {
