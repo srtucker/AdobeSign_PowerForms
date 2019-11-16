@@ -1,7 +1,6 @@
 
 @import 'vars';
 
-
 //bootstrap-reboot
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
@@ -17,7 +16,8 @@
 @import "~bootstrap/scss/utilities/spacing";
 
 
-@import 'container';
+@import 'default';
+
 @import 'workflow-form';
 @import 'dialogs';
 

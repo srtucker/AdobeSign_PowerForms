@@ -25,7 +25,7 @@ export default class CarbonCopyLine {
     // Create the div
     var tempDiv = document.createElement('div');
     tempDiv.innerHTML = carbonCopyLineTemplate(data);
-    var div = tempDiv.firstChild
+    var div = tempDiv.firstChild;
     parentNode.appendChild(div);
 
     //create hooks

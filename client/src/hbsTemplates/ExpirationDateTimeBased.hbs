@@ -1,23 +1,25 @@
-<div role="group" aria-labelledby="expiration-label">
-  <div class="compose-option-group checkbox-a12" role="presentation">
-    <label class="form-check-label">
-      <input type="checkbox" id="expiration-checkbox" class="expiration"
+<div class="expiration-section compose-option-section">
+  <div role="group" aria-labelledby="expiration-label">
+    <div class="compose-option-group" role="presentation">
+      <label class="form-check-label">
+        <input type="checkbox" id="expiration-checkbox" class="expiration"
+               {{#if readonly}} readonly {{/if}}
+               {{checked}}>
+        <span id="expiration-label">Completion Deadline</span>
+      </label>
+    </div>
+    <div id="expiration-details" class="form-group expiration-in-time" role="presentation" {{#unless checked}}hidden {{/unless}}>
+      <input id="expiration-time" type="date" class="form-control"
+             value="{{value}}"
+             min="{{minDate}}"
+             max="{{maxDate}}"
              {{#if readonly}} readonly {{/if}}
-             {{checked}}>
-      <span id="expiration-label">Completion Deadline</span>
-    </label>
+             required />
+    </div>
+    {{!--<div class="ancillary-text hidden" role="presentation">
+      <span id="expiration-in-days-desc" aria-live="polite" aria-relevant="additions text" aria-atomic="true">
+        <span class="medium expiration-after-text hidden"></span>
+      </span>
+    </div>--}}
   </div>
-  <div id="expiration-details" class="form-group expiration-in-time" role="presentation" {{#unless checked}}hidden {{/unless}}>
-    <input id="expiration-time" type="date" class="form-control"
-           value="{{value}}"
-           min="{{minDate}}"
-           max="{{maxDate}}"
-           {{#if readonly}} readonly {{/if}}
-           required />
-  </div>
-  {{!--<div class="ancillary-text hidden" role="presentation">
-    <span id="expiration-in-days-desc" aria-live="polite" aria-relevant="additions text" aria-atomic="true">
-      <span class="medium expiration-after-text hidden"></span>
-    </span>
-  </div>--}}
 </div>

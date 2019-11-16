@@ -20,9 +20,9 @@ export default class PasswordOption {
     };
 
     // Create the div
-    let div = document.createElement('div');
-    div.innerHTML = passwordOptionTemplate(data);
-    div.className = "pdf-protect-section compose-option-section";
+    var tempDiv = document.createElement('div');
+    tempDiv.innerHTML = passwordOptionTemplate(data);
+    var div = tempDiv.firstChild;
     parentNode.appendChild(div);
 
     //create hooks

@@ -1,16 +1,18 @@
-<div role="group" aria-labelledby="reminder-option-label">
-  <div class="compose-option-group checkbox-a12">
-    <label class="form-check-label">
-      <input type="checkbox" id="reminder-option" class="checkbox-input reminder-option"
-             {{#if disabled}} disabled {{/if}}
-             {{#if checked}} checked {{/if}}>
-      <span id="reminder-option-label">Set Reminder</span>
-    </label>
-  </div>
-  <div id="reminder-details" class="form-group reminder-frequency" role="group" aria-labelledby="reminder-option-label" {{#unless checked}}hidden {{/unless}}>
-    <select id="reminder-frequency" class="form-control reminder-frequency-select"
-            {{#if disabled}} disabled {{/if}}>
-      {{#each reminderFrequencyOptions}}<option value="{{value}}"{{#if selected}} selected {{/if}}>{{descr}}</option>{{/each}}
-    </select>
+<div class="reminder-section compose-option-section">
+  <div role="group" aria-labelledby="reminder-option-label">
+    <div class="compose-option-group">
+      <label class="form-check-label">
+        <input type="checkbox" id="reminder-option" class="checkbox-input reminder-option"
+               {{#if disabled}} disabled {{/if}}
+               {{#if checked}} checked {{/if}}>
+        <span id="reminder-option-label">Set Reminder</span>
+      </label>
+    </div>
+    <div id="reminder-details" class="form-group reminder-frequency" role="group" aria-labelledby="reminder-option-label" {{#unless checked}}hidden {{/unless}}>
+      <select id="reminder-frequency" class="form-control reminder-frequency-select"
+              {{#if disabled}} disabled {{/if}}>
+        {{#each reminderFrequencyOptions}}<option value="{{value}}"{{#if selected}} selected {{/if}}>{{descr}}</option>{{/each}}
+      </select>
+    </div>
   </div>
 </div>

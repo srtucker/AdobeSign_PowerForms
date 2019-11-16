@@ -28,6 +28,7 @@ var webpackConfig = {
   },
   output: {
     filename: 'js/bundle.js?[hash]',
+    chunkFilename: 'js/[name].js?[hash]',
     path: path.resolve(__dirname, buildFolder),
     sourceMapFilename: '[file].map',
     publicPath: config.publicPath,
@@ -117,7 +118,7 @@ var webpackConfig = {
       // Options similar to the same options in webpackOptions.output
       // both options are optional
       filename: 'css/styles.css?[contenthash]',
-      chunkFilename: '[id].css?[contenthash]',
+      chunkFilename: 'css/[name].css?[contenthash]',
     }),
     new LodashModuleReplacementPlugin,
   ],

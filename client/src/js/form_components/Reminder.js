@@ -51,9 +51,9 @@ export default class Reminder{
     }
 
     // Create the div
-    let div = document.createElement('div');
-    div.innerHTML = reminderSectionTemplate(data);
-    div.className = "reminder-section compose-option-section";
+    var tempDiv = document.createElement('div');
+    tempDiv.innerHTML = reminderSectionTemplate(data);
+    var div = tempDiv.firstChild;
     parentNode.appendChild(div);
 
     //create hooks

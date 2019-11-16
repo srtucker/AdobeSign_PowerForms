@@ -10,6 +10,7 @@ import DOMUtils from './util/DOMUtils';
 
 import appErrorTemplate from 'AppError.hbs';
 
+import '../scss/colors.scss';
 import '../scss/style.scss';
 
 const parsePath = new ParsePath({

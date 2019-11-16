@@ -27,9 +27,9 @@ export default class ExpirationDateTimeBased {
     };
 
     // Create the div
-    let div = document.createElement('div');
-    div.innerHTML = expirationDateTimeBasedTemplate(data);
-    div.className = "expiration-section compose-option-section";
+    var tempDiv = document.createElement('div');
+    tempDiv.innerHTML = expirationDateTimeBasedTemplate(data);
+    var div = tempDiv.firstChild;
     parentNode.appendChild(div);
 
     //create hooks

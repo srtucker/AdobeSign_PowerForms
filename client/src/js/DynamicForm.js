@@ -45,7 +45,7 @@ export default class DynamicForm {
     this.createMessageSection(appDiv.querySelector('#message_section'));
     this.createUploadSection(appDiv.querySelector('#upload_section'));
     this.createMergeSection(appDiv.querySelector('#merge_section'));
-    this.createOptionsSection(appDiv.querySelector('#options_section'));
+    this.createOptionsSection(appDiv.querySelector('.compose-options'));
 
     // deal with submit
     this._submitButton = appDiv.querySelector('button#form_submit_button');
@@ -244,9 +244,6 @@ export default class DynamicForm {
   }
 
   createOptionsSection(sectionNode) {
-    //reset current node
-    this.resetDOMNode(sectionNode, true);
-
     let showSection = false;
 
     let showPassword = this.createPasswordSubsection(sectionNode);
@@ -258,8 +255,8 @@ export default class DynamicForm {
     let showReminder = this.createReminderSubsection(sectionNode);
     showSection = showSection || showReminder;
 
-    if(showSection) {
-      DOMUtils.removeClass(sectionNode, "hidden");
+    if(!showSection) {
+      sectionNode.classList.add("hidden");
     }
   }
 

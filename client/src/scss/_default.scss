@@ -1,0 +1,25 @@
+body{
+  background: var(--application-background-color);
+  font-family: "adobe-clean-n4", "adobe-clean", Helvetica, Arial, sans-serif;
+}
+
+button, input, optgroup, select, textarea {
+  font-size: 14px;
+  padding: 10px;
+  color: #2d2d2d;
+}
+
+.hidden {
+  visibility: hidden;
+  display:none;
+  width: 0;
+  height: 0;
+}
+
+small, .small {
+  font-size: 85%;
+}
+
+input::-webkit-input-placeholder {
+  font-size: .9rem;
+}

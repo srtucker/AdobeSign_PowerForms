@@ -50,7 +50,6 @@ export default class RecipientGroup {
     // If data is not blank, fill it in with predefine information
     if (this.config.defaultValue !== "") {
       inputNode.value = this.config.defaultValue;
-      inputNode.classList.add("predefined_input");
 
       if(!this.config.editable) {
         inputNode.readonly = true;
@@ -163,7 +162,7 @@ export default class RecipientGroup {
       // Create new input field
       var participent_input = document.createElement('input');
       participent_input.type = "text";
-      participent_input.className = "recipient_form_input";
+      participent_input.className = "form-control";
       participent_input.placeholder = "Enter Recipient's Email";
       participent_input.id = participent_id;
       participent_input.name = participent_id;
