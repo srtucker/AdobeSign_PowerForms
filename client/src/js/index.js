@@ -72,6 +72,8 @@ async function runWorkflow(appNode, workflowId, showSelector) {
     DOMUtils.removeElement(initialLoadingNode);
   }
   catch(e) {
+    DOMUtils.removeElement(initialLoadingNode);
+
     if(e instanceof HandledException) {
       appNode.innerHTML = appErrorTemplate(e.getTemplateVars());
     }
