@@ -3,7 +3,7 @@
   height: 100%!important;
   margin-right: auto;
   margin-left: auto;
-  background: var(--body-bg-color);
+  background: $form-background-color;
   //font-size: 20px;
   box-shadow: 0 10px 20px 5px grey;
   border-radius: 5px;
@@ -21,8 +21,8 @@
   }
 
   .workflow_header {
-    background-color: var(--workflow-top-bg-color);
-    color: var(--workflow-top-text-color);
+    background-color: $header-background-color;
+    color: $header-text-color;
     text-align: center;
 
     h1 {
@@ -36,7 +36,7 @@
       font-weight: normal;
       font-size: .6rem;
       content: "\f069";
-      color: var(--form-required-color);
+      color: $form-required-color;
       margin-left:2px;
       vertical-align: top;
     }
@@ -125,7 +125,7 @@
         margin: 10px 0 20px 0;
         background: none;
         font-size: 13px;
-        color: var(--form-error-color);
+        color: $form-error-color;
         border: 0;
         padding: 0;
         word-break: break-word;
@@ -155,7 +155,7 @@
         }
         .expiration-error-text {
           display: block;
-          color: var(--form-error-color);
+          color: $form-error-color;
         }
       }
     }
@@ -176,8 +176,8 @@
     font-weight: 400;
     min-width: 80px;
     width: 100%;
-    color: var(--form-submit-text-color);
-    background-color: var(--form-submit-background-color);
-    border-color: var(--form-submit-border-color);
+    color: $form-submit-text-color;
+    background-color: $form-submit-background-color;
+    border-color: $form-submit-border-color;
   }
 }

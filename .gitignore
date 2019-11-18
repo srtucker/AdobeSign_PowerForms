@@ -1,5 +1,6 @@
 node_modules/
 .DS_Store
+config/config.scss
 config/config.yaml
 client/dev
 temp/

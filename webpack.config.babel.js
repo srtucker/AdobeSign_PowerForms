@@ -123,6 +123,9 @@ var webpackConfig = {
     new LodashModuleReplacementPlugin,
   ],
   resolve: {
+    alias: {
+      StyleConfig$: (fs.existsSync(path.join(__dirname, 'config/config.scss'))) ? path.resolve(__dirname, 'config/config.scss') : path.resolve(__dirname, 'config/config.default.scss'),
+    },
     extensions: ['.js', '.jsx'],
     modules: [
       path.join(__dirname, 'client', 'src'),

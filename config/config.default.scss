@@ -1,0 +1,29 @@
+/********** Custom configuration **********/
+
+$accent-color: #2175c8;
+
+/** background color **/
+$app-background-color: #f5f5f5;
+
+/** Top form color **/
+$header-background-color: #2175c8;
+$header-text-color: white;
+
+/** Form body color **/
+$form-background-color: white;
+
+/** Select button color **/
+$select-button-color: #f5f5f5;
+
+/** Submit button color **/
+$form-submit-background-color: #2175c8;
+$form-submit-border-color: #2175c8;
+$form-submit-text-color: white;
+
+$form-required-color: #E34850;
+$form-error-color: #E34850;
+
+/********** Bootstrap configuration **********/
+$theme-colors: (
+  "danger": #E34850,
+);

@@ -10,7 +10,7 @@
   bottom: 0;
   left: 0;
   z-index: 1040;
-  background-color: var(--application-background-color);
+  background-color: $app-background-color;
 
   &.fadeIn {
     animation: fadeIn 1s;
@@ -50,7 +50,7 @@
       stroke-opacity:1;
     }
     .loader-svg-top {
-      stroke: var(--workflow-accent-color);
+      stroke: $accent-color;
     }
   }
 }
