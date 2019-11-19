@@ -1,6 +1,7 @@
 //include modules
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const multer  = require('multer');
 const Axios = require('axios');
 const FormData = require('form-data');
@@ -20,7 +21,9 @@ var router = express.Router();
 module.exports = router;
 
 //add helpers
-const upload = multer({ dest: 'temp/uploads/' });
+const upload = multer({
+  dest: path.join(__dirname, '../../temp/uploads/'),
+});
 const APIClient = Axios.create({
   baseURL: config.adobeApi.url,
   headers: {
