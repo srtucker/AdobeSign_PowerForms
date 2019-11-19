@@ -7,7 +7,7 @@ const path = require('path');
 const config = require('./config.js');
 
 // detect if running in a production or development env
-const isDev = !(yargs.argv.env == "production" || false);
+const isDev = !(process.env.NODE_ENV === 'production' || yargs.argv.env == "production" || false);
 const isDevClient = (yargs.argv.devClient || false);
 //console.log({isDev, isDevClient})
 
@@ -26,7 +26,7 @@ var clientFolder = isDev ? 'client/dev' : 'client/dist';
 //rewrite urls to root for workflow
 app.use(function(req, res, next) {
   if (/\/workflow\/\S*$/.test(req.url)) {
-    req.url = '/';
+    req.url = publicPath;
   }
   next();
 });

@@ -21,13 +21,18 @@ const parsePath = new ParsePath({
 let initialLoadingNode = document.getElementById('initial-loading');
 let appNode = document.getElementById("app");
 
-var params = parsePath.test('/workflow/:id', window.location.pathname);
+var params = parsePath.test(`${ClientConfig.baseURL}workflow/:id`, window.location.pathname);
 if(params !== false) {
   var workflowId = params.id;
   runWorkflow(appNode, workflowId, false);
 }
 else {
-  showWorkflowSelector()
+  appNode.innerHTML = appErrorTemplate({
+    heading: "Error",
+    errorBody: "The page you have requested is invalid.",
+  });
+  DOMUtils.removeElement(initialLoadingNode);
+  //showWorkflowSelector()
 }
 
 async function showWorkflowSelector() {

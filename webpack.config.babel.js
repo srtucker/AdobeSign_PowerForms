@@ -109,7 +109,11 @@ var webpackConfig = {
       title: 'Dynamic Workflow',
       filename: 'index.html',
       template: 'src/pages/index.html',
-      ClientConfig: config.ClientConfig
+      ClientConfig: {
+        apiBaseURL: config.ClientConfig.apiBaseURL,
+        expirationAsDate: config.ClientConfig.expirationAsDate,
+        baseURL: config.publicPath,
+      }
     }),
     //new CopyWebpackPlugin([
     //  {from: 'src/assets'}
