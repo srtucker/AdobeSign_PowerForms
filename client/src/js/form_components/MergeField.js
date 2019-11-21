@@ -1,5 +1,6 @@
 import DOMUtils from '../util/DOMUtils';
 import mergeFieldTemplate from 'MergeField.hbs';
+import unescape from 'lodash/unescape';
 
 export default class MergeField {
   constructor(config){
@@ -12,7 +13,7 @@ export default class MergeField {
   addToDOM(parentNode) {
     let data = {
       inputId: 'merge_input_' + this.config.fieldName,
-      label: this.config.displayName,
+      label: unescape(this.config.displayName),
       defaultValue: this.config.defaultValue,
       required: this.config.required,
       readonly: this.readonly,
