@@ -53,3 +53,6 @@ ClientConfig:
 
   # Setting to show Agreement expiration as date if true or as number of days if false
   expirationAsDate: true
+
+  #title of the application
+  appTitle: 'Dynamic Workflow'

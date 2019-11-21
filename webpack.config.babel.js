@@ -104,7 +104,7 @@ var webpackConfig = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Dynamic Workflow',
+      title: config.ClientConfig.appTitle,
       filename: 'index.html',
       template: 'src/pages/index.html',
       ClientConfig: config.ClientConfig,
