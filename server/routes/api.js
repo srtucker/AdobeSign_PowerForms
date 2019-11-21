@@ -7,7 +7,7 @@ const Axios = require('axios');
 const FormData = require('form-data');
 const WorkflowConfig = require('../WorkflowConfig.js');
 const WorkflowAgreementProcessor = require('../WorkflowAgreementProcessor.js');
-const config = require('../config.js');
+const config = require('../../config');
 
 const fetch = require('node-fetch');
 

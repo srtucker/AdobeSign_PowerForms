@@ -1,15 +1,15 @@
 //include modules
 const yargs = require('yargs');
+const fallback = require('express-history-api-fallback');
 const express = require('express');
 const async = require('express-async-await');
 const bodyParser = require('body-parser');
 const path = require('path');
-const config = require('./config.js');
+const config = require('../config');
 
 // detect if running in a production or development env
 const isDev = !(process.env.NODE_ENV === 'production' || yargs.argv.env == "production" || false);
 const isDevClient = (yargs.argv.devClient || false);
-//console.log({isDev, isDevClient})
 
 // SEVER SETUP
 // =============================================================================
@@ -19,17 +19,7 @@ const app = express();
 app.locals.config = config;
 
 // Configuration
-var port = process.env.PORT || config.port || 80;
-var publicPath = config.publicPath || "/";
-var clientFolder = isDev ? 'client/dev' : 'client/dist';
-
-//rewrite urls to root for workflow
-app.use(function(req, res, next) {
-  if (/\/workflow\/\S*$/.test(req.url)) {
-    req.url = publicPath;
-  }
-  next();
-});
+var clientFolder = path.join(__dirname, (isDev ? '../client/dev' : '../client/dist'));
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -38,8 +28,8 @@ app.use(bodyParser.json());
 
 //log endpoint
 app.use(function (req, res, next) {
-    console.info('REQUEST %s %s', req.method, req.originalUrl)
-    next() // pass control to the next handler
+  console.info('REQUEST %s %s', req.method, req.originalUrl)
+  next() // pass control to the next handler
 });
 
 if (isDevClient) {
@@ -59,7 +49,7 @@ if (isDevClient) {
 
   //Enable "webpack-dev-middleware"
   app.use(webpackDevMiddleware(webpackCompiler, {
-      publicPath: publicPath
+    publicPath: config.publicPath
   }));
 
   //Enable "webpack-hot-middleware"
@@ -69,12 +59,18 @@ if (isDevClient) {
 // ROUTES
 // =============================================================================
 // Serve static files
-app.use(publicPath, express.static(path.join(__dirname, '../', clientFolder)));
+app.use(config.publicPath, express.static(clientFolder));
 
-app.use(publicPath + 'api', require('./routes/api.js'));
+// API Route
+app.use(config.publicPath + 'api', require('./routes/api.js'));
+
+// Fallback for HTML5 History API
+app.use(fallback('index.html', {
+  root: clientFolder,
+}));
 
 // START THE SERVER
 // =============================================================================
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
+app.listen(config.port, () => {
+  console.log(`Server started on port ${config.port}`);
 });

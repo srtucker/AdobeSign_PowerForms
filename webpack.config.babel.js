@@ -9,9 +9,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
-
-// Load settings from settings.yml
-var config = yaml.safeLoad(fs.readFileSync(path.join(__dirname, 'config', 'config.yaml'), 'utf-8'));
+const config = require('./config');
 
 // detect if webpack bundle is being processed in a production or development env
 const isDev = !(yargs.argv.env == "production" || false);
@@ -109,11 +107,7 @@ var webpackConfig = {
       title: 'Dynamic Workflow',
       filename: 'index.html',
       template: 'src/pages/index.html',
-      ClientConfig: {
-        apiBaseURL: config.ClientConfig.apiBaseURL,
-        expirationAsDate: config.ClientConfig.expirationAsDate,
-        baseURL: config.publicPath,
-      }
+      ClientConfig: config.ClientConfig,
     }),
     //new CopyWebpackPlugin([
     //  {from: 'src/assets'}
@@ -162,7 +156,7 @@ if(yargs.argv.profile) {
   webpackConfig.plugins.push(
     new BundleAnalyzerPlugin({
       analyzerMode: 'server',
-      analyzerHost: "0.0.0.0",
+      analyzerHost: "localhost",
       analyzerPort: config.PORT,
       openAnalyzer: false
     })

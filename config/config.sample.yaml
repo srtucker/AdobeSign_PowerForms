@@ -4,7 +4,7 @@
 # Please make sure that all your information is correct.
 
 # This is the port that the express server should listen on if it is not provided by process.env.PORT
-port: 80
+PORT: 80
 
 # This is the public path the server will be located at.
 publicPath: '/'
@@ -47,7 +47,9 @@ WorkFlowConfig:
 
 #these setings are included in the client
 ClientConfig:
-  # This is the base URL all client API calls will be made to
+  # This is the base URL all client API calls will be made to. It can be relative
+  # or absolute url. If not defined publicPath will be used.
   apiBaseURL: '/'
 
+  # Setting to show Agreement expiration as date if true or as number of days if false
   expirationAsDate: true
