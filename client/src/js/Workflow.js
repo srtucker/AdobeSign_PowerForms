@@ -64,11 +64,15 @@ export default class Workflow {
     return this.workflowConfig;
   }
 
-  render(parentNode) {
+  render(parentNode, isStandalone) {
     var dynamicForm = new DynamicForm(this.workflowConfig, this);
     dynamicForm.buildRecipientsForm(parentNode);
 
     this.dynamicForm = dynamicForm;
+
+    if(isStandalone) {
+      document.title = `${ClientConfig.appTitle} - ${this.workflowConfig.displayName}`;
+    }
   }
 
   async submit() {

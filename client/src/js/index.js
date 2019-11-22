@@ -72,7 +72,7 @@ async function runWorkflow(appNode, workflowId, showSelector) {
     let workflow = await Workflow.loadWorkflow(workflowId);
 
     // Create the dynamic form
-    workflow.render(appNode);
+    workflow.render(appNode, true);
     DOMUtils.removeElement(initialLoadingNode);
   }
   catch(e) {
