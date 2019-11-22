@@ -56,3 +56,6 @@ ClientConfig:
 
   #title of the application
   appTitle: 'Dynamic Workflow'
+
+  # The path that workflows will be accessed at, this will be appended to publicPath. It should not start with a '/' and must end with '/' if it is not empty.
+  workflowPath: 'Workflow/'

@@ -21,7 +21,7 @@ const parsePath = new ParsePath({
 let initialLoadingNode = document.getElementById('initial-loading');
 let appNode = document.getElementById("app");
 
-var params = parsePath.test(`${ClientConfig.baseURL}workflow/:id`, window.location.pathname);
+var params = parsePath.test(`${ClientConfig.baseURL}/${ClientConfig.workflowPath}/:id`.replace(/[\/]+/g, '/'), window.location.pathname);
 if(params !== false) {
   var workflowId = params.id;
   runWorkflow(appNode, workflowId, false);
