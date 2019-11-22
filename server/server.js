@@ -1,6 +1,6 @@
 //include modules
 const yargs = require('yargs');
-const fallback = require('express-history-api-fallback');
+const historyApiFallback = require('connect-history-api-fallback');
 const express = require('express');
 const async = require('express-async-await');
 const bodyParser = require('body-parser');
@@ -20,6 +20,11 @@ app.locals.config = config;
 
 // Configuration
 var clientFolder = path.join(__dirname, (isDev ? '../client/dev' : '../client/dist'));
+
+// Fallback for HTML5 History API
+app.use(historyApiFallback({
+  index: config.publicPath
+}));
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -63,11 +68,6 @@ app.use(config.publicPath, express.static(clientFolder));
 
 // API Route
 app.use(config.publicPath + 'api', require('./routes/api.js'));
-
-// Fallback for HTML5 History API
-app.use(fallback('index.html', {
-  root: clientFolder,
-}));
 
 // START THE SERVER
 // =============================================================================
