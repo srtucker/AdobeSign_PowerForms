@@ -12,6 +12,8 @@ export default class PasswordOption {
     this._passwordInput;
     this._passwordConfirmInput;
     this._passwordErrorDiv;
+
+    this._passwordConfirmEdited = false;
   }
 
   addToDOM(parentNode){
@@ -87,10 +89,15 @@ export default class PasswordOption {
     let passwordConfirm = passwordConfirmInput.value;
     let messages = [];
 
+    if(isRevalidate || (event && event.target.id == "protect-password-confirm")) {
+      this._passwordConfirmEdited = true;
+    }
+
     if(this._protectCheckbox.checked === true) {
-      if(password != passwordConfirm) {
+      if(this._passwordConfirmEdited && password != passwordConfirm) {
         error = true;
         messages.push(`Passwords do not match.`);
+        passwordConfirmInput.classList.add("is-invalid");
       }
 
       if(password.length < 3) {
@@ -120,7 +127,6 @@ export default class PasswordOption {
 
       //format inputs with error
       passwordInput.classList.add("is-invalid");
-      passwordConfirmInput.classList.add("is-invalid");
     }
     else {
       this._passwordErrorDiv.innerText = "";
