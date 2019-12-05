@@ -34,9 +34,9 @@ export default class CarbonCopyGroup {
     });
   }
 
-  runValidation(validationTracker) {
+  runValidation(validationTracker, event, isRevalidate) {
     this.carbonCopyLines.forEach(carbonCopyLine => {
-      carbonCopyLine.runValidation(validationTracker);
+      carbonCopyLine.runValidation(validationTracker, event, isRevalidate);
     });
   }
 

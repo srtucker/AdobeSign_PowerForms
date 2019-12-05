@@ -33,11 +33,11 @@ export default class FileUpload {
 
     this._uploadNode.addEventListener("change", async (event) => {
       this._transientDocumentId = await this.handleFileUpload();
-      validationFn(validationTracker, event);
+      validationFn(validationTracker, event, false);
     });
   }
 
-  runValidation(validationTracker, event) {
+  runValidation(validationTracker, event, isRevalidate) {
     let error = false;
     let message = null;
     let docId = this._transientDocumentId;

@@ -131,6 +131,6 @@ export class ValidationTracker {
   }
 
   revalidate() {
-    this.validationFn(this);
+    this.validationFn(this, null, true);
   }
 }

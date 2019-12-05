@@ -65,20 +65,20 @@ export default class PasswordOption {
     this._protectCheckbox.addEventListener("click", (event) => {
       //only run when unchecking
       if(this._protectCheckbox.checked !== true) {
-        validationFn(validationTracker, event);
+        validationFn(validationTracker, event, false);
       }
     });
 
     this._passwordInput.addEventListener("change", (event) => {
-      validationFn(validationTracker, event);
+      validationFn(validationTracker, event, false);
     });
 
     this._passwordConfirmInput.addEventListener("change", (event) => {
-      validationFn(validationTracker, event);
+      validationFn(validationTracker, event, false);
     });
   }
 
-  runValidation(validationTracker, event) {
+  runValidation(validationTracker, event, isRevalidate) {
     let error = false;
     let message = null;
     let passwordInput = this._passwordInput;

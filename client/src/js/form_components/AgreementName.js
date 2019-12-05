@@ -26,11 +26,11 @@ export default class AgreementName {
     let validationTracker = validator.createTracker(this._inputNode, validationFn);
 
     this._inputNode.addEventListener("change", (event) => {
-      validationFn(validationTracker, event);
+      validationFn(validationTracker, event, false);
     });
   }
 
-  runValidation(validationTracker, event) {
+  runValidation(validationTracker, event, isRevalidate) {
     let error = false;
     let message = null;
     let email = this._inputNode.value;

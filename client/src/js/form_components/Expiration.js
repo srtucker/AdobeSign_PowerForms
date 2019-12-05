@@ -61,16 +61,16 @@ export default class Expiration {
     this._expireCheckbox.addEventListener("click", (event) => {
       //only run when unchecking
       if(this._expireCheckbox.checked !== true) {
-        validationFn(validationTracker, event);
+        validationFn(validationTracker, event, false);
       }
     });
 
     this._expirationInput.addEventListener("change", (event) => {
-      validationFn(validationTracker, event);
+      validationFn(validationTracker, event, false);
     });
   }
 
-  runValidation(validationTracker, event) {
+  runValidation(validationTracker, event, isRevalidate) {
     let error = false;
     let message = null;
     let expirationDays = this._expirationInput.value;

@@ -57,11 +57,11 @@ export default class FileSelect {
     let validationTracker = validator.createTracker(this._selectNode, validationFn);
 
     this._selectNode.addEventListener("change", (event) => {
-      validationFn(validationTracker, event);
+      validationFn(validationTracker, event, false);
     });
   }
 
-  runValidation(validationTracker, event) {
+  runValidation(validationTracker, event, isRevalidate) {
     let error = false;
     let message = null;
     let docId = this._selectNode.value;

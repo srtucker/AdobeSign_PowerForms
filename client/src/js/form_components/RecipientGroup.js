@@ -77,12 +77,12 @@ export default class RecipientGroup {
 
     let validationTracker = validator.createTracker(this.inputNode, validationFn);
 
-    this.inputNode.onchange = function() {
-      validationFn(validationTracker);
-    };
+    this.inputNode.addEventListener("change", (event) => {
+      validationFn(validationTracker, event, false);
+    });
   }
 
-  runValidation(validationTracker) {
+  runValidation(validationTracker, event, isRevalidate) {
     let error = false;
     let message = null;
     let email = this.inputNode.value;

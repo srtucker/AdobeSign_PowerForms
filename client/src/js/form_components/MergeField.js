@@ -34,11 +34,11 @@ export default class MergeField {
     let validationTracker = validator.createTracker(this._inputNode, validationFn);
 
     this._inputNode.addEventListener("change", (event) => {
-      validationFn(validationTracker, event);
+      validationFn(validationTracker, event, false);
     });
   }
 
-  runValidation(validationTracker, event) {
+  runValidation(validationTracker, event, isRevalidate) {
     let error = false;
     let message = null;
     let value = this._inputNode.value;
