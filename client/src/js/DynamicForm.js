@@ -80,7 +80,7 @@ export default class DynamicForm {
       let result = await this.workflow.submit();
       console.log("Submit result", result)
 
-      this._appDiv.querySelector('.workflow_content').innerHTML = submitCompleteTemplate({body: "The agreement has been submitted successfully. The first recipient should recieve an email shortly with a link to the agreement."});
+      this._appDiv.querySelector('.workflow_content').innerHTML = submitCompleteTemplate({body: "The agreement has been submitted successfully. The first recipient should receive an email shortly with a link to the agreement."});
 
       modal.remove();
     }

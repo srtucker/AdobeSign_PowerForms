@@ -1,6 +1,6 @@
 {
-  "name": "test",
-  "version": "1.0.1",
+  "name": "AdobeSign_Dynamic_Workflow",
+  "version": "1.0.2",
   "description": "",
   "main": "server/server.js",
   "scripts": {
@@ -12,8 +12,11 @@
     "build:prod": "webpack --progress --env=production",
     "analyze": "webpack --progress --env=production --profile"
   },
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "Scott R. Tucker",
+    "email": "srtucker@calpoly.edu"
+  },
+  "license": "UNLICENSED",
   "dependencies": {
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
