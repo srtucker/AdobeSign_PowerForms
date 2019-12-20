@@ -1,7 +1,7 @@
 {
   "name": "AdobeSign_Dynamic_Workflow",
-  "version": "1.0.2",
-  "description": "",
+  "version": "1.0.3",
+  "description": "Web Application to bring functionality similar to DocuSign's PowerForms to AdobeSign.",
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js --env=production",
@@ -12,11 +12,15 @@
     "build:prod": "webpack --progress --env=production",
     "analyze": "webpack --progress --env=production --profile"
   },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@code.its.calpoly.edu:7999/afd/adobesign_dynamic_workflow.git"
+  },
   "author": {
     "name": "Scott R. Tucker",
     "email": "srtucker@calpoly.edu"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "dependencies": {
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
