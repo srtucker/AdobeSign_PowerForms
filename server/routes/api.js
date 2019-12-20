@@ -96,8 +96,6 @@ router.post('/workflows/:workflowId/agreements', async function(req, res, next){
     }
 
     const agreementRequest = await APIClient.post(`/workflows/${workflowId}/agreements`, agreementData, {headers});
-
-    console.log("agreementRequest", agreementRequest);
     res.json(agreementRequest.data);
   }
   catch(e) {

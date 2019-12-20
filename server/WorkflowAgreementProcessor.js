@@ -22,16 +22,6 @@ class WorkflowAgreementProcessor {
   }
 
   getAgreement() {
-    console.log("dictionary", this.dictionary);
-    console.log("documentCreationInfo", this.agreementData);
-
-    //this.agreementData.callbackInfo
-    //this.agreementData.formFieldLayerTemplates
-    //this.agreementData.formFields
-    //this.agreementData.locale
-    //this.agreementData.postSignOptions
-    //this.agreementData.vaultingInfo
-
     return {
       documentCreationInfo: this.agreementData,
       options: {
