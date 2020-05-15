@@ -1,7 +1,7 @@
 # Adobe Sign PowerForms
 The Adobe Sign PowerForm is a custom application to provide a solution for self-service forms. It was created to fill an Adobe Sign gap where multiple signers need to be defined by the individual requesting the form. An example would be a self-service form that requires supervisor approval. The supervisor would be dependent on the individual initiating the form. The PowerForm allows the individual initiating the form to supply the appropriate email address.
 
-Configurations of PowerForms is done completely within Adobe Sign's Workflow Designer, see [Configuring a Workflow for PowerForms](documentation\Configuring-a-Workflow-for-PowerForms.md) for instructions.
+Configurations of PowerForms is done completely within Adobe Sign's Workflow Designer, see [Configuring a Workflow for PowerForms](/documentation/Configuring-a-Workflow-for-PowerForms.md) for instructions.
 
 Additional documentation is available in the [documentation](/documentation/) directory.
 
