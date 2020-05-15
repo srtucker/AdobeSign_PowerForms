@@ -1,26 +1,25 @@
-# This is the Dynamic Workflow configuration file.
+# This is the PowerForms configuration file.
 #
-# This file contains all the import information needed to run Dynamic Workflows.
+# This file contains all the important information needed to run PowerForms.
 # Please make sure that all your information is correct.
 
 # This is the port that the express server should listen on if it is not provided by process.env.PORT
 PORT: 80
 
-# This is the public path the server will be located at.
-publicPath: '/'
+# This is the public path the server will be located at. It must end with a '/'.
+publicPath: '/PowerForm/'
 
 # This is the server information needed to point the application to your Sign Console.
 adobeApi:
   # The host address to your Sign Console.
-  host:
+  host: https://api.na1.documents.adobe.com
 
-  # DO NOT CHANGE THE FOLLOW TWO CONFIGURATION.
-  # This is the endpoint
+  # DO NOT CHANGE THE FOLLOWING CONFIGURATION.
+  # This is the API endpoint of Adobe Sign
   endpoint: "/api/rest/v5"
 
-  # This is your integration key for Adobe Sign. This key
-  # is needed to get access to perform synchronization between Admin
-  # Console and Adobe Sign.
+  # This is your integration key for Adobe Sign. This key is needed to login to
+  # the Adobe Sign API to get workflow configurations and sending agreements.
   integrationKey:
 
 # This is the feature configuration.
@@ -29,16 +28,17 @@ WorkFlowConfig:
     hide_predefined: false
     hide_readonly: true
   cc:
-    hide_predefined: false
+    hide_predefined: true
     hide_readonly: true
   agreementName:
     hide: false
   message:
-    hide: false
+    hide: true
   files:
-    hide_predefined: false
+    hide_predefined: true
   mergeFields:
-    hide_readonly: false
+    hide_predefined: true
+    hide_readonly: true
   expiration:
     hide: false
   reminder:
@@ -47,15 +47,15 @@ WorkFlowConfig:
 
 #these setings are included in the client
 ClientConfig:
-  # This is the base URL all client API calls will be made to. It can be relative
-  # or absolute url. If not defined publicPath will be used.
-  apiBaseURL: '/'
+  # This is the base URL all client API calls will be made to. It can be a relative
+  # or absolute url. If not defined publicPath will be used. It must end with a '/'.
+  apiBaseURL: '/PowerForm/'
 
   # Setting to show Agreement expiration as date if true or as number of days if false
-  expirationAsDate: true
+  expirationAsDate: false
 
-  #title of the application
-  appTitle: 'Dynamic Workflow'
+  #Title of the web client (what will show in the web browser's tab)
+  appTitle: 'PowerForm'
 
   # The path that workflows will be accessed at, this will be appended to publicPath. It should not start with a '/' and must end with '/' if it is not empty.
-  workflowPath: 'Workflow/'
+  workflowPath: '/'
