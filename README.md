@@ -3,7 +3,7 @@ The Adobe Sign PowerForm is a custom application to provide a solution for self-
 
 Configurations of PowerForms is done completely within Adobe Sign's Workflow Designer, see [Configuring a Workflow for PowerForms](documentation\Configuring-a-Workflow-for-PowerForms.md) for instructions.
 
-Additional documentation is available in the [documentation](\documentation\) directory.
+Additional documentation is available in the [documentation](/documentation/) directory.
 
 ## Getting Started
 
