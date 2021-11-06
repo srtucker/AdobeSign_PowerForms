@@ -6,10 +6,14 @@ const async = require('express-async-await');
 const bodyParser = require('body-parser');
 const path = require('path');
 const config = require('../config');
+const removeFiles = require('./removeFiles.js');
 
 // detect if running in a production or development env
 const isDev = !(process.env.NODE_ENV === 'production' || yargs.argv.env == "production" || false);
 const isDevClient = (yargs.argv.devClient || false);
+
+//remove temp files
+removeFiles(path.join(__dirname, '../temp/uploads/'), 3600, 100).then(removedFiles =>  console.log("removedFiles", removedFiles));
 
 // SEVER SETUP
 // =============================================================================
@@ -68,6 +72,12 @@ app.use(config.publicPath, express.static(clientFolder));
 
 // API Route
 app.use(config.publicPath + 'api', require('./routes/api.js'));
+
+
+app.use(function (err, req, res, next) {
+  console.error("error caught in server.js", {err, req});
+  res.status(500).send('Something broke!');
+})
 
 // START THE SERVER
 // =============================================================================

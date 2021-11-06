@@ -101,7 +101,10 @@ router.post('/workflows/:workflowId/agreements', async function(req, res, next){
   catch(e) {
     if(e.response) {
       console.error(`API Error: ${e.response.status}`, e.response);
-      if(e.response.status == 403) {
+      if(e.response.status == 400) {
+        return res.status(400).json(e.response.data);
+      }
+      else if(e.response.status == 403) {
         return res.status(403).json(e.response.data);
       }
       else if(e.response.status == 404) {
@@ -149,12 +152,8 @@ router.post('/postTransient', upload.single('myfile'), async function (req, res,
     const api_response = await APIClient.post("/transientDocuments", formData, {
       headers: {
         'Content-Type': `multipart/form-data;boundary=${formData.getBoundary()}`
-      }
-    });
-
-    // Delete uploaded doc after transient call
-    fs.unlink(req.file.path, function (err) {
-      if (err) return console.log(err);
+      },
+      maxRedirects: 0
     });
 
     res.json(api_response.data)
@@ -162,12 +161,24 @@ router.post('/postTransient', upload.single('myfile'), async function (req, res,
   catch(err) {
     console.error(err);
     if(err.response) {
-      console.error(err.response);
       if(err.response.status == 404) {
         res.status(404).json(err.response.data);
         return;
       }
+      if(err.response.status == 403 && err.response.data.code == 'LARGE_FILE_SIZE') {
+        console.log("postTransient file too large", req.file.originalname, req.file.filename, req.file.size/1024);
+        res.status(403).json(err.response.data);
+        return;
+      }
     }
     res.status(500).send();
+  }
+  finally {
+    // Delete uploaded doc after transient call
+    fs.unlink(req.file.path, function (err) {
+      if (err) {
+        console.error({message: "Error unlinking file", error:err});
+      }
+    });
   }
 });
