@@ -31,6 +31,39 @@ const APIClient = Axios.create({
   }
 });
 
+// GET /workflows
+router.get('/workflows.json', async function (req, res, next) {
+  try {
+    const api_response = await APIClient.get(`/workflows`);
+
+    workflows = api_response.data['userWorkflowList'].map(x => {
+      return {
+        workflowId: x.workflowId,
+        displayName: x.displayName
+      }
+    });
+    
+    res.header("Content-Type",'application/json');
+    res.send(JSON.stringify(workflows, null, 4));
+  }
+  catch(e) {
+    if(e.response) {
+      console.error(`API Error: ${e.response.status}`, e.response);
+      if(e.response.status == 401) {
+        return res.status(500).send();
+      }
+      else if(e.response.status == 403) {
+        return res.status(403).json(e.response.data);
+      }
+      else if(e.response.status == 404) {
+        return res.status(404).json(e.response.data);
+      }
+    }
+
+    console.error(e);
+    res.status(500).send();
+  }
+});
 
 // GET /workflows
 router.get('/getWorkflows', async function (req, res, next) {
